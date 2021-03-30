@@ -32,7 +32,7 @@
 
     let nameInvalid
 
-    let description = item.description
+    let itext = item.itext
     let visible = item.visible
     let images = item.images
     let price = item.price
@@ -92,7 +92,7 @@
             f = f.file
         })
         let data = {
-            description,
+            itext,
             id: item.id,
             images,
             image,
@@ -138,15 +138,6 @@
 </Row>
 
 <Row noGutter>
-    <Column>
-        <RadioButtonGroup bind:selected={itype}>
-            <RadioButton labelText='Product' value='product' />
-            <RadioButton labelText='Service' value='service' />
-        </RadioButtonGroup>
-    </Column>
-</Row>
-
-<Row noGutter>
     <Column noGutter>
         <TextInput
             on:focus={() => {open=true;current=ref}}
@@ -182,9 +173,9 @@
                 bind:invalid={nameInvalid}
                 invalidText='Name taken'
             />
-            <TextInput labelText="Price" bind:value={price} />
+            <TextInput labelText="Type" bind:value={itype} />
         </FluidForm>
-            <TextArea labelText="Description" bind:value={description} />
+            <TextArea labelText="Text" bind:value={itext} />
     </Column>
 </Row>
 

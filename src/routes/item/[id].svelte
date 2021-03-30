@@ -25,9 +25,9 @@
     
     let { session } = stores()
 
-    let description
-    if (item.description){
-        description = marked(item.description)
+    let itext
+    if (item.itext){
+        itext = marked(item.itext)
     }
 </script>
 
@@ -62,10 +62,10 @@
     </Column>
 </Row>
 
-{#if description}
+{#if itext}
     <Row noGutter>
         <Column lg={2} sm={2} md={2} xlg={2}>
-            <p>{@html description}</p>
+            <p>{@html itext}</p>
         </Column>
     </Row>
 {/if}

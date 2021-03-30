@@ -2,18 +2,19 @@
     export async function preload({params}, {user}){
         let {id} = params
         let tagString = JSON.stringify([])
+        let theUser = await api.get(`users/${id}`)
         let url = `items?id=${id}&tags=${tagString}&page=1`
         let res = await api.get(url)
-        let items = res.items
-        let total = res.total
-        let pages = res.pages
         if (res == '404'){
             this.error(404, 'User not Found')
         }
         if (res == '423'){
             this.error(423, 'User not visible')
         }
-        return {items, total, pages, user, id}
+        let items = res.items
+        let total = res.total
+        let pages = res.pages
+        return {items, total, pages, theUser, user, id}
     }
 </script>
 
@@ -21,14 +22,11 @@
     export let items = []
     export let total = 0
     export let pages = 0
-    export let user
+    export let theUser, user
     export let id
 
-    import { myItype, userItype, whose } from '../../stores'
     import {
-        RadioButtonGroup,
         PaginationNav,
-        RadioButton,
         Checkbox,
         Column,
         Search,
@@ -42,31 +40,6 @@
     onMount(()=>{
         ref.focus()
     })
-
-    let title
-    let itype='all'
-
-    $:get(itype)
-
-    function changeItype() {
-        if($whose && $whose=='my'){
-            $myItype=itype
-        } else {
-            $userItype=itype
-        }
-    }
-
-    $: changeItype(itype)
-
-    if ($whose && $whose=='my'){
-        title='My Items'
-    } else {
-        if(user.name){
-            title=`${user.name.split(' ')[0]}'s items`
-        }else{
-            title=`${user.username}'s items`
-        }
-    }
 
     let page = 0
 
@@ -111,7 +84,6 @@
     let get = async function(){
         let tagString = JSON.stringify(tags)
         let url = `items?visible=${visible}&id=${id}&tags=${tagString}&page=${page+1}`
-        if (itype != 'all') url = url + '&itype=' + itype
         let res = await api.get(url)
         items = res.items
         total = res.total
@@ -123,7 +95,7 @@
 <svelte:window on:keydown={keydown} />
 
 <svelte:head>
-    <title>{title}</title>
+    <title>{`${theUser.name.split(' ')[0]}'s items`}</title>
 </svelte:head>
 
 <Row noGutter>
@@ -133,16 +105,6 @@
             bind:value={tag}
             bind:ref
         />
-    </Column>
-</Row>
-
-<Row noGutter>
-    <Column>
-        <RadioButtonGroup bind:selected={itype}>
-            <RadioButton labelText='All' value='all' />
-            <RadioButton labelText='Products' value='product' />
-            <RadioButton labelText='Services' value='service' />
-        </RadioButtonGroup>
     </Column>
 </Row>
 

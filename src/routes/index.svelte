@@ -1,46 +1,24 @@
 <script>
     import {
-        Tag,
         Row,
-        Link,
-        Search,
         Column,
-        RadioButton,
         PaginationNav,
-        RadioButtonGroup
     } from 'carbon-components-svelte'
     import * as api from 'api'
     import {
-        itype,
         itemTags
     } from '../stores.js'
-
-    $itype='all'
-    $:get($itype)
+    import Tag from '../components/Tag.svelte'
+    import {goto} from '@sapper/app'
 
     let items = []
     let page = 0
     let total = 0
     let pages = 0
 
-    let current
-
-    let open = false
     let got
-    let tag
-    let ref
 
-    let keydown = (e) => {
-        switch(e.keyCode){
-            case 13:
-                if (current==ref){
-                    addTag()
-                    get()
-                }
-        }
-    }
-
-    let addTag = () => {
+    let addTag=()=>{
         if (tag != '' && !$itemTags.includes(tag)){
             $itemTags=[...$itemTags, tag]
             open=true
@@ -48,7 +26,7 @@
         }
     }
 
-    let delTag = (tag) => {
+    let delTag=(tag)=>{
         $itemTags=$itemTags.filter(t => t != tag)
         get()
     }
@@ -61,7 +39,6 @@
     let get = async function(){
         let tagString = JSON.stringify($itemTags)
         let url = `items?tags=${tagString}&visible=1&page=${page+1}`
-        if ($itype != 'all') url = url + '&itype=' + $itype
         let res = await api.get(url)
         items = res.items
         total = res.total
@@ -71,58 +48,23 @@
     }
 </script>
 
-<svelte:window on:keydown={keydown} />
-
 <svelte:head>
-    <title>Marketlinks</title>
+    <title>Apexlinks</title>
 </svelte:head>
 
-<Row noGutter>
-    <Column>
-        <Search
-            on:focus={() => {current=ref}}
-            bind:value={tag}
-            bind:ref
-        />
-    </Column>
-</Row>
-
-{#if open}
-    <Row noGutter>
-        <Column>
-            <Tag
-                on:click={clear}
-                type='magenta'
-            >
-                Clear
-            </Tag>
-            {#each $itemTags as tag}
-                <Tag filter on:click={delTag(tag)}>{tag}</Tag>
-            {/each}
-        </Column>
-    </Row>
-{/if}
-
-<Row noGutter>
-    <Column>
-        <RadioButtonGroup bind:selected={$itype}>
-            <RadioButton labelText='All' value='all' />
-            <RadioButton labelText='Products' value='product' />
-            <RadioButton labelText='Services' value='service' />
-        </RadioButtonGroup>
-    </Column>
-</Row>
+<Tag on:change={get} placeholder='Search' bind:tags={$itemTags} />    
 
 {#each items as item}
     <br />
     <Row noGutter>
         <div>
             {#if item.image}
-                <img style='vertical-align: top;' height='37px' width='37px' alt='profile pic' src={item.image}>
+            <span><img style='vertical-align: top;' height='37px' width='37px' alt='profile pic' src={item.image}></span>
             {:else}
-                <img style='vertical-align: top;' height='37px' width='37px' alt='profile pic' src='/placeholder.png'>
+                <span><img style='vertical-align: top;' height='37px' width='37px' alt='profile pic' src='/placeholder.png'></span>
             {/if}
-            <Link href='item/{item.id}'>{item.name}</Link>
+            <h4 class='pointer' on:click={goto(`item/${item.id}`)}>{item.name}</h4>
+            <p class='bx--link--sm'>{item.itype}</p>
         </div>
     </Row>
 {/each}
@@ -145,3 +87,9 @@
         </Column>
     </Row>
 {/if}
+
+<style>
+    .pointer:hover {
+        cursor: pointer;
+    }
+</style>
