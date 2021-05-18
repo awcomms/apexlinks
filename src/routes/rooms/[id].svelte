@@ -1,9 +1,10 @@
 <script context='module'>
-    export async function preload({params}, {user}){
+    export async function load({page, session}){
+        let user = session.user
         if(!user){
             this.redirect('302', 'enter')
         }
-        let {id} = params
+        let {id} = page.params
         let tagString = JSON.stringify([])
         let url = `xrooms?id=${id}&tags=${tagString}&page=1`
         let res = await api.get(url, user.token)
@@ -31,8 +32,8 @@
     export let pages = 0
     export let id
 
-    import { goto } from '@sapper/app'
-    import { myTags } from '../../stores'
+    import { goto } from '$app/navigation'
+    import { myTags } from '$lib/stores'
     import {
         PaginationNav,
         Column,
@@ -40,7 +41,7 @@
         Link,
         Tag,
         Row, } from 'carbon-components-svelte'
-    import * as api from 'api'
+    import * as api from '$lib/api'
     import { onMount } from 'svelte';
     
 
@@ -57,7 +58,7 @@
     let ref
 
     let go=(room)=>{
-        goto(`room/${room.id}`)
+        goto(`/room/${room.id}`)
     }
 
     let keydown = (e) => {

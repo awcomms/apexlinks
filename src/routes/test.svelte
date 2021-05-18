@@ -1,5 +1,5 @@
 <script>
-    import Input from '../components/Input/Input.svelte'
+    import Input from '$lib/components/Input/Input.svelte'
     let invalid
 </script>
 

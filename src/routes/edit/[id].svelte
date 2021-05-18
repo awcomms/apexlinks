@@ -1,18 +1,27 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({params}, {user}){
+    import * as api from '$lib/api'
+    export async function load({ page, session}){
+        let user = session.user
         if (!user){
-            this.redirect(302, 'login')
+            return {
+                status: 302,
+                redirect: '/login'
+            }
         }
-        let {id} = params
+        let {id} = page.params
         let item = await api.get(`items/${id}`)
-        return { item, user }
+        return {
+            props: { 
+                item,
+                user
+            }
+        }
     }
 </script>
 
 <script>
     export let item, user
-    import { goto } from '@sapper/app'
+    import { goto } from '$app/navigation'
     import {
         FluidForm,
         ButtonSet,
@@ -24,12 +33,13 @@
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import {initialCaps} from 'utils'
-    import Tag from '../../components/Tag.svelte'
-    import Image from '../../components/Image.svelte'
-    import Input from '../../components/Input/Input.svelte'
-    import { abslink } from 'utils'
+    import {initialCaps} from '$lib/utils'
+    import Tag from '$lib/components/Tag.svelte'
+    import Image from '$lib/components/Image.svelte'
+    import Input from '$lib/components/Input/Input.svelte'
+    import { abslink } from '$lib/utils'
 
+    $: validateLink(link)
     $: itype = initialCaps(itype)
 
     let nameInvalid
@@ -61,7 +71,11 @@
         }
     }
 
-    const del = async function(){
+    const validateLink=(e)=>{
+        linkInvalid = false
+    }
+
+    const del=async()=>{
         delLoading = true
         let res = await api.del(`items/${item.id}`, user.token).finally(
             (r)=>{
@@ -70,11 +84,11 @@
             }
         )
         if (res.yes){
-            goto(`items/${user.id}`)
+            goto(`/items/${user.id}`)
         } //TODO else reload the page
     }
 
-    const edit = async function(){
+    const edit=async()=>{
         editLoading = true
         if(redirect && !abslink.test(link)){
             linkInvalid = true
@@ -103,7 +117,7 @@
             nameInvalid = true
         }
         if (res.id){
-            goto(`item/${res.id}`)
+            goto(`/item/${res.id}`)
         }
     }
 </script>
@@ -148,11 +162,12 @@
             <Checkbox bind:checked={redirect} 
                 labelText="Let the item's listing redirect to a link" />
             {#if redirect}
-                <Input 
+                <Input
                     invalid={linkInvalid}
                     invalidText={linkError}
                     labelText='Link' 
-                    bind:value={link} 
+                    bind:value={link}
+                    focus
                 />
             {:else}
                 <TextArea placeholder='Description(Markdown)' bind:value={itext} />

@@ -1,19 +1,31 @@
 <svelte:window on:keydown={keydown} />
 
 <script context="module">
-    import * as api from 'api.js';
-    export async function preload({params}, { user }) {
-        if (!user){
-            this.redirect(302, 'login')
+    import * as api from '$lib/api.js';
+    export async function load({ session }) {
+        let token = session.token
+        if (token){
+            return {
+                redirect: {
+                    status: 302,
+                    to: 'login'
+                }
+            }
         }
-        user = await api.get(`users/${user.id}`)
-        return {user}
+        let user = await api.get('user', token)
+        return {
+            props: {
+                user
+            }
+        }
     }
 </script>
     
 <script>
     export let user
-    import { goto, stores } from '@sapper/app';
+    import {pk_test} from '$lib/vars'
+    import { session } from '$app/stores'
+    import { goto } from '$app/navigation';
     import {
         InlineLoading,
         FluidForm,
@@ -24,17 +36,31 @@
         Column,
         Row,
     } from 'carbon-components-svelte'
-    import Input from '../components/Input/Input.svelte'
-    import Image from '../components/Image.svelte'
-    import Tag from '../components/Tag.svelte'
-    import { checkEmail } from 'utils'
+    import Input from '$lib/components/Input/Input.svelte'
+    import Image from '$lib/components/Image.svelte'
+    import Tag from '$lib/components/Tag.svelte'
+    import Paystack from '$lib/components/Paystack.svelte'
+    import { 
+        checkEmail,
+        abslink 
+    } from '$lib/utils'
 
     $: checkUsername(username)
 
     $: if(username) username = username.toLowerCase()
     $: if(email) email = email.toLowerCase()
 
-    let { session } = stores();
+    let config = {
+        key: process.env.NODE_ENV === 'development' ? pk_test : process.env.PAYSTACK,
+        email: user.email,
+        metadata: {
+            id: user.id
+        },
+        amount: 190233,
+        currency: "NGN",
+        embed: false,
+        value: "Pay"
+    }
 
     let show_email = user.show_email
     let username = user.username
@@ -52,11 +78,16 @@
     let usernameInvalid
     let usernameError
 
+    let websiteInvalid
+    let websiteError
+
     let emailInvalid
     let emailError
 
     let loading
 
+    let linkError = 'Add a url scheme to the link, something like "http://, at the beginning'
+    
     const keydown=(e)=>{
         switch(e.keyCode){
             case 13:
@@ -73,7 +104,12 @@
     }
 
     const edit=async()=>{
-        loading = true  
+        loading = true
+        if(!abslink.test(website)){
+            websiteInvalid = true
+            editLoading = false
+            return
+        }
         if (!email){
             emailInvalid = true
             emailError = 'Empty'
@@ -118,8 +154,7 @@
             }
         )
         if (res.id) {
-            $session.user = res
-            goto(`${res.username}`)
+            goto(`/${res.username}`)
         }
     }
 </script>
@@ -128,7 +163,30 @@
     <title>Edit</title>
 </svelte:head>
 
-<Image bind:image />
+<Paystack {config} />
+<Image bind:image>
+    {#if user.paid}
+        <Button
+            on:click={()=>{config.open=true}}
+            size='small'
+        >
+            Renew subscription
+        </Button>
+        <Button
+            on:click={()=>{config.open=true; config.amount=3000; config.metadata.purpose='change_card'}}
+            size='small'
+        >
+            Change card
+        </Button>
+    {:else}
+        <Button
+            on:click={()=>{config.open=true}}
+            size='small'
+        >
+            Subscribe
+        </Button>
+    {/if}
+</Image>
 
 <Row noGutter>
     <Column>
@@ -152,7 +210,12 @@
             <TextInput labelText="Name" bind:value={name} />
             <TextInput labelText="Phone" bind:value={phone} />
             <TextInput labelText="Address" bind:value={address} />
-            <TextInput labelText="Website" bind:value={website} />
+            <Input 
+                invalid={websiteInvalid}
+                invalidText={websiteError}
+                labelText='Link' 
+                bind:value={website} 
+            />
             <TextArea rows={11} placeholder='About (Markdown)' bind:value={about} />
         </FluidForm>
     </Column>

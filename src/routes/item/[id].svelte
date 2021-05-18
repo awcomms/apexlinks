@@ -1,15 +1,19 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({params}){
-        let {id} = params
+    import * as api from '$lib/api'
+    export async function load({page, session}){
+        let {id} = page.params
         let item = await api.get(`items/${id}`)
-        if (item == '404')(
-            this.error(404, 'item not Found')
-        )
-        if (item == '423')(
-            this.error(423, 'item not visible')
-        )
-        return {item}
+        if(item.error){
+            return {
+                status: item.status,
+                error: item.error
+            }
+        }
+        return {
+            props: {
+                item
+            }
+        }
     }
 </script>
 
@@ -20,11 +24,9 @@
         Link,
         Column,
     } from 'carbon-components-svelte'
-    import {parseMarkdown} from 'utils'
-    import { stores } from '@sapper/app'
+    import {parseMarkdown} from '$lib/utils'
+    import { session } from '$app/stores'
     
-    let { session } = stores()
-
     let itext
     if(item.itext){
         itext = parseMarkdown(item.itext)
@@ -48,9 +50,9 @@
         <!-- {#if item.itype}
             <p>{item.itype}</p>
         {/if} -->
-        <Link href='{item.user}'>User</Link>
+        <Link href='/{item.user}'>User</Link>
         {#if $session.user && $session.user.username == item.user}
-            <Link href='edit/{item.id}'>Edit</Link>
+            <Link href='/edit/{item.id}'>Edit</Link>
         {/if}
     </Column>
 </Row>

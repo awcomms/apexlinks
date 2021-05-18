@@ -1,6 +1,6 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({}, {user}){
+    import * as api from '$lib/api'
+    export async function load{}, {user}){
         if(!user){
             this.redirect(302, 'enter')
         }
@@ -23,8 +23,8 @@
         Column,
     } from 'carbon-components-svelte'
     import {onMount} from 'svelte'
-    import Tag from '../components/Tag.svelte'
-    import { goto } from '@sapper/app'
+    import Tag from '$lib/components/Tag.svelte'
+    import { goto } from '$app/navigation'
 
     let tags
 
@@ -34,7 +34,7 @@
     }
 
     let go=(room)=>{
-        goto(`room/${room.id}`)
+        goto(`/room/${room.id}`)
     }
 
     let get=async()=>{

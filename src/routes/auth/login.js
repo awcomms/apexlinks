@@ -1,10 +1,10 @@
-import * as api from 'api'
+import * as 
+api from '$lib/api'
+import {respond} from '$lib/_respond'
 
-export function post(req, res) {
+export async function post(req) {
     const { username, password } = req.body
-    api.post('tokens', { username, password }).then(response => {
-        if (response.user) req.session.user = response.user;
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(response))
-    })
+    const token = await api.post('tokens', { username, password })
+
+    return respond(token)
 }

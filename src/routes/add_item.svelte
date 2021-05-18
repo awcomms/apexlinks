@@ -1,20 +1,28 @@
 <svelte:window on:keydown={keydown} />
 
 <script context="module">
-    export async function preload({ path }, { user }) {
+    export async function load({ session }) {
+        let user = api.get('user', session.token)
         if (!user) {
-            this.redirect(302, `login`);
+            return {
+                status: 302,
+                redirect: 'login'
+            }
         }
-        return { user }
+        return {
+            props: {
+                user
+            }
+        }
     }
 </script>
 
 <script>
     export let user
-    import {initialCaps} from 'utils'
-    import Image from '../components/Image.svelte'
-    import Tag from '../components/Tag.svelte'
-    import Input from '../components/Input/Input.svelte'
+    import {initialCaps} from '$lib/utils'
+    import Image from '$lib/components/Image.svelte'
+    import Tag from '$lib/components/Tag.svelte'
+    import Input from '$lib/components/Input/Input.svelte'
     import {
         Row,
         Button,
@@ -24,10 +32,9 @@
         TextInput,
         ButtonSet,
         FluidForm,
-        InlineLoading,
     } from 'carbon-components-svelte'
-    import { goto } from '@sapper/app'
-    import * as api from 'api'
+    import { goto } from '$app/navigation'
+    import * as api from '$lib/api'
 
     $: itype = initialCaps(itype)
 
@@ -74,7 +81,7 @@
             nameInvalid = true
         }
         if (res.id) {
-            goto(`item/${res.id}`)
+            goto(`/item/${res.id}`)
         }
     }
 </script>

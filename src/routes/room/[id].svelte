@@ -1,24 +1,41 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({params}, {user}){
-        const {id} = params
+    import * as api from '$lib/api'
+    export async function load({page, session}){
+        let user = session.user
+        const {id} = page.params
         if(!user){
-            this.redirect('302', 'enter')
+            return {
+                status: 302,
+                redirect: 'login'
+            }
         }
         const room = await api.get(`rooms/${id}`, user.token)
         // if(!room.open && !room.users.includes(user.username)){
         //     this.error('Unauthorized')
         // }
-        let { items, page, total } = await api.get(`messages?id=${id}`, user.token)
+        let items, total
+        let res = await api.get(`messages?id=${id}`, user.token)
+        items = res.items
+        page = res.page
+        total = res.total
         if (!Array.isArray(items)) items = []
-        return {room, items, page, total, user, id}
+        return {
+            props: {
+                room,
+                items,
+                page,
+                total,
+                user,
+                id
+            }
+        }
     }
 </script>
 
 <script>
     export let room, items, page, total, user, id
-    import {goto} from '@sapper/app'
-    import { context } from '../../stores.js'
+    import {goto} from '$app/navigation'
+    import { context } from '$lib/stores'
     import {
         Row,
         Column,
@@ -54,44 +71,48 @@
         updateScroll()
     })
 
-    let keydown = (e) => {
+    const keydown = (e) => {
         switch(e.keyCode){
             case 13:
                 send()
         }
     }
 
-    let get=async()=>{
+    const get=async()=>{
         res = await api.get(`messages?id=${id}&page=${page+1}`, user.token)
         items = res.items
         total = res.total
         page++
     }
 
-    let exit=async()=>{
+    const exit=async()=>{
         socket.emit('leave', room.id)
         await api.put('leave', {id:room.id}, user.token)
         goto('/')
     }
 
-    let go=()=>{
+    const go=()=>{
         if(room.user == user.username){
-            goto(`edit/${room.id}`)
+            goto(`/edit/${room.id}`)
         }
     }
 
-    let send=async()=>{
+    const goUser=(user)=>{
+        goto(user)
+    }
+
+    const send=async()=>{
         if(!value) return
         value=value.trim()
         let obj = {user: user.username, id, value}
         items = [...items, obj]
         socket.emit('msg', obj)
-        await api.put('messages', {id, value}, user.token)
+        await api.post('messages', {id, value}, user.token)
         updateScroll()
         value=''
     }
 
-    let updateScroll=()=>{
+    const updateScroll=()=>{
         setTimeout(()=>{
             window.scrollTo({left: 0, top: document.body.scrollHeight})
         }, 0)
@@ -101,7 +122,7 @@
 <svelte:window on:keydown={keydown} />
 
 <svelte:head>
-    <title>'Rooms'</title>
+    <title>{room.name}</title>
 </svelte:head>
 
 <Row noGutter>
@@ -110,7 +131,8 @@
                 <p on:click={go} class:head-link={room.user == user.username} class='head'>
                     {room.name}
                 </p>
-                <p on:click={exit} class='small'>Leave</p>
+                <p on:click={exit} class='pointer'>Leave</p>
+                <br/>
             </span>
         <div class='head-space'></div>
     </Column>
@@ -119,7 +141,7 @@
 {#each items as item}
     <Row noGutter>
         <Column>
-            <p class='small'>{item.user}</p>
+            <p on:click={goUser(item.user)} class='small pointer'>{item.user}</p>
             <p class='message'>{item.value}</p>            
         </Column>
     </Row>
@@ -132,10 +154,12 @@
 </Row>
 
 <style>
+    .pointer {
+        cursor: pointer;
+    }
     .small {
         color: grey; 
         font-size: 0.75rem;
-        cursor: pointer;
     }
     .message {
         overflow-wrap: break-word;

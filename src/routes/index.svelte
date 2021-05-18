@@ -1,11 +1,13 @@
 <script context='module'>
-    export async function preload(page){
+    export async function load({page, session}){
+        let token = session.token
         let notify = page.query.notify
         return {notify}
     }
 </script>
 
 <script>
+    export let token
     export let notify
 
     import {
@@ -13,13 +15,13 @@
         Column,
         PaginationNav,
     } from 'carbon-components-svelte'
-    import * as api from 'api'
+    import * as api from '$lib/api'
     import {
         itemTags
-    } from '../stores.js'
-    import ResetSuccess from '../components/Notifications/ResetSuccess.svelte'
-    import Tag from '../components/Tag.svelte'
-    import {goto} from '@sapper/app'
+    } from '$lib/stores'
+    import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'
+    import Tag from '$lib/components/Tag.svelte'
+    import {goto} from '$app/navigation'
 
     $: if (got) get(page)
 
@@ -57,7 +59,7 @@
     <br />
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={goto(`item/${item.id}`)} class='pointer item'>
+            <div on:click={goto(`/item/${item.id}`)} class='pointer item'>
                 {#if item.image}
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={item.image}>
                 {:else}

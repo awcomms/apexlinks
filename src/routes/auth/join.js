@@ -1,10 +1,8 @@
-import * as api from 'api'
+import * as api from '$lib/api'
+import {respond} from '$lib/_respond'
 
 export function post(req, res) {
     const { email, username, password } = req.body
-    api.post('users', { email, username, password }).then(response => {
-        if (response.user) req.session.user = response.user
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(response))
-    })
+    const token = api.post('users', { email, username, password })
+    return respond(token)
 }

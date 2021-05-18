@@ -1,15 +1,15 @@
 <svelte:window on:keydown={keydown} />
 
 <script context='module'>
-    import * as api from 'api'
-    export async function preload(page, {user}){
-        if(user){
-            this.redirect(302, 'login')
-        }
+    import * as api from '$lib/api'
+    export async function load({ page }){
         let token = page.query.q
         let res = await api.get('check_reset_password_token', token)
         if(!res.r){
-            this.redirect(302, `login?n=invalid`)
+            return {
+                status: 302,
+                redirect: 'login?n=invalid'
+            }
         }
     }
 </script>
@@ -25,9 +25,9 @@
         Column,
         Row
     } from 'carbon-components-svelte'
-    import Input from '../components/Input/Input.svelte'
-    import { goto } from '@sapper/app'
-    import { notify } from '../stores'
+    import Input from '$lib/components/Input/Input.svelte'
+    import { goto } from '$app/navigation'
+    import { notify } from '$lib/stores'
     import { post } from 'utils.js'
 
     let password
@@ -77,7 +77,7 @@
             goto('/')
         } else {
             $notify = 'invalidLink'
-            goto('login')
+            goto('/login')
         }
     }
 </script>

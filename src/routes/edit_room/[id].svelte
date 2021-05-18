@@ -1,6 +1,7 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({params}, {user}){
+    import * as api from '$lib/api'
+    export async function load({ session }){
+        let user = session.user
         let {id} = params
         let room = await api.get(`rooms/${id}`)
         if (!user){
@@ -9,14 +10,19 @@
         if (!(room.user == user.username)){
             this.error(401, 'Unauthorized')
         }
-        return { room, user }
+        return {
+            props: {
+                room,
+                user
+            }
+        }
     }
 </script>
 
 <script>
     export let room, user
-    import {context} from '../../stores.js'
-    import { goto } from '@sapper/app'
+    import {context} from '$lib/stores'
+    import { goto } from '$app/navigation'
     import {
         FluidForm,
         ButtonSet,
@@ -25,8 +31,8 @@
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import Tag from '../../components/Tag.svelte'
-    import Input from '../../components/Input/Input.svelte'
+    import Tag from '$lib/components/Tag.svelte'
+    import Input from '$lib/components/Input/Input.svelte'
 
     let nameInvalid
 
@@ -37,7 +43,7 @@
     let del = async function(){
         let res = await api.del(`rooms/${room.id}`, user.token)
         if (res.yes){
-            goto(`rooms/${user.id}`)
+            goto(`/rooms/${user.id}`)
         }
     }
 
@@ -53,7 +59,7 @@
         }
         if (res.id){
             $context=name
-            goto(`room/${room.id}`)
+            goto(`/room/${room.id}`)
         }
     }
 </script>

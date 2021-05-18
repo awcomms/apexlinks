@@ -1,16 +1,20 @@
 <script context="module">
-    export async function preload({ path }, { user }) {
-        if (!user) {
+    export async function load({ session }) {
+        if (!session.token) {
+            return {
+                status: 302,
+                redirect: '/enter'
+            }
             this.redirect(302, `enter`);
         }
-        return { user }
+        return { token }
     }
 </script>
 
 <script>
-    export let user
-    import Input from '../components/Input/Input.svelte'
-    import Tag from '../components/Tag.svelte'
+    export let token
+    import Input from '$lib/components/Input/Input.svelte'
+    import Tag from '$lib/components/Tag.svelte'
     import {
         Row,
         Button,
@@ -20,9 +24,9 @@
         InlineLoading
     } from 'carbon-components-svelte'
     import Exit16 from 'carbon-icons-svelte/lib/Exit16'
-    import {open, username, context} from '../stores.js'
-    import { goto } from '@sapper/app'
-    import * as api from 'api'
+    import {open, username, context} from '$lib/stores'
+    import { goto } from '$app/navigation'
+    import * as api from '$lib/api'
 
     let nameInvalid
     let userInvalid
@@ -32,23 +36,9 @@
     let name
     let tags
 
-    // $: if(!$open){
-    //     openLabel = 'Personal'
-    // } else {
-    //     openLabel = 'Open'
-    // }
-
-    // $: change($username)
-
     $: if(process.browser && $username) {
         setTimeout(checkUser, 123)
     }
-
-    // let change=()=>{
-    //     if($username){
-    //         name = `${user.username}.${$username}`
-    //     }
-    // }
 
     const checkUser=async()=>{
         if($username == '') return
@@ -81,7 +71,7 @@
             name,
             tags,
         }
-        let res = await api.post('rooms', data, user.token)
+        let res = await api.post('rooms', data, token)
         if (res.nameError) {
             nameError = res.nameError
             nameInvalid = true
@@ -93,7 +83,7 @@
         } else if (res.id) {
             $context=name
             adding=false
-            goto(`room/${res.id}`)
+            goto(`/room/${res.id}`)
         }
     }
 </script>

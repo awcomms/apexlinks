@@ -1,13 +1,20 @@
 <svelte:window on:keydown={keydown} />
 
 <script context="module">
-    import * as api from 'api'
-    export async function preload(page, { user }) {
+    import * as api from '$lib/api'
+    export async function load({ page, session }) {
         let n = page.query.n
-        if (user) {
-            this.redirect(302, '/');
+        if (session.user) {
+            return {
+                status: 302,
+                redirect: '/',
+            }
         }
-        return {n}
+        return {
+            props: {
+                n
+            }
+        }
     }
 </script>
     
@@ -17,17 +24,17 @@
     import {
         Row,
         FluidForm,
-        Checkbox,
         Button,
         Column,
         ButtonSet,
         InlineLoading,
     } from 'carbon-components-svelte';
-    import Input from '../components/Input/Input.svelte'
-    import { goto, stores } from '@sapper/app';
-    import { isSideNavOpen, logged, notify } from '../stores.js'
-    import { post, checkEmail } from 'utils.js'
-    import NavNotification from '../components/Notifications/NavNotification.svelte'
+    import Input from '$lib/components/Input/Input.svelte'
+    import { goto } from '$app/navigation';
+    import { session } from '$app/stores'
+    import { isSideNavOpen, logged, notify } from '$lib/stores'
+    import { post, checkEmail } from '$lib/utils'
+    import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
 
     // $: validateEmail(email)
     // $: validatePassword(password)
@@ -41,13 +48,12 @@
 
     if(n && process.browser) {
         $notify = n
-        goto('login')
+        goto('/login')
     }
 
     let newUser
     let userText
 
-    let { session } = stores();
     let usernameInvalid = false
     let username = null
     let usernameError
@@ -146,8 +152,8 @@
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
         passwordInvalid = r.passwordInvalid
-        if (r.user) {
-            $session.user = await r.user
+        if (r.token) {
+            $session.token = await r.token
             $logged = true
             $isSideNavOpen = true
             goto('/')
@@ -189,21 +195,22 @@
         usernameInvalid=false
         passwordInvalid=false
         emailInvalid=false
-        const r = await post(`auth/join`, { email, username, password }).finally(
+        const r = await post('auth/join', { email, username, password }).finally(
             (r)=>{
                 joinLoading = false
                 return r
             }
         )
+        console.log(r)
         usernameInvalid = r.usernameInvalid
         usernameError = r.usernameError
         passwordInvalid = r.passwordInvalid
         passwordError = r.passwordError
-        if (r.user) {
-            $session.user = r.user
+        if (r.token) {
+            $session.token = r.token
             $logged = true
             $isSideNavOpen = true
-            goto('edit')
+            goto('/edit')
         }
     }
 </script>
@@ -213,18 +220,6 @@
 <svelte:head>
     <title>Login</title>
 </svelte:head>
-
-<Row noGutter>
-    <Column>
-        <Button
-            kind='ghost'
-            size='small'
-            on:click={toggleNewUser}
-        >
-            {userText}
-        </Button>
-    </Column>
-</Row>
 
 <Row noGutter>
     <Column>
@@ -291,13 +286,20 @@
                     <div on:click={join} {...props}>
                         <p>Join</p>
                         {#if joinLoading}
-                        <div class='right'>
-                            <InlineLoading />
-                        </div>
+                            <div class='right'>
+                                <InlineLoading />
+                            </div>
                         {/if}
                     </div>                
                 </Button>
             {/if}
+            <Button
+                kind='ghost'
+                size='small'
+                on:click={toggleNewUser}
+            >
+                {userText}
+        </Button>
     </ButtonSet>
     <!-- {#if resetPasswordRes}
         <br />

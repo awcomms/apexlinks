@@ -1,15 +1,19 @@
 <script context='module'>
-    import * as api from 'api'
-    export async function preload({params}){
-        let {username} = params
+    import * as api from '$lib/api'
+    export async function load({page}){
+        let {username} = page.params
         let user = await api.get(`users/${username}`)
-        if (user == '404')(
-            this.error(404, 'User not Found')
-        )
-        if (!user.visible)(
-            this.error(423, 'User not visible')
-        )
-        return {user}
+        if (user.error){
+            return {
+                status: user.status,
+                error: user.error
+            }
+        }
+        return {
+            props: {
+                user
+            }
+        }
     }
 </script>
 
@@ -25,10 +29,8 @@
     import Earth20 from 'carbon-icons-svelte/lib/Earth20'
     import Email20 from 'carbon-icons-svelte/lib/Email20'
     import Location20 from 'carbon-icons-svelte/lib/Location20'
-    import { stores } from '@sapper/app'
-    import {parseMarkdown} from 'utils'
-
-    let { session } = stores()
+    import { session } from '$app/stores'
+    import {parseMarkdown} from '$lib/utils'
 
     let about
     if (user.about) about = parseMarkdown(user.about)
@@ -75,11 +77,8 @@
             </div>
         {/if}
         <br />
-        {#if !user.items_empty}
-            <Link href='items/{user.id}'>Items</Link>
-        {/if}
-        {#if $session.user && $session.user.username == user.username}
-            <Link href='edit'>Edit</Link>
+        {#if !$session.token && !user.items_empty}
+            <Link href='/items/{user.id}'>Items</Link>
         {/if}
     </Column>
 </Row>

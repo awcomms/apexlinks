@@ -1,25 +1,31 @@
 <script context='module'>
-    export async function preload({params}, {}){
+    export async function load({ page }){
         let items = []
         let total = 0
         let pages = 0
-        let {id} = params
-        let tagString = JSON.stringify([])
+        let {id} = page.params
         let user = await api.get(`users/${id}`)
-        let url = `items?id=${id}&tags=${tagString}&page=1`
-        let res = await api.get(url)
-        if (res == '404'){
-            this.error(404, 'User not Found')
-        }
-        if (res == '423'){
-            this.error(423, 'User not visible')
+        let res = await api.get(`items?id=${id}`)
+        if (res.error){
+            return {
+                status: res.status,
+                error: res.error
+            }
         }
         if(Array.isArray(res.items)){
             items = res.items
             total = res.total
             pages = res.pages
         }
-        return {items, total, pages, user, id}
+        return {
+            props: {
+                items,
+                total,
+                pages,
+                user,
+                id
+            }
+        }
     }
 </script>
 
@@ -36,9 +42,9 @@
         Column,
         Row,
     } from 'carbon-components-svelte'
-    import Tag from "../../components/Tag.svelte";
-    import * as api from 'api'
-    import { goto } from '@sapper/app'
+    import Tag from "$lib/components/Tag.svelte";
+    import * as api from '$lib/api'
+    import { goto } from '$app/navigation'
 
     let page = 0
 
@@ -77,7 +83,7 @@
     <br/>
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={goto(`item/${item.id}`)} class='pointer item'>
+            <div on:click={goto(`/item/${item.id}`)} class='pointer item'>
                 {#if item.image}
                     <img style='vertical-align: top;' width='100%' alt='item display _image' src={item.image}>
                 {:else}
