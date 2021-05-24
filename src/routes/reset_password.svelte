@@ -28,7 +28,7 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation'
     import { notify } from '$lib/stores'
-    import { post } from 'utils.js'
+    import { post } from '$lib/utils'
 
     let password
     let password2
