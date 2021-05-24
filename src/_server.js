@@ -52,7 +52,6 @@ io(server).on('connection', (socket)=>{
   })
 
   socket.on('msg', (obj)=>{
-    console.log('message')
     socket.to(obj.id).emit('msg', obj)
     fetch('/send', {
       method: 'put',

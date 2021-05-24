@@ -43,7 +43,7 @@ export function getSession(request){
 export async function handle({ request, render}) {
     const cookies = cookie.parse(request.headers.cookie || '')
     const token = cookies.token
-    request.locals.token = token
+    request.locals.token = token || null
 
     if(request.headers['x-forwarded-proto'] === 'https' || NODE_ENV === 'development'){} 
     else {

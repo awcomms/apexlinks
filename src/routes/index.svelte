@@ -1,8 +1,12 @@
 <script context='module'>
     export async function load({page, session}){
-        let token = session.token
         let notify = page.query.notify
-        return {notify}
+        return {
+            props: {
+                notify,
+                token: session.token
+            }
+        }
     }
 </script>
 
@@ -35,7 +39,7 @@
     const get = async function(){
         let tagString = JSON.stringify($itemTags)
         let url = `items?tags=${tagString}&page=${page+1}`
-        let res = await api.get(url)
+        let res = await api.get(url, token)
         if(Array.isArray(res.items)){
             items = res.items
             total = res.total

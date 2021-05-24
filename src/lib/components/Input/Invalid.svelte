@@ -16,7 +16,6 @@
 
     onMount(()=>{
         if(focus) ref.focus()
-        console.log(ref.setSelectionRange)
         ref.setSelectionRange(selectionStart, selectionStart)
     })
 

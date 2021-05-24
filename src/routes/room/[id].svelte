@@ -1,9 +1,9 @@
 <script context='module'>
     import * as api from '$lib/api'
     export async function load({page, session}){
-        let user = session.user
+        let token = session.token
         const {id} = page.params
-        if(!user){
+        if(!token){
             return {
                 status: 302,
                 redirect: 'login'

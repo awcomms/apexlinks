@@ -1,9 +1,19 @@
 <script context='module'> 
-    export async function load{params}, {user}){
-        if(!user){
-            this.redirect('302', 'enter')
+    import * as api from '$lib/api'
+    export async function load({session}){
+        let token = session.token
+        if(token){
+            return {
+                status: 302,
+                redirect: '/login',
+            }
         }
-        return {user}
+        let user = await api.get('user', token)
+        return {
+            props: {
+                user
+            }
+        }
     }
 </script>
 
@@ -14,7 +24,6 @@
         Column
     } from 'carbon-components-svelte'
     import Tag from '$lib/components/Tag.svelte'
-    import * as api from '$lib/api'
     import { goto } from '$app/navigation'
     import {
         roomTags

@@ -1,6 +1,11 @@
 <script context='module'>
     import * as api from '$lib/api'
-    export async function load({page, session}){
+    export async function load({session, page}){
+        let user
+        let token = session.token
+        if (token){
+            user = await api.get('user', token)
+        }
         let {id} = page.params
         let item = await api.get(`items/${id}`)
         if(item.error){
@@ -11,6 +16,7 @@
         }
         return {
             props: {
+                user,
                 item
             }
         }
@@ -18,6 +24,7 @@
 </script>
 
 <script>
+    export let user
     export let item
     import {
         Row,
@@ -25,7 +32,6 @@
         Column,
     } from 'carbon-components-svelte'
     import {parseMarkdown} from '$lib/utils'
-    import { session } from '$app/stores'
     
     let itext
     if(item.itext){
@@ -51,7 +57,7 @@
             <p>{item.itype}</p>
         {/if} -->
         <Link href='/{item.user}'>User</Link>
-        {#if $session.user && $session.user.username == item.user}
+        {#if user && user.username == item.user}
             <Link href='/edit/{item.id}'>Edit</Link>
         {/if}
     </Column>

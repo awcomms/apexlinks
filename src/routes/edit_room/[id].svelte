@@ -1,14 +1,21 @@
 <script context='module'>
     import * as api from '$lib/api'
-    export async function load({ session }){
-        let user = session.user
-        let {id} = params
+    export async function load({ page, session }){
+        let token = session.token
+        let {id} = page.params
         let room = await api.get(`rooms/${id}`)
-        if (!user){
-            this.redirect(302, 'enter')
+        if (!token){
+            return {
+                status: 302,
+                redirect: '/login',
+            }
         }
+        let user = await api.get('user', token)
         if (!(room.user == user.username)){
-            this.error(401, 'Unauthorized')
+            return {
+                error: "You're not authorized to edit this room",
+                status: "401"
+            }
         }
         return {
             props: {

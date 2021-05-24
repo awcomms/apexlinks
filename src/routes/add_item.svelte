@@ -34,6 +34,7 @@
         FluidForm,
     } from 'carbon-components-svelte'
     import { goto } from '$app/navigation'
+    import { session } from '$app/stores'
     import * as api from '$lib/api'
 
     $: itype = initialCaps(itype)
@@ -47,7 +48,6 @@
     let itype
     let redirect
 
-    let token = user.token
     let tags = []
     let loading
     let image
@@ -71,7 +71,7 @@
             itype,
             itext
         }
-        let res = await api.post('items', data, token).finally(
+        let res = await api.post('items', data, $session.token).finally(
             (r)=>{
                 loading=false
                 return r

@@ -1,13 +1,22 @@
 <script context='module'>
     export async function load({page, session}){
-        let user = session.user
-        if(!user){
-            this.redirect('302', 'enter')
+        let token = session.token
+        if(!token){
+            return {
+                status: 302,
+                redirect: '/login',
+            }
         }
         let {id} = page.params
         let tagString = JSON.stringify([])
         let url = `xrooms?id=${id}&tags=${tagString}&page=1`
         let res = await api.get(url, user.token)
+        if (res.error){
+            return {
+                status: res.status,
+                error: res.error
+            }
+        }
         let rooms
         if (Array.isArray(res.items)) {
             rooms = res.items
@@ -16,13 +25,14 @@
         }
         let total = res.total
         let pages = res.pages
-        if (res == '401'){
-            this.redirect(302, 'enter')
+        return {
+            props: {
+                room,
+                total,
+                pages,
+                id
+            }
         }
-        if (res == '404'){
-            this.error(404, 'User not Found')
-        }
-        return {rooms, total, pages, id}
     }
 </script>
 

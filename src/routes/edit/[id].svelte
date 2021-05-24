@@ -1,8 +1,8 @@
 <script context='module'>
     import * as api from '$lib/api'
     export async function load({ page, session}){
-        let user = session.user
-        if (!user){
+        let token = session.token
+        if (!token){
             return {
                 status: 302,
                 redirect: '/login'
@@ -10,6 +10,7 @@
         }
         let {id} = page.params
         let item = await api.get(`items/${id}`)
+        let user = await api.get('user', token)
         return {
             props: { 
                 item,
@@ -20,7 +21,8 @@
 </script>
 
 <script>
-    export let item, user
+    export let item
+    export let user
     import { goto } from '$app/navigation'
     import {
         FluidForm,

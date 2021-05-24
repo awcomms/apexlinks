@@ -4,7 +4,7 @@
     import * as api from '$lib/api'
     export async function load({ page, session }) {
         let n = page.query.n
-        if (session.user) {
+        if (session.token) {
             return {
                 status: 302,
                 redirect: '/',
@@ -32,13 +32,9 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
-    import { isSideNavOpen, logged, notify } from '$lib/stores'
+    import { isSideNavOpen, notify } from '$lib/stores'
     import { post, checkEmail } from '$lib/utils'
     import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
-
-    // $: validateEmail(email)
-    // $: validatePassword(password)
-    // $: validateUsername(username)
 
     $: if(newUser) {
         userText = 'Login instead'
@@ -154,7 +150,6 @@
         passwordInvalid = r.passwordInvalid
         if (r.token) {
             $session.token = await r.token
-            $logged = true
             $isSideNavOpen = true
             goto('/')
         }
@@ -201,14 +196,12 @@
                 return r
             }
         )
-        console.log(r)
         usernameInvalid = r.usernameInvalid
         usernameError = r.usernameError
         passwordInvalid = r.passwordInvalid
         passwordError = r.passwordError
         if (r.token) {
             $session.token = r.token
-            $logged = true
             $isSideNavOpen = true
             goto('/edit')
         }
@@ -222,7 +215,11 @@
 </svelte:head>
 
 <Row noGutter>
-    <Column>
+    <Column sm={8} md={8} lg={8} xlg={8}>
+        <h1 id='head'>Apexlinks</h1>
+        <h2>List your business, products and services</h2>
+    </Column>
+    <Column sm={8} md={8} lg={8} xlg={8}>
         <FluidForm>
             {#if newUser}
                 <Input
@@ -249,58 +246,53 @@
                 bind:ref={passwordRef}
                 password
             />
+            <ButtonSet stacked>
+                {#if !newUser}
+                    <Button as let:props>
+                        <div on:click={login} {...props}>
+                            <p>Login</p>
+                            {#if loginLoading}
+                                <div class='right'>
+                                    <InlineLoading />
+                                </div>
+                            {/if}
+                        </div>
+                    </Button>
+                    <!-- <Button kind='ghost' as let:props>
+                        <div on:click={resetPassword} {...props}>
+                            <p>Reset Password</p>
+                            {#if resetPasswordLoading}
+                                <div class='right'>
+                                    <InlineLoading />
+                                </div>
+                            {/if}
+                        </div>                
+                    </Button> -->
+                {/if}
+                
+                {#if newUser}
+                    <Button as let:props>
+                        <div on:click={join} {...props}>
+                            <p>Join</p>
+                            {#if joinLoading}
+                                <div class='right'>
+                                    <InlineLoading />
+                                </div>
+                            {/if}
+                        </div>                
+                    </Button>
+                {/if}
+                <Button
+                    kind='ghost'
+                    size='small'
+                    on:click={toggleNewUser}
+                >
+                    {userText}
+                </Button>
+            </ButtonSet>
         </FluidForm>
     </Column>
-</Row>
-
-<Row noGutter>
     <Column>
-        <ButtonSet 
-            stacked
-        >
-            {#if !newUser}
-                <Button as let:props>
-                    <div on:click={login} {...props}>
-                        <p>Login</p>
-                        {#if loginLoading}
-                            <div class='right'>
-                                <InlineLoading />
-                            </div>
-                        {/if}
-                    </div>
-                </Button>
-                <!-- <Button kind='ghost' as let:props>
-                    <div on:click={resetPassword} {...props}>
-                        <p>Reset Password</p>
-                        {#if resetPasswordLoading}
-                            <div class='right'>
-                                <InlineLoading />
-                            </div>
-                        {/if}
-                    </div>                
-                </Button> -->
-            {/if}
-            
-            {#if newUser}
-                <Button as let:props>
-                    <div on:click={join} {...props}>
-                        <p>Join</p>
-                        {#if joinLoading}
-                            <div class='right'>
-                                <InlineLoading />
-                            </div>
-                        {/if}
-                    </div>                
-                </Button>
-            {/if}
-            <Button
-                kind='ghost'
-                size='small'
-                on:click={toggleNewUser}
-            >
-                {userText}
-        </Button>
-    </ButtonSet>
     <!-- {#if resetPasswordRes}
         <br />
         <p>{resetPasswordRes}</p>
@@ -309,6 +301,13 @@
 </Row>
 
 <style>
+    @font-face {
+        font-family: round;
+        src: url(junegull.ttf) format('ttf');
+    }
+    #head {
+        font-family: round;
+    }
     .right {
         float: right;
     }

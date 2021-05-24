@@ -1,3 +1,4 @@
+import * as api from '$lib/api'
 import marked from 'marked'
 import { link_renderer } from '@sveltejs/site-kit/utils/markdown.js';
 import { highlight } from './highlight';

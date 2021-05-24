@@ -26,7 +26,7 @@ function send({ method, path, data, token }) {
 				text: await r.text()
 			}
 		})
-		.then((res) => {
+		.then((res)=>{
 			try {
 				let json = JSON.parse(res.text)
 				if(json.error && !json.status){
@@ -36,6 +36,8 @@ function send({ method, path, data, token }) {
 			} catch (err) {
 				return res.text
 			}
+		}).catch((err)=>{
+			return
 		})
 }
 

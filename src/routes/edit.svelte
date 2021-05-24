@@ -4,12 +4,10 @@
     import * as api from '$lib/api.js';
     export async function load({ session }) {
         let token = session.token
-        if (token){
+        if (!token){
             return {
-                redirect: {
-                    status: 302,
-                    to: 'login'
-                }
+                status: 302,
+                redirect: '/login'
             }
         }
         let user = await api.get('user', token)
@@ -105,7 +103,7 @@
 
     const edit=async()=>{
         loading = true
-        if(!abslink.test(website)){
+        if(website && !abslink.test(website)){
             websiteInvalid = true
             editLoading = false
             return

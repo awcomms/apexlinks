@@ -1,13 +1,17 @@
 <script context="module">
     export async function load({ session }) {
-        if (!session.token) {
+        let token = session.token
+        if (!token) {
             return {
                 status: 302,
-                redirect: '/enter'
+                redirect: '/login'
             }
-            this.redirect(302, `enter`);
         }
-        return { token }
+        return {
+            props: {
+                user
+            }
+        }
     }
 </script>
 
@@ -23,8 +27,7 @@
         FluidForm,
         InlineLoading
     } from 'carbon-components-svelte'
-    import Exit16 from 'carbon-icons-svelte/lib/Exit16'
-    import {open, username, context} from '$lib/stores'
+    import {open, context} from '$lib/stores'
     import { goto } from '$app/navigation'
     import * as api from '$lib/api'
 

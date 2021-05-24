@@ -1,11 +1,11 @@
+closure
+
 svelte-kit prefetch to all links
 
 subscribe button alert icon
 paystackPop
 button input
 attach media to room message
-
-init $logged as false
 
 user-edit
     check username

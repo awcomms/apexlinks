@@ -1,8 +1,12 @@
 <script context='module'>
     import * as api from '$lib/api'
-    export async function load{}, {user}){
-        if(!user){
-            this.redirect(302, 'enter')
+    export async function load({session}){
+        let token = session.token
+        if(!token){
+            return {
+                status: 302,
+                redirect: '/login'
+            }
         }
         let rooms
         let {items, total, page} = await api.get('xrooms', user.token) || {}
@@ -11,7 +15,14 @@
         } else {
             rooms = []
         }
-        return {rooms, total, page, user}
+        return {
+            props: {
+                rooms,
+                total,
+                page,
+                user
+            }
+        }
     }
 </script>
 

@@ -1,13 +1,13 @@
 <svelte:window on:appinstalled={installed} on:beforeinstallprompt={before} />
 
 <script>
-  import * as api from '../api'
-  import url8 from '../url8'
-  import { post } from '../utils.js'
+  import * as api from '$lib/api'
+  import url8 from '$lib/url8'
+  import { post } from '$lib/utils.js'
   import { goto } from '$app/navigation'
   import { page, session, navigating } from '$app/stores'
   import SideNavLink from './SideNavLink.svelte'
-  import { isSideNavOpen, logged } from '$lib/stores'
+  import { isSideNavOpen } from '$lib/stores'
   import {
     InlineLoading,
     SkipToContent,
@@ -17,13 +17,17 @@
     Header,
   } from "carbon-components-svelte"
 
+  let user
   let show
   let installRef
   let installPrompt
   $isSideNavOpen = false
-
   let token = $session.token
-  let user = await api.get('user', token)
+
+  const getUser=async()=>{
+    user = await api.get('user', token)
+  }
+  getUser()
 
   const installed=()=>{
     show=false
@@ -42,10 +46,6 @@
             show = false
           }
         })
-  }
-
-  if (token){
-    $logged = true
   }
 
   const prompt=()=>{
@@ -85,10 +85,9 @@
   //   }
   // }
 
-  const exit = async()=>{
-    await post(`auth/exit`)
-    token = null
-    $logged=false
+  const exit=async()=>{
+    $session.token = null
+    await post('/auth/exit')
     goto('/login')
   }
 </script>
@@ -110,13 +109,13 @@
 
 <SideNav bind:isOpen={$isSideNavOpen}>
   <SideNavItems>
-    {#if !user || !$logged}
+    {#if !user}
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
       <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/login'/>
     {/if}
-    {#if user && $logged}
+    {#if user}
       <SideNavMenu text='Rooms'>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'rooms' ? true : false} href='/rooms' text='All rooms'/>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'my_rooms' ? true : false} href='/my_rooms' text='My rooms'/>

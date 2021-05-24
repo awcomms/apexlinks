@@ -5,8 +5,6 @@
     export let selectionStart
     export let password = ''
 
-    $: console.log(value)
-
     $: if(typeof window !== 'undefined') {
         if(ref && document.activeElement !== ref){
             ref.focus()
