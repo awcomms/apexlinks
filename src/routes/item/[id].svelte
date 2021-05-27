@@ -32,6 +32,8 @@
         Column,
     } from 'carbon-components-svelte'
     import {parseMarkdown} from '$lib/utils'
+
+    item.fields = item.fields || []
     
     let itext
     if(item.itext){
@@ -48,14 +50,20 @@
     <Column lg={4} sm={4} md={4} xlg={4}>
         {#if item.name}
             {#if item.redirect && item.link}
-                <p style='font-weight: 600;'><a class='blank-link' href={item.link || ''}>{item.name}</a></p>
+                <p class='bold'><a class='blank-link' href={item.link || ''}>{item.name}</a></p>
             {:else}
-                <p style='font-weight: 600;'>{item.name}</p>
+                <p class='bold'>{item.name}</p>
             {/if}
         {/if}
         <!-- {#if item.itype}
             <p>{item.itype}</p>
         {/if} -->
+        {#each item.fields as field}
+            <div>
+                <span class='bold'>{field.label}: </span>
+                <span>{field.value}</span>
+            </div>
+        {/each}
         <Link href='/{item.user}'>User</Link>
         {#if user && user.username == item.user}
             <Link href='/edit/{item.id}'>Edit</Link>
@@ -74,6 +82,9 @@
 {/if}
 
 <style>
+    .bold {
+        font-weight: 600;
+    }
     .blank-link {
         text-decoration: none;
     }

@@ -12,6 +12,7 @@ const c = [
 	() => import("../../../src/routes/login.svelte"),
 	() => import("../../../src/routes/rooms/[id].svelte"),
 	() => import("../../../src/routes/rooms.svelte"),
+	() => import("../../../src/routes/users.svelte"),
 	() => import("../../../src/routes/beee.svelte"),
 	() => import("../../../src/routes/edit/[id].svelte"),
 	() => import("../../../src/routes/edit.svelte"),
@@ -57,6 +58,9 @@ export const routes = [
 	// src/routes/rooms.svelte
 	[/^\/rooms\/?$/, [c[0], c[12]], [c[1]]],
 
+	// src/routes/users.svelte
+	[/^\/users\/?$/, [c[0], c[13]], [c[1]]],
+
 	// src/routes/auth/login.js
 	[/^\/auth\/login\/?$/],
 
@@ -67,25 +71,25 @@ export const routes = [
 	[/^\/auth\/join\/?$/],
 
 	// src/routes/beee.svelte
-	[/^\/beee\/?$/, [c[0], c[13]], [c[1]]],
+	[/^\/beee\/?$/, [c[0], c[14]], [c[1]]],
 
 	// src/routes/edit/[id].svelte
-	[/^\/edit\/([^/]+?)\/?$/, [c[0], c[14]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/edit\/([^/]+?)\/?$/, [c[0], c[15]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/edit.svelte
-	[/^\/edit\/?$/, [c[0], c[15]], [c[1]]],
+	[/^\/edit\/?$/, [c[0], c[16]], [c[1]]],
 
 	// src/routes/item/[id].svelte
-	[/^\/item\/([^/]+?)\/?$/, [c[0], c[16]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/item\/([^/]+?)\/?$/, [c[0], c[17]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/room/[id].svelte
-	[/^\/room\/([^/]+?)\/?$/, [c[0], c[17]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/room\/([^/]+?)\/?$/, [c[0], c[18]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/test.svelte
-	[/^\/test\/?$/, [c[0], c[18]], [c[1]]],
+	[/^\/test\/?$/, [c[0], c[19]], [c[1]]],
 
 	// src/routes/[username].svelte
-	[/^\/([^/]+?)\/?$/, [c[0], c[19]], [c[1]], (m) => ({ username: d(m[1])})]
+	[/^\/([^/]+?)\/?$/, [c[0], c[20]], [c[1]], (m) => ({ username: d(m[1])})]
 ];
 
 export const fallback = [c[0](), c[1]()];

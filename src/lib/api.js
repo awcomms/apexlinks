@@ -6,8 +6,6 @@ export let base
 if (process.env.NODE_ENV === 'development') {base=local} else {base=live}
 
 function send({ method, path, data, token }) {
-	// const fetch = process.browser ? window.fetch : require('node-fetch').default;
-
 	const opts = { method, headers: {} };
 
 	if (data) {

@@ -22,8 +22,7 @@
 <script>
     export let user
     import {pk_test} from '$lib/vars'
-    import { session } from '$app/stores'
-    import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation'
     import {
         InlineLoading,
         FluidForm,
@@ -70,6 +69,7 @@
     let phone = user.phone
     let about = user.about
     let token = user.token
+    let data = user.data
     let name = user.name
     let tags = user.tags || []
 
@@ -132,7 +132,7 @@
             loading = false
             return
         }
-        let data = {
+        let dt = {
             show_email,
             username,
             visible,
@@ -142,10 +142,11 @@
             phone,
             about,
             image,
+            data,
             tags,
             name,
         } 
-        let res = await api.put('users', data, token).finally(
+        let res = await api.put('users', dt, token).finally(
             (r)=>{
                 loading = false
                 return r

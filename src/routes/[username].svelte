@@ -77,9 +77,9 @@
             </div>
         {/if}
         <br />
-        {#if !$session.token && !user.items_empty}
+        <!-- {#if } -->
             <Link href='/items/{user.id}'>Items</Link>
-        {/if}
+        <!-- {/if} -->
     </Column>
 </Row>
 

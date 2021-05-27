@@ -26,7 +26,7 @@
 </script>
 
 {#if password}
-    <PasswordInput on:input={set} on:change bind:value bind:ref {...$$restProps} invalid />
+    <PasswordInput on:input={set} on:input bind:value bind:ref {...$$restProps} invalid />
 {:else}
-    <TextInput on:input={set} on:change bind:value bind:ref {...$$restProps} invalid />
+    <TextInput on:input={set} on:input bind:value bind:ref {...$$restProps} invalid />
 {/if}

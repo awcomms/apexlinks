@@ -27,9 +27,9 @@
     import {
         FluidForm,
         ButtonSet,
-        TextInput,
         Checkbox,
         TextArea,
+        TextInput,
         Column,
         Button,
         Modal,
@@ -38,6 +38,7 @@
     import {initialCaps} from '$lib/utils'
     import Tag from '$lib/components/Tag.svelte'
     import Image from '$lib/components/Image.svelte'
+    import Fields from '$lib/components/Fields/Fields.svelte'
     import Input from '$lib/components/Input/Input.svelte'
     import { abslink } from '$lib/utils'
 
@@ -48,12 +49,12 @@
 
     let itext = item.itext
     let visible = item.visible
-    let images = item.images
     let redirect = item.redirect
     let price = item.price
     let link = item.link
     let itype = item.itype
     let image = item.image
+    let fields = item.fields || []
     let name = item.name
     let tags = item.tags
 
@@ -104,6 +105,7 @@
             link,
             redirect,
             visible,
+            fields,
             price,
             itype,
             name,
@@ -160,7 +162,8 @@
                 bind:invalid={nameInvalid}
                 invalidText='Name taken'
             />
-            <!-- <TextInput labelText="Item type" bind:value={itype} /> -->
+            <Fields pin bind:fields />
+            <TextInput labelText="Item type" bind:value={itype} />
             <Checkbox bind:checked={redirect} 
                 labelText="Let the item's listing redirect to a link" />
             {#if redirect}

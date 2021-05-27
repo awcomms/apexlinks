@@ -91,6 +91,16 @@
                 {/if}
                 <div class='label'>
                     <h4>{item.name}</h4>
+                    {#if item.fields}
+                        {#each item.fields as field}
+                            {#if item.pinned}
+                                <div>
+                                    <span class='bold'>{field.label}: </span>
+                                    <span>{field.value}</span>
+                                </div>
+                            {/if}
+                        {/each}
+                    {/if}
                     <!-- {#if item.itype}
                         <p class='bx--link--sm'>{item.itype}</p>
                     {/if} -->

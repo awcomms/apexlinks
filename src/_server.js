@@ -9,7 +9,7 @@ const fetch = require('node-fetch')
 const webPush = require('web-push')
 const express = require('express')
 
-const { PORT, NODE_ENV} = process.env;
+const { PORT, NODE_ENV} = process.env
 const server = http.createServer()
 
 

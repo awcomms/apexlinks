@@ -1,10 +1,15 @@
 <script context='module'>
-    export async function load({page, session}){
-        let notify = page.query.notify
+    export async function load({session}){
+        let token = session.token
+        if (!token){
+            return {
+                status: 302,
+                redirect: '/login'
+            }
+        }
         return {
             props: {
-                notify,
-                token: session.token
+                token
             }
         }
     }
@@ -12,25 +17,22 @@
 
 <script>
     export let token
-    export let notify
 
     import {
         Row,
-        Modal,
         Column,
         PaginationNav,
     } from 'carbon-components-svelte'
     import * as api from '$lib/api'
     import {
-        itemTags
+        userTags
     } from '$lib/stores'
-    import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
 
     $: if (got) get(page)
 
-    let items = []
+    let users = []
     let page = 0
     let total = 0
     let pages = 0
@@ -38,11 +40,11 @@
     let got
 
     const get = async function(){
-        let tagString = JSON.stringify($itemTags)
-        let url = `items?tags=${tagString}&page=${page+1}`
+        let tagString = JSON.stringify($userTags)
+        let url = `users?tags=${tagString}&page=${page+1}`
         let res = await api.get(url, token)
-        if(Array.isArray(res.items)){
-            items = res.items
+        if(Array.isArray(res.users)){
+            users = res.items
             total = res.total
             pages = res.pages
             got = true
@@ -50,34 +52,27 @@
     }
 </script>
 
-{#if notify == 'resetSuccess'}
-    <ResetSuccess />
-{/if}
-
 <svelte:head>
     <title>Apexlinks</title>
 </svelte:head>
 
-<Tag on:change={get} placeholder='Search' bind:tags={$itemTags} />    
+<Tag on:change={get} placeholder='Search' bind:tags={$userTags} />    
 
-{#each items as item}
+{#each users as user}
     <br />
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={goto(`/item/${item.id}`)} class='pointer item'>
-                {#if item.image}
-                    <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={item.image}>
+            <div on:click={goto(`/${user.username}`)} class='pointer user'>
+                {#if user.image}
+                    <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={user.image}>
                 {:else}
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src='/placeholder.png'>
                 {/if}
                 <div class='label'>
-                    <h4>{item.name}</h4>
-                    {#if item.user}
-                        <p class='bx--link--sm'>{item.user}</p>
+                    <h4>{user.name}</h4>
+                    {#if user.username}
+                        <p class='bx--link--sm'>{user.username}</p>
                     {/if}
-                    <!-- {#if item.itype}
-                        <p class='bx--link--sm'>{item.itype}</p>
-                    {/if} -->
                 </div>
             </div>
         </Column>
@@ -104,7 +99,7 @@
     .label {
         padding-left: 0.5rem
     }
-    .item {
+    .user {
         display: flex;
         flex-direction: row;
     }
