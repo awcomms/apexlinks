@@ -12,19 +12,12 @@
         field = field.dirty
     }
 
-    const startEdit=(field)=>{
-        field.edit = true
-        field.dirty = field
-    }
-
     const edit=(field)=>{
         if (fields.find(f => f.label == field.label && f !== field)) {
-            console.log('find')
             field.invalid = true
             field.invalidText = 'A field with that label already exists'
             return
         }
-        console.log('s')
         field.new = false
         field.edit = false
     }
@@ -34,6 +27,9 @@
     }
 
     const add=()=>{
+        fields.forEach((field)=>{
+            field.focused = false
+        })
         let field = {
             pinned: false,
             ref: null,
@@ -47,7 +43,12 @@
 </script>
 
 {#each fields as field}
-    <Field on:startEdit={startEdit(field)} on:cancel={cancel(field)} on:del={del(field)} on:edit={edit(field)} {pin} bind:field />
+    <Field
+        on:del={del(field)}
+        bind:field
+        on:enter
+        {pin}
+    />
 {/each}
 
 <div>

@@ -1,4 +1,5 @@
 <script>
+    export let ref
     export let value = ''
     export let invalid = false
 
@@ -15,6 +16,7 @@
 </script>
 
 <svelte:component 
+    bind:ref
     this={current}
     {...$$restProps}
     bind:value 

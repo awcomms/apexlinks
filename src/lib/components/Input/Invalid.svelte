@@ -1,4 +1,5 @@
 <script>
+    export let ref
     export let value = ''
     export let password = ''
 
@@ -9,7 +10,15 @@
 </script>
 
 {#if password}
-    <PasswordInput bind:value {...$$restProps} />
+    <PasswordInput
+        bind:ref
+        bind:value
+        {...$$restProps}
+    />
 {:else}
-    <TextInput bind:value {...$$restProps} />
+    <TextInput
+        bind:ref
+        bind:value
+        {...$$restProps}
+    />
 {/if}

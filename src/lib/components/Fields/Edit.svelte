@@ -8,12 +8,20 @@
     import Close16 from 'carbon-icons-svelte/lib/Close16'
     import Checkmark16 from 'carbon-icons-svelte/lib/Checkmark16'
 
-    import { createEventDispatcher } from 'svelte'
+    import {
+        onMount
+    } from 'svelte'
 
-    const dispatch = createEventDispatcher()
+    onMount(()=>{
+        if(ref) ref.focus()
+        field.focused = true
+    })
+
+    let ref
 </script>
 
 <Input
+    bind:ref
     labelText='Label'
     bind:value={field.label}
     bind:invalid={field.invalid}

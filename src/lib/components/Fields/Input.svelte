@@ -7,12 +7,20 @@
     import Input from '$lib/components/Input/Input.svelte'    
     import Edit16 from 'carbon-icons-svelte/lib/Edit16'
 
-    import { createEventDispatcher } from 'svelte'
+    import {
+        onMount
+    } from 'svelte'
 
-    const dispatch = createEventDispatcher()
+    onMount(()=>{
+        if(ref) ref.focus()
+        field.focused = true
+    })
+
+    let ref
 </script>
 
 <Input
+    bind:ref
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}

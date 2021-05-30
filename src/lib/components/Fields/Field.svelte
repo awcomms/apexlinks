@@ -1,3 +1,5 @@
+<svelte:window on:keydown={keydown} />
+
 <script>
     export let pin
     export let field
@@ -11,18 +13,37 @@
     import Pin from '$lib/components/Pin/Pin.svelte'
     import { createEventDispatcher } from 'svelte'
 
-    const dispatch = createEventDispatcher()
-
-    let current
-
     $: if (field.edit) {
         current = Edit
     } else if (!field.edit) {
         current = Input
     }
+
+    const dispatch = createEventDispatcher()
+
+    let current
+
+    const keydown=(e)=>{
+        switch(e.keyCode){
+            case 13:
+                if (field.focused){
+                    if(field.edit){
+                        field.edit = false
+                    } else if(!field.edit) {
+                        dispatch('enter')
+                    }
+                }
+        }
+    }
 </script>
 
-<svelte:component this={current} on:startEdit on:cancel on:edit on:del bind:field />
+<svelte:component
+    this={current}
+    on:cancel
+    on:edit
+    on:del 
+    bind:field
+/>
 
 <Button
     iconDescription='Delete'
