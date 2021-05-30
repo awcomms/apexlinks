@@ -1,4 +1,6 @@
 <script>
+    export let button
+    
     /**
      * Set the size of the input
      * @type {"sm" | "xl"}
@@ -174,16 +176,18 @@
           on:focus
           on:blur
         />
-        <button
-            type="button"
-            aria-label="createFilter"
-            disabled="{createDisabled}"
-            class:bx--search-close="{true}"
-            class:bx--search-close--hidden="{createHidden}"
-            on:click={()=>{dispatch('iconClick')}}
-        >
-            <svelte:component this="{size === 'xl' ? Filter20 : Filter16}" />
-        </button>
+        {#if button}
+          <button
+              type="button"
+              aria-label="createFilter"
+              disabled="{createDisabled}"
+              class:bx--search-close="{true}"
+              class:bx--search-close--hidden="{createHidden}"
+              on:click={()=>{dispatch('iconClick')}}
+          >
+              <svelte:component this="{size === 'xl' ? Filter20 : Filter16}" />
+          </button>
+        {/if}
         {#if isFluid}
           <hr class:bx--text-input__divider="{true}" />
         {/if}

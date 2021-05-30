@@ -74,7 +74,8 @@
     bind:tags={$itemTags}
     placeholder='Search'
     icon={Filter16}
-    on:change={get} 
+    on:change={get}
+    button
 />    
 
 {#each items as item}

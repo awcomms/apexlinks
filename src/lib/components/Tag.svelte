@@ -1,4 +1,5 @@
 <script>
+    export let button
     export let tags = []
     export let is_focused = false
     import { createEventDispatcher } from 'svelte'
@@ -78,6 +79,7 @@
             bind:value
             placeholder={tags.length > 0 ? `${tags.length} ${tags.length > 1 ? 'tags' : 'tag'}` : 'Add tag'}
             {...$$restProps}
+            {button}
         />
         <slot />
     </Column>
