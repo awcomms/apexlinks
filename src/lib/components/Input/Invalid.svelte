@@ -1,32 +1,15 @@
 <script>
-    export let ref
     export let value = ''
-    export let focus = true
     export let password = ''
-    export let invalid
-    export let selectionStart
-    export let autoValidate
 
     import {
         PasswordInput,
         TextInput
     } from 'carbon-components-svelte'
-    import { onMount } from 'svelte'
-
-
-    onMount(()=>{
-        if(focus) ref.focus()
-        ref.setSelectionRange(selectionStart, selectionStart)
-    })
-
-    let set=(e)=>{
-        if(autoValidate) invalid = false
-        selectionStart = e.target.selectionStart
-    }
 </script>
 
 {#if password}
-    <PasswordInput on:input={set} on:input bind:value bind:ref {...$$restProps} invalid />
+    <PasswordInput bind:value {...$$restProps} />
 {:else}
-    <TextInput on:input={set} on:input bind:value bind:ref {...$$restProps} invalid />
+    <TextInput bind:value {...$$restProps} />
 {/if}

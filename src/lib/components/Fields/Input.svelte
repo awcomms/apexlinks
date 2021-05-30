@@ -13,7 +13,6 @@
 </script>
 
 <Input
-    bind:ref={field.ref}
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}
@@ -21,9 +20,10 @@
     />
 
 <Button
+    iconDescription='Edit'
     hasIconOnly
     kind='ghost'
     size='field'
     icon={Edit16}
-    on:click={()=>{dispatch('startEdit')}}
+    on:click={()=>{field.dirty=field; field.edit=true}}
 />

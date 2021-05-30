@@ -1,6 +1,7 @@
 <script>
+    export let prompt = 'Add Custom Field'
     export let pin = false
-    export let fields
+    export let fields = []
 
     import {
         Button
@@ -12,16 +13,18 @@
     }
 
     const startEdit=(field)=>{
+        field.edit = true
         field.dirty = field
     }
 
     const edit=(field)=>{
-        console.log(true)
         if (fields.find(f => f.label == field.label && f !== field)) {
+            console.log('find')
             field.invalid = true
             field.invalidText = 'A field with that label already exists'
             return
         }
+        console.log('s')
         field.new = false
         field.edit = false
     }
@@ -47,4 +50,6 @@
     <Field on:startEdit={startEdit(field)} on:cancel={cancel(field)} on:del={del(field)} on:edit={edit(field)} {pin} bind:field />
 {/each}
 
-<Button on:click={add}>Add Custom Field</Button>
+<div>
+    <Button on:click={add}>{prompt}</Button>
+</div>

@@ -6,6 +6,7 @@
 </script>
 
 <Button
+    iconDescription='Pin field'
     hasIconOnly
     kind='ghost'
     size='field'

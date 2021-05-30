@@ -6,6 +6,7 @@
 </script>
 
 <Button
+    iconDescription='Unpin field'
     hasIconOnly
     kind='ghost'
     size='field'

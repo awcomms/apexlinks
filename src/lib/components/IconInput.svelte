@@ -62,14 +62,14 @@
     /** Set to `true` to use inline version */
     export let inline = false;
 
-    // export let createDisabled = false;
-    // export let createHidden = false;
+    export let createDisabled = false;
+    export let createHidden = false;
 
     import { getContext } from "svelte";
     import WarningFilled16 from "carbon-icons-svelte/lib/WarningFilled16/WarningFilled16.svelte";
     import WarningAltFilled16 from "carbon-icons-svelte/lib/WarningAltFilled16/WarningAltFilled16.svelte";
-    import TagGroup16 from "carbon-icons-svelte/lib/TagGroup16/TagGroup16.svelte";
-    import TagGroup20 from "carbon-icons-svelte/lib/TagGroup20/TagGroup20.svelte";
+    import Filter16 from "carbon-icons-svelte/lib/Filter16/Filter16.svelte";
+    import Filter20 from "carbon-icons-svelte/lib/Filter20/Filter20.svelte";
     import {createEventDispatcher} from 'svelte';
 
     const dispatch = createEventDispatcher()
@@ -174,16 +174,16 @@
           on:focus
           on:blur
         />
-        <!-- <button
+        <button
             type="button"
-            aria-label="createTagGroup"
+            aria-label="createFilter"
             disabled="{createDisabled}"
             class:bx--search-close="{true}"
             class:bx--search-close--hidden="{createHidden}"
-            on:click
+            on:click={()=>{dispatch('iconClick')}}
         >
-            <svelte:component this="{size === 'xl' ? TagGroup20 : TagGroup16}" />
-        </button> -->
+            <svelte:component this="{size === 'xl' ? Filter20 : Filter16}" />
+        </button>
         {#if isFluid}
           <hr class:bx--text-input__divider="{true}" />
         {/if}

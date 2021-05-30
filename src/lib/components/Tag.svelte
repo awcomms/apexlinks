@@ -1,16 +1,13 @@
 <script>
     export let tags = []
-    export let tagGroups = []
     export let is_focused = false
     import { createEventDispatcher } from 'svelte'
-    import TagInput from './IconInput.svelte'
-    import { onMount } from 'svelte'
+    import IconInput from './IconInput.svelte'
     import {
         Tag,
         Row,
         Column,
     } from 'carbon-components-svelte'
-    import { session } from '$app/stores'
 
     $: if(ref && is_focused) ref.focus()
 
@@ -79,11 +76,11 @@
 
 <Row noGutter>
     <Column xlg={4} lg={4} md={4} sm={4}>
-        <TagInput 
+        <IconInput
             bind:ref 
             on:focus={focus}
-            on:click={toggleTagGroup}
-            on:blur={blur} 
+            on:iconClick
+            on:blur={blur}
             bind:value
             placeholder={tags.length > 0 ? `${tags.length} ${tags.length > 1 ? 'tags' : 'tag'}` : 'Add tag'}
             {...$$restProps}

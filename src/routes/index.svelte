@@ -16,19 +16,23 @@
 
     import {
         Row,
-        Modal,
         Column,
         PaginationNav,
     } from 'carbon-components-svelte'
     import * as api from '$lib/api'
     import {
+        itemFields,
         itemTags
     } from '$lib/stores'
+    import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
+    import Filters from '$lib/components/Filters.svelte';
 
     $: if (got) get(page)
+
+    let filtersOpen
 
     let items = []
     let page = 0
@@ -39,7 +43,8 @@
 
     const get = async function(){
         let tagString = JSON.stringify($itemTags)
-        let url = `items?tags=${tagString}&page=${page+1}`
+        let fieldString = JSON.stringify($itemFields)
+        let url = `items?fields=${fieldString}&$tags=${tagString}&page=${page+1}`
         let res = await api.get(url, token)
         if(Array.isArray(res.items)){
             items = res.items
@@ -58,7 +63,19 @@
     <title>Apexlinks</title>
 </svelte:head>
 
-<Tag on:change={get} placeholder='Search' bind:tags={$itemTags} />    
+<Filters
+    bind:fields={$itemFields}
+    bind:open={filtersOpen}
+    on:search={get}
+/>
+
+<Tag 
+    on:iconClick={()=>{filtersOpen=!filtersOpen}} 
+    bind:tags={$itemTags}
+    placeholder='Search'
+    icon={Filter16}
+    on:change={get} 
+/>    
 
 {#each items as item}
     <br />
@@ -75,9 +92,9 @@
                     {#if item.user}
                         <p class='bx--link--sm'>{item.user}</p>
                     {/if}
-                    <!-- {#if item.itype}
+                    {#if item.itype}
                         <p class='bx--link--sm'>{item.itype}</p>
-                    {/if} -->
+                    {/if}
                 </div>
             </div>
         </Column>

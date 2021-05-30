@@ -10,7 +10,7 @@ function simpleStore() {
 }
 
 export const to = simpleStore()
-export const selectionStart = simpleStore()
+export const itemFields = simpleStore()
 export const username = simpleStore()
 export const notify = simpleStore()
 export const sort = simpleStore()

@@ -42,6 +42,7 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { abslink } from '$lib/utils'
 
+    $: console.log(fields)
     $: validateLink(link)
     $: itype = initialCaps(itype)
 
@@ -92,6 +93,7 @@
     }
 
     const edit=async()=>{
+        console.log('edit')
         editLoading = true
         if(redirect && !abslink.test(link)){
             linkInvalid = true
@@ -113,12 +115,15 @@
         }
         let res = await api.put('items', data, user.token).finally(
             (r)=>{
+                console.log('r')
                 editLoading = false
                 return r
             }
         )
+        console.log(res)
         if (res.nameError) {
             nameInvalid = true
+            nameError = res.nameError
         }
         if (res.id){
             goto(`/item/${res.id}`)
