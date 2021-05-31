@@ -1,6 +1,6 @@
 import * as cookie from 'cookie'
 import {minify} from 'html-minifier'
-import { env, prerendering } from '$app/env'
+import { dev, prerendering } from '$app/env'
 
 const min_opts = {
     collapseBooleanAttributes: true,
