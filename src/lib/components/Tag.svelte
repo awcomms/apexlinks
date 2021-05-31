@@ -1,5 +1,5 @@
 <script>
-    export let button
+    export let button = false
     export let tags = []
     export let is_focused = false
     import { createEventDispatcher } from 'svelte'

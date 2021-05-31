@@ -1,5 +1,5 @@
 <script>
-    export let field
+    export let field = {}
 
     import {
         Button

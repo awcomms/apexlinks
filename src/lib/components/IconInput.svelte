@@ -1,5 +1,5 @@
 <script>
-    export let button
+    export let button = false
     
     /**
      * Set the size of the input

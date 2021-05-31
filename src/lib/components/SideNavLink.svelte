@@ -1,6 +1,6 @@
 <script>
-    export let href
-    export let text
+    export let href = ''
+    export let text = ''
     import { isSideNavOpen } from '$lib/stores'
     import { SideNavLink } from 'carbon-components-svelte'
 

@@ -18,7 +18,7 @@
 </script>
 
 <script>
-    export let user
+    export let user = {}
     import {
         Column,
         Link,

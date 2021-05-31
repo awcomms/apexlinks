@@ -16,7 +16,7 @@
 </script>
 
 <script>
-    export let token
+    export let token = ''
     import Input from '$lib/components/Input/Input.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {

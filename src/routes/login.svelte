@@ -19,7 +19,7 @@
 </script>
     
 <script>
-    export let n
+    export let n = ''
 
     import {
         Row,

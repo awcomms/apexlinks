@@ -1,3 +1,5 @@
+<svelte:window on:keydown={keydown} />
+
 <script context="module">
     import * as api from '$lib/api.js';
     export async function load({ session }) {
@@ -22,13 +24,11 @@
         }
     }
 </script>
-
-<svelte:window on:keydown={keydown} />
-
+    
 <script>
-    export let user = {}
-    import { goto } from '$app/navigation';
+    export let user
     import { pk_test } from '$lib/vars';
+    import { goto } from '$app/navigation';
     import {
         InlineLoading,
         FluidForm,
@@ -38,19 +38,22 @@
         Button,
         Column,
         Row,
-    } from 'carbon-components-svelte'
-    import { dev } from '$app/env'
-    import Paystack from '$lib/components/Paystack.svelte'
+    } from 'carbon-components-svelte';
     import Input from '$lib/components/Input/Input.svelte'
     import Image from '$lib/components/Image.svelte'
     import Tag from '$lib/components/Tag.svelte'
+    import Paystack from '$lib/components/Paystack.svelte'
     import { 
         checkEmail,
         abslink 
     } from '$lib/utils'
 
+    $: checkUsername(username)
+
+    $: if(username) username = username.toLowerCase()
+    $: if(email) email = email.toLowerCase()
+
     let config = {
-        key: dev ? pk_test : process.env.PAYSTACK,
         email: user.email,
         metadata: {
             id: user.id
@@ -78,14 +81,16 @@
     let usernameInvalid
     let usernameError
 
-    let websiteError = 'Add a url scheme to the link, something like "http://, at the beginning'
     let websiteInvalid
+    let websiteError
 
     let emailInvalid
     let emailError
 
     let loading
 
+    let linkError = 'Add a url scheme to the link, something like "http://, at the beginning'
+    
     const keydown=(e)=>{
         switch(e.keyCode){
             case 13:
@@ -120,14 +125,6 @@
             loading = false
             return
         }
-        if(username !== user.username){
-            if(await api.get(`check_username/${username}`).then(r => !r.res)){
-                usernameInvalid = true
-                usernameError = 'Username taken'
-                loading = false
-                return
-            }
-        }
         if (checkEmail(username)){
             usernameInvalid = true
             usernameError = 'Unaccepted'
@@ -160,8 +157,11 @@
     }
 </script>
 
-<Paystack {config} />
+<svelte:head>
+    <title>Edit</title>
+</svelte:head>
 
+<Paystack {config} />
 <Image bind:image>
     {#if user.paid}
         <Button
@@ -238,4 +238,4 @@
     .right {
         float: right;
     }
-</style>
+</style> -->

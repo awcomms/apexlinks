@@ -2,7 +2,8 @@
 
 <script context="module">
     export async function load({ session }) {
-        let user = api.get('user', session.token)
+        let user = await api.get('user', session.token)
+        console.log(user)
         if (!user) {
             return {
                 status: 302,
@@ -18,7 +19,7 @@
 </script>
 
 <script>
-    export let user
+    export let user = {}
     import {initialCaps} from '$lib/utils'
     import Image from '$lib/components/Image.svelte'
     import Tag from '$lib/components/Tag.svelte'

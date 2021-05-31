@@ -1,8 +1,8 @@
 <svelte:window on:keydown={keydown} />
 
 <script>
-    export let pin
-    export let field
+    export let pin = false
+    export let field = {}
 
     import {
         Button

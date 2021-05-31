@@ -1,5 +1,5 @@
 <script>
-    export let pinned
+    export let pinned = false
 
     import Unpinned from '$lib/components/Pin/Unpinned.svelte'
     import Pinned from '$lib/components/Pin/Pinned.svelte'

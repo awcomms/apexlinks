@@ -27,7 +27,10 @@
 </script>
 
 <script>
-    export let rooms, total, page, user
+    export let rooms
+    export let total
+    export let page
+    export let user
     import {
         Row,
         Link,

@@ -40,7 +40,7 @@ export function getSession(request){
     }
 }
 
-export async function handle({ request, render}) {
+export async function handle({ request, resolve}) {
     const cookies = cookie.parse(request.headers.cookie || '')
     const token = cookies.token
     request.locals.token = token || null
@@ -55,7 +55,7 @@ export async function handle({ request, render}) {
         }
     }
 
-    const response = await render(request)
+    const response = await resolve(request)
     if(prerendering && response.headers['content-type'] === 'text/html') {
         response.body = minify(response.body, min_opts)
     }

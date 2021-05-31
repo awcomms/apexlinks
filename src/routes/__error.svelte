@@ -10,8 +10,8 @@
 </script>
 
 <script>
-  export let status;
-  export let error;
+  export let status = ''
+  export let error = ''
 
   import { Row, Column, Link } from "carbon-components-svelte";
 

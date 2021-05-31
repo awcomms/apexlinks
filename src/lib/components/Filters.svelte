@@ -1,6 +1,6 @@
 <script>
-    export let open
-    export let fields
+    export let open = false
+    export let fields = []
 
     import {
         Modal

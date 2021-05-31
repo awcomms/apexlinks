@@ -11,8 +11,8 @@
 </script>
 
 <script>
-    export let token
-    export let notify
+    export let token = ''
+    export let notify = ''
 
     import {
         Row,
