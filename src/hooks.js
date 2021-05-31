@@ -49,7 +49,7 @@ export async function handle({ request, resolve}) {
     else {
         return {
             headers: {
-                Location: `https://${req.host}${req.path}`
+                Location: `https://${request.host}${request.path}`
             },  
             status: 301
         }
