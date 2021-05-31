@@ -1,19 +1,6 @@
 import * as cookie from 'cookie'
 import {minify} from 'html-minifier'
-import {prerendering} from '$app/env'
-// import terminate from '$lib/terminate'
-
-// const exitHandler = terminate(server, {
-//   coredump: false,
-//   timeout: 500
-// })
-
-// process.on('uncaughtException', exitHandler(1, 'Unexpected Error'))
-// process.on('unhandledRejection', exitHandler(1, 'Unhandles Promise'))
-// process.on('SIGTERM', exitHandler(0, 'SIGTERM'))
-// process.on('SIGINT', exitHandler(0, 'SIGINT'))
-
-const { NODE_ENV} = process.env
+import { env, prerendering } from '$app/env'
 
 const min_opts = {
     collapseBooleanAttributes: true,
@@ -45,8 +32,7 @@ export async function handle({ request, resolve}) {
     const token = cookies.token
     request.locals.token = token || null
 
-    if(request.headers['x-forwarded-proto'] === 'https' || NODE_ENV === 'development'){} 
-    else {
+    if(request.headers['x-forwarded-proto'] !== 'https' && !dev){
         return {
             headers: {
                 Location: `https://${request.host}${request.path}`
