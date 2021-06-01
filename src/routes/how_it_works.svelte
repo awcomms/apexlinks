@@ -6,7 +6,7 @@
 </script>
 
 <Row>
-    <Column sm={4} md={4} lg={4} xlg={4}>
+    <Column sm={8} md={8} lg={8} xlg={8}>
         <h1>How Apexlinks works</h1>
 
         <p>
