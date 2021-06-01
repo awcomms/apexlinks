@@ -1,6 +1,7 @@
 import * as api from '$lib/api'
 
 export async function post(req) {
+    console.log('s', req.locals.token)
     await api.del('tokens', req.locals.token)
     req.locals.token = null
     return {

@@ -1,38 +1,23 @@
-<script context='module'>
-  import * as api from '$lib/api'
-  export async function load({session}){
-    console.log('z')
-    const token = session.token
-    let user
-    if(token){
-      const res = await api.get('user', token)
-      console.log('sl', res)
-      if(res){
-        user = res
-      }
-    }
-    console.log(user)
-    return {
-      props: {
-        user
-      }
-    }
-  }
-</script>
-
 <svelte:window on:appinstalled={installed} on:beforeinstallprompt={before} />
 
 <script>
-  export let user = null
+  import SideNavLink from './SideNavLink.svelte'
+  import * as api from '$lib/api'
   import url8 from '$lib/url8'
-  import { post } from '$lib/utils.js'
-  import { goto } from '$app/navigation'
+  import {
+    post
+  } from '$lib/utils.js'
+  import {
+    goto
+  } from '$app/navigation'
   import {
     navigating,
+    session,
     page
   } from '$app/stores'
-  import SideNavLink from './SideNavLink.svelte'
-  import { isSideNavOpen } from '$lib/stores'
+  import {
+    isSideNavOpen
+  } from '$lib/stores'
   import {
     InlineLoading,
     SkipToContent,
@@ -41,9 +26,16 @@
     SideNav,
     Header,
   } from "carbon-components-svelte"
+  import {
+    onMount
+  } from 'svelte'
 
-  console.log('us', user)
+  onMount(async()=>{
+    user = await api.get('user', $session.token)
+    console.log(user)
+  })
 
+  let user
   let show
   let installRef
   let installPrompt
@@ -107,7 +99,9 @@
   }*/
 
   const exit=async()=>{
+    $session.token = null
     await post('/auth/exit')
+    console.log('c', $session.token)
     goto('/login')
   }
 </script>
