@@ -32,8 +32,11 @@ export async function handle({ request, resolve}) {
     const token = cookies.token
     request.locals.token = token || null
 
+    console.log('host: ', request.host)
+    console.log('path: ', request.path)
+
     if(request.headers['x-forwarded-proto'] !== 'https' && !dev){
-        path = request.path || ''
+        path = request.path || '/'
         return {
             headers: {
                 Location: `https://${request.host}${path}`
