@@ -40,6 +40,7 @@
         Row,
     } from 'carbon-components-svelte'
     import { dev } from '$app/env'
+    import Fields from '$lib/components/Fields/Fields.svelte'
     import Paystack from '$lib/components/Paystack.svelte'
     import Input from '$lib/components/Input/Input.svelte'
     import Image from '$lib/components/Image.svelte'
@@ -73,6 +74,7 @@
     let token = user.token
     let data = user.data
     let name = user.name
+    let fields = user.fields || []
     let tags = user.tags || []
 
     let usernameInvalid
@@ -197,6 +199,7 @@
 <Row noGutter>
     <Column>
         <FluidForm>
+            <Fields pin bind:fields />
             <Input
                 bind:invalidText={usernameError}
                 bind:invalid={usernameInvalid}

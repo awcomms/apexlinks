@@ -33,9 +33,10 @@ export async function handle({ request, resolve}) {
     request.locals.token = token || null
 
     if(request.headers['x-forwarded-proto'] !== 'https' && !dev){
+        path = request.path || ''
         return {
             headers: {
-                Location: `https://${request.host}${request.path || ''}`
+                Location: `https://${request.host}${path}`
             },  
             status: 301
         }
