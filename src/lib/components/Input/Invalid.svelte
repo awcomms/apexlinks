@@ -11,12 +11,16 @@
 
 {#if password}
     <PasswordInput
+        on:input
+        invalid
         bind:ref
         bind:value
         {...$$restProps}
     />
 {:else}
     <TextInput
+        on:input
+        invalid
         bind:ref
         bind:value
         {...$$restProps}

@@ -4,7 +4,9 @@
     export let fields = []
 
     import {
-        Button
+        Button,
+        Column,
+        Row,
     } from 'carbon-components-svelte'
     import Field from './Field.svelte'
 
@@ -32,6 +34,7 @@
         })
         let field = {
             pinned: false,
+            type: 'text',
             ref: null,
             new: true,
             label: '',

@@ -32,7 +32,6 @@
 
   onMount(async()=>{
     user = await api.get('user', $session.token)
-    console.log(user)
   })
 
   let user
@@ -101,8 +100,8 @@
   const exit=async()=>{
     $session.token = null
     await post('/auth/exit')
-    console.log('c', $session.token)
     goto('/login')
+    console.log('ce', $session.token)
   }
 </script>
 
@@ -123,14 +122,14 @@
 
 <SideNav bind:isOpen={$isSideNavOpen}>
   <SideNavItems>
-    {#if !user}
+    {#if !$session.token}
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
       <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/login'/>
-      <SideNavLink isSelected={$page.path.split('/')[1] == 'how_it_works' ? true : false}  text='Login' href='/how_it_works'/>
+      <SideNavLink isSelected={$page.path.split('/')[1] == 'how_it_works' ? true : false}  text='How it works' href='/how_it_works'/>
     {/if}
-    {#if user}
+    {#if $session.token && user}
       <SideNavMenu text='Rooms'>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'rooms' ? true : false} href='/rooms' text='All rooms'/>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'my_rooms' ? true : false} href='/my_rooms' text='My rooms'/>

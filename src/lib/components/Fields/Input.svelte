@@ -2,6 +2,7 @@
     export let field = {}
 
     import {
+        NumberInput,
         Button
     } from 'carbon-components-svelte'
     import Input from '$lib/components/Input/Input.svelte'    
@@ -19,13 +20,31 @@
     let ref
 </script>
 
-<Input
+{#if field.type === 'text'}
+    <Input
     bind:ref
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}
     invalidText={field.invalidText}
     />
+{:else if field.type === 'number'}
+    <NumberInput 
+        labelText={field.label}
+        bind:value={field.number}
+    />
+<!-- {:else if field.type === 'range'}
+    <NumberInput label='Minimum value' bind:value={field.min} />
+    <NumberInput label='Maximum value' bind:value={field.max} /> -->
+{:else}
+    <Input
+        bind:ref
+        labelText={field.label}
+        bind:value={field.value}
+        bind:invalid={field.invalid}
+        invalidText={field.invalidText}
+    />
+{/if}
 
 <Button
     iconDescription='Edit'

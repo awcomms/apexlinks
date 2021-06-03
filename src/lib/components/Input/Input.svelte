@@ -17,6 +17,7 @@
 
 <svelte:component 
     bind:ref
+    on:input
     this={current}
     {...$$restProps}
     bind:value 

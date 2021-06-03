@@ -195,11 +195,17 @@
 </Row>
 
 <Tag bind:tags />
-    
+
+
+<Row>
+    <Column>
+        <Fields pin bind:fields />
+    </Column>
+</Row>
+
 <Row noGutter>
     <Column>
         <FluidForm>
-            <Fields pin bind:fields />
             <Input
                 bind:invalidText={usernameError}
                 bind:invalid={usernameInvalid}

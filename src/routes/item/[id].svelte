@@ -58,12 +58,6 @@
         <!-- {#if item.itype}
             <p>{item.itype}</p>
         {/if} -->
-        {#each item.fields as field}
-            <div>
-                <span class='bold'>{field.label}: </span>
-                <span>{field.value}</span>
-            </div>
-        {/each}
         <Link href='/{item.user}'>User</Link>
         {#if user && user.username == item.user}
             <Link href='/edit/{item.id}'>Edit</Link>
@@ -72,6 +66,19 @@
 </Row>
 
 <br />
+
+{#each item.fields as field}
+    <div>
+        <div class='bold'>{field.label}</div>
+        {#if field.type === 'text'}
+            <div>{field.value}</div>
+        {:else if field.type === 'number'}
+            <div>{field.num}</div>
+        {:else if field.type === 'range'}
+            <div>{field.min} - {field.num}</div>
+        {/if}
+    </div>
+{/each}
 
 {#if !item.redirect && itext}
     <Row>

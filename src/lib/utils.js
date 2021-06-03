@@ -38,7 +38,7 @@ marked.setOptions({
     renderer: renderer,
 })
 
-export let abslink = /\S+:\/\//
+export let abslink = /\S+:\/\/\S+/
 
 export function parseMarkdown(markdown) {
     if(markdown){

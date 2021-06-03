@@ -11,8 +11,15 @@
         let {id} = page.params
         let item = await api.get(`items/${id}`)
         let user = await api.get('user', token)
+        if (item.user !== user.username){
+            return {
+                status: 302,
+                redirect: `/items/{user.id}`
+            }
+        }
         return {
-            props: { 
+            props: {
+                token,
                 item,
                 user
             }
@@ -21,6 +28,7 @@
 </script>
 
 <script>
+    export let token
     export let item
     export let user
     import { goto } from '$app/navigation'
@@ -42,7 +50,7 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { abslink } from '$lib/utils'
 
-    $: validateLink(link)
+    $: console.log(linkInvalid)
     $: itype = initialCaps(itype)
 
     let nameInvalid
@@ -58,6 +66,7 @@
     let name = item.name
     let tags = item.tags
 
+    let linkRef
     let linkInvalid
     let linkError = 'Add a url scheme to the link, something like "http://, at the beginning'
 
@@ -74,13 +83,9 @@
         }
     }
 
-    const validateLink=(e)=>{
-        linkInvalid = false
-    }
-
     const del=async()=>{
         delLoading = true
-        let res = await api.del(`items/${item.id}`, user.token).finally(
+        let res = await api.del(`items/${item.id}`, token).finally(
             (r)=>{
                 delLoading = false
                 return r
@@ -94,13 +99,13 @@
     const edit=async()=>{
         editLoading = true
         if(redirect && !abslink.test(link)){
+            console.log('invalid')
             linkInvalid = true
             editLoading = false
             return
         }
         let data = {
             itext,
-            id: item.id,
             image,
             link,
             redirect,
@@ -111,8 +116,9 @@
             name,
             tags,
         }
-        let res = await api.put('items', data, user.token).finally(
+        let res = await api.put(`items/${item.id}`, data, token).finally(
             (r)=>{
+                console.log(r)
                 editLoading = false
                 return r
             }
@@ -156,6 +162,12 @@
 
 <Row noGutter>
     <Column>
+        <Fields pin bind:fields />
+    </Column>
+</Row>
+
+<Row noGutter>
+    <Column>
         <FluidForm>
             <Input 
                 labelText="Name" 
@@ -163,17 +175,19 @@
                 bind:invalid={nameInvalid}
                 invalidText='Name taken'
             />
-            <Fields pin bind:fields />
+        </FluidForm>
+        <FluidForm>
             <TextInput labelText="Item type" bind:value={itype} />
             <Checkbox bind:checked={redirect} 
                 labelText="Let the item's listing redirect to a link" />
             {#if redirect}
                 <Input
-                    invalid={linkInvalid}
-                    invalidText={linkError}
-                    labelText='Link' 
+                    on:input={()=>{linkInvalid=false; linkRef.focus()}}
+                    bind:invalid={linkInvalid}
+                    bind:invalidText={linkError}
                     bind:value={link}
-                    focus
+                    labelText='Link'
+                    bind:ref={linkRef}
                 />
             {:else}
                 <TextArea placeholder='Description(Markdown)' bind:value={itext} />

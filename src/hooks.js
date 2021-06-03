@@ -31,6 +31,8 @@ export async function handle({ request, resolve}) {
     const cookies = cookie.parse(request.headers.cookie || '')
     const token = cookies.token
     request.locals.token = token || null
+    console.log('shr', request.locals.token)
+    console.log('sh', token)
 
     console.log('host: ', request.host)
     console.log('path: ', request.path)
@@ -43,6 +45,8 @@ export async function handle({ request, resolve}) {
             },  
             status: 301
         }
+    } else {
+        //
     }
 
     const response = await resolve(request)
