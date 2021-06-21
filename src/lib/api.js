@@ -5,16 +5,20 @@ export let base
 
 if (process.env.NODE_ENV === 'development') {base=local} else {base=live}
 
-function send({ method, path, data, token }) {
-	const opts = { method, headers: {} };
+function send({ method, path, data, auth }) {
+	const opts = { method, headers: {} }
 
-	if (data) {
-		opts.headers['Content-Type'] = 'application/json';
-		opts.body = JSON.stringify(data);
+	if (auth) {
+		if (auth.username && auth.password) {
+			opts.headers['auth'] = Buffer.from(`${auth.username}:${auth.password}`).toString('base64')
+		} else {
+			opts.headers['token'] = `${auth}`
+		}
 	}
 
-	if (token) {
-		opts.headers['Token'] = `${token}`;
+	if (data) {
+		opts.headers['Content-Type'] = 'application/json'
+		opts.body = JSON.stringify(data);
 	}
 
 	return fetch(`${base}/${path}`, opts)
@@ -30,8 +34,10 @@ function send({ method, path, data, token }) {
 				if(json.error && !json.status){
 					json.status = res.status
 				}
+				console.log('json', json)
 				return json
 			} catch (err) {
+				console.log('res.text', res.text)
 				return res.text
 			}
 		}).catch((err)=>{
@@ -39,18 +45,18 @@ function send({ method, path, data, token }) {
 		})
 }
 
-export function get(path, token) {
-	return send({ method: 'GET', path, token });
+export function get(path, auth) {
+	return send({ method: 'GET', path, auth });
 }
 
-export function del(path, token) {
-	return send({ method: 'DELETE', path, token });
+export function del(path, auth) {
+	return send({ method: 'DELETE', path, auth });
 }
 
-export function post(path, data, token) {
-	return send({ method: 'POST', path, data, token });
+export function post(path, data, auth) {
+	return send({ method: 'POST', path, data, auth });
 }
 
-export function put(path, data, token) {
-	return send({ method: 'PUT', path, data, token });
+export function put(path, data, auth) {
+	return send({ method: 'PUT', path, data, auth });
 }

@@ -48,15 +48,15 @@
 
     let page = 0
 
-    let visible = true
+    let hidden = true
     let tags=[]
     let got
 
-    $: get(visible, page)
+    $: get(hidden, page)
 
     const get = async function(){
         let tagString = JSON.stringify(tags)
-        let url = `items?visible=${visible}&id=${id}&tags=${tagString}&page=${page+1}`
+        let url = `items?hidden=${hidden}&id=${id}&tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
         if(Array.isArray(res.items)){
             items = res.items
@@ -75,7 +75,7 @@
 
 <Row noGutter>
     <Column>
-        <Checkbox bind:checked={visible} labelText='Visible' />
+        <Checkbox bind:checked={hidden} labelText='Hidden' />
     </Column>
 </Row>
 

@@ -64,7 +64,7 @@
 
     let show_email = user.show_email
     let username = user.username
-    let visible = user.visible
+    let hidden = user.hidden
     let address = user.address
     let website = user.website
     let image = user.image
@@ -139,7 +139,7 @@
         let dt = {
             show_email,
             username,
-            visible,
+            hidden,
             website,
             address,
             email,
@@ -190,7 +190,7 @@
 
 <Row noGutter>
     <Column>
-        <Checkbox bind:checked={visible} labelText='Public'/>
+        <Checkbox bind:checked={hidden} labelText='Hidden'/>
     </Column>
 </Row>
 

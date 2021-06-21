@@ -56,7 +56,7 @@
     let nameInvalid
 
     let itext = item.itext
-    let visible = item.visible
+    let hidden = item.hidden
     let redirect = item.redirect
     let price = item.price
     let link = item.link
@@ -109,7 +109,7 @@
             image,
             link,
             redirect,
-            visible,
+            hidden,
             fields,
             price,
             itype,
@@ -154,7 +154,7 @@
 
 <Row noGutter>
     <Column>
-        <Checkbox bind:checked={visible} labelText='Visible' />
+        <Checkbox bind:checked={hidden} labelText='Hidden' />
     </Column>
 </Row>
 

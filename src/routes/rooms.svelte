@@ -41,7 +41,7 @@
 
     let get = async function(){
         let tagString = JSON.stringify($roomTags)
-        let url = `rooms?tags=${tagString}&visible=1&page=${page+1}`
+        let url = `rooms?tags=${tagString}&page=${page+1}`
         let res = await api.get(url, user.token)
         if(Array.isArray(res.items)){
             rooms = res.items

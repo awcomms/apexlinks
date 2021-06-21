@@ -41,7 +41,19 @@
 
     let got
 
-    const get = async function(){
+    const go=async(item)=>{
+        item = await api.get(`items/${item.id}`)
+        if(!item || item.error){
+            $notify = {
+                title: error
+            }
+            return
+        } else {
+            goto(`/item/${item.id}`)
+        }
+    }
+
+    const get = async()=>{
         let tagString = JSON.stringify($itemTags)
         let fieldString = JSON.stringify($itemFields)
         let url = `items?fields=${fieldString}&$tags=${tagString}&page=${page+1}`
@@ -82,7 +94,7 @@
     <br />
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={goto(`/item/${item.id}`)} class='pointer item'>
+            <div on:click={go} class='pointer item'>
                 {#if item.image}
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={item.image}>
                 {:else}
