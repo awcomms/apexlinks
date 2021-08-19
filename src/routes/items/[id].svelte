@@ -33,7 +33,7 @@
     export let items = []
     export let total = 0
     export let pages = 0
-    export let user
+    export let theUser, user
     export let id
 
     import {
