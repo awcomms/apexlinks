@@ -15,12 +15,12 @@
         ButtonSet,
         InlineLoading
     } from 'carbon-components-svelte';
-    import Input from '../components/Input/Input.svelte'
-    import { goto, stores } from '@sapper/app';
+    import Input from '$lib/components/Input/Input.svelte'
+    import { goto } from '$app/navigation';
+    import { session } from '$app/stores';
     import { isSideNavOpen, logged } from '../stores.js'
-    import { post } from 'utils.js';
+    import { post } from '$lib/utils';
 
-    let { session } = stores();
     let usernameInvalid = false
     let passwordInvalid = false
     let usernameError

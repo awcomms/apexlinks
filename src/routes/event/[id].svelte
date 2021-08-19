@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from 'api'
+    import * as api from '$lib/api'
     export async function preload({params}){
         let {id} = params
         let event = await api.get(`events/${id}`)
@@ -20,14 +20,12 @@
         Link,
         Column,
     } from 'carbon-components-svelte'
-    import {marked} from 'utils'
-    import { stores } from '@sapper/app'
+    import {parseMarkdown} from '$lib/utils'
+    import { session } from '$app/stores'
     
-    let { session } = stores()
-
     let itext
     if (event.itext){
-        itext = marked(event.itext)
+        itext = parseMarkdown(event.itext)
     }
 </script>
 
