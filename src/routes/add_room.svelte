@@ -27,7 +27,11 @@
         FluidForm,
         InlineLoading
     } from 'carbon-components-svelte'
-    import {open, context} from '$lib/stores'
+    import {
+        open,
+        context,
+        username
+    } from '$lib/stores'
     import { goto } from '$app/navigation'
     import * as api from '$lib/api'
 
