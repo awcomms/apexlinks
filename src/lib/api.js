@@ -12,7 +12,7 @@ function send({ method, path, data, auth }) {
 		if (auth.username && auth.password) {
 			opts.headers['auth'] = Buffer.from(`${auth.username}:${auth.password}`).toString('base64')
 		} else {
-			opts.headers['token'] = `${auth}`
+			opts.headers['auth'] = auth
 		}
 	}
 
