@@ -1,9 +1,7 @@
 <script context='module'>
     export async function load({page, session}){
-        let notify = page.query.notify
         return {
             props: {
-                notify,
                 token: session.token
             }
         }
@@ -12,7 +10,6 @@
 
 <script>
     export let token = ''
-    export let notify = ''
 
     import {
         Row,
@@ -22,7 +19,8 @@
     import * as api from '$lib/api'
     import {
         itemFields,
-        itemTags
+        itemTags,
+        notify,
     } from '$lib/stores'
     import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'

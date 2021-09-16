@@ -127,7 +127,6 @@
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
       <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/login'/>
-      <SideNavLink isSelected={$page.path.split('/')[1] == 'how_it_works' ? true : false}  text='How it works' href='/how_it_works'/>
     {/if}
     {#if $session.token && user}
       <SideNavMenu text='Rooms'>

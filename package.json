@@ -11,22 +11,21 @@
   },
   "dependencies": {
     "@sveltejs/adapter-node": "^1.0.0-next.20",
-    "@sveltejs/site-kit": "^1.2.5",
-    "carbon-icons-svelte": "^10.28.0",
+    "@sveltejs/site-kit": "^1.4.0",
+    "carbon-icons-svelte": "^10.36.0",
     "cookie": "^0.4.1",
     "dotenv": "^10.0.0",
     "html-minifier": "^4.0.0",
-    "marked": "2.0.6",
-    "socket.io-client": "^4.1.2",
+    "marked": "3.0.2",
+    "socket.io-client": "^4.2.0",
     "svelte-paystack": "^0.1.4",
-    "svelte-preprocess": "^4.7.3"
+    "svelte-preprocess": "^4.8.0"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.33.0",
-    "eslint": "^7.27.0",
+    "carbon-components-svelte": "^0.42.2",
+    "eslint": "^7.32.0",
     "eslint-plugin-svelte3": "^3.2.0",
-    "svelte": "^3.38.2",
-    "vite": "^2.3.4"
+    "svelte": "^3.42.4"
   }
 }

@@ -1,4 +1,5 @@
 import * as cookie from 'cookie'
+import * as api from '$lib/api'
 import {minify} from 'html-minifier'
 import { dev, prerendering } from '$app/env'
 
@@ -23,19 +24,19 @@ const min_opts = {
 
 export function getSession(request){
     return {
-        token: request.locals.token
+        // token: request.locals.token
     }
 }
 
 export async function handle({ request, resolve}) {
     const cookies = cookie.parse(request.headers.cookie || '')
     const token = cookies.token
-    request.locals.token = token || null
-    console.log('shr', request.locals.token)
-    console.log('sh', token)
-
-    console.log('host: ', request.host)
-    console.log('path: ', request.path)
+    const res = api.get('tokens', token)
+    if (res.ok) {
+        request.locals.token = token
+    } else {
+        request.locals.token = null
+    }
 
     if(request.headers['x-forwarded-proto'] !== 'https' && !dev){
         const path = request.path || '/'
