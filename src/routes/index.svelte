@@ -2,21 +2,18 @@
     export async function load({page, session}){
         return {
             props: {
-                token: session.token
             }
         }
     }
 </script>
 
 <script>
-    export let token = ''
-
     import {
         Row,
         Column,
         PaginationNav,
     } from 'carbon-components-svelte'
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     import {
         itemFields,
         itemTags,
@@ -55,7 +52,7 @@
         let tagString = JSON.stringify($itemTags)
         let fieldString = JSON.stringify($itemFields)
         let url = `items?fields=${fieldString}&$tags=${tagString}&page=${page+1}`
-        let res = await api.get(url, token)
+        let res = await api.get(url)
         if(Array.isArray(res.items)){
             items = res.items
             total = res.total

@@ -1,7 +1,7 @@
 <svelte:window on:keydown={keydown} />
 
 <script context="module">
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({ page, session }) {
         let n = page.query.n
         if (session.token) {
@@ -33,7 +33,8 @@
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
     import { isSideNavOpen, notify } from '$lib/stores'
-    import { post, checkEmail } from '$lib/utils'
+    import { post } from '$lib/utils/fetch/post'
+    import { checkEmail } from '$lib/utils/checkEmail'
     import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
 
     $: if(newUser) {
@@ -140,10 +141,11 @@
         usernameInvalid=false
         passwordInvalid=false
         let r = await post('auth/login', { username, password }).finally(
-            (r)=>{
+            (res)=>{
                 loginLoading=false
-                return r
+                return res
             })
+        console.log('login response: ', r)
         usernameError = r.usernameError
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
@@ -200,11 +202,6 @@
         usernameError = r.usernameError
         passwordInvalid = r.passwordInvalid
         passwordError = r.passwordError
-        if (r.token) {
-            $session.token = r.token
-            $isSideNavOpen = true
-            goto('/edit')
-        }
     }
 </script>
 

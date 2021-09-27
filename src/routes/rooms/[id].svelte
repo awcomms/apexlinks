@@ -51,7 +51,7 @@
         Link,
         Tag,
         Row, } from 'carbon-components-svelte'
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     import { onMount } from 'svelte';
     
 

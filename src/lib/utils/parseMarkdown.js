@@ -1,8 +1,3 @@
-import * as api from '$lib/api'
-import marked from 'marked'
-import { link_renderer } from '@sveltejs/site-kit/utils/markdown.js';
-import { highlight } from './highlight';
-
 const renderer = new marked.Renderer()
 renderer.link = link_renderer                                                                                                                           
 renderer.code = highlight
@@ -38,8 +33,6 @@ marked.setOptions({
     renderer: renderer,
 })
 
-export let abslink = /\S+:\/\/\S+/
-
 export function parseMarkdown(markdown) {
     if(markdown){
         return marked(
@@ -48,46 +41,6 @@ export function parseMarkdown(markdown) {
             { renderer }
         )
     } else {
-        return ''
+        return {}
     }
-}
-
-export function checkEmail(string){
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return re.test(String(string).toLowerCase())
-}
-
-export function usernameCoerce(string){
-    if(string){
-        return string.toLowerCase().replace(' ', '')
-    } else {
-        return ''
-    }
-}
-
-export function initialCaps(string){
-    if(string){
-        return string.charAt(0).toUpperCase() + string.slice(1)
-    } else {
-        return ''
-    }
-}
-
-export function get(endpoint) {
-    return fetch(endpoint, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(r => r.json())
-}
-
-export function post(endpoint, data) {
-    return fetch(endpoint, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(data || {}),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(r => r.json())
 }

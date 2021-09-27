@@ -11,19 +11,15 @@
 	/** @type {number} */
 	export let status;
 
-	/** @type {Error & {frame?: string} & {loc?: object}} */
+	/** @type {Error} */
 	export let error;
 </script>
 
 <h1>{status}</h1>
 
-<pre>{error.message}</pre>
+<p>{error.message}</p>
 
-<!-- TODO figure out what to do with frames/stacktraces in prod -->
-<!-- frame is populated by Svelte in its CompileError and is a Rollup/Vite convention -->
-{#if error.frame}
-	<pre>{error.frame}</pre>
-{/if}
+<!-- TODO figure out what to do with stacktraces in prod -->
 {#if error.stack}
 	<pre>{error.stack}</pre>
 {/if}

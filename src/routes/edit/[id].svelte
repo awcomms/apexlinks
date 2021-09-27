@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({ page, session}){
         let token = session.token
         if (!token){
@@ -43,12 +43,12 @@
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import {initialCaps} from '$lib/utils'
+    import {initialCaps} from '$lib/utils/initialCaps'
     import Tag from '$lib/components/Tag.svelte'
     import Image from '$lib/components/Image.svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
     import Input from '$lib/components/Input/Input.svelte'
-    import { abslink } from '$lib/utils'
+    import { abslink } from '$lib/utils/abslink'
 
     $: console.log(linkInvalid)
     $: itype = initialCaps(itype)

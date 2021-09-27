@@ -1,5 +1,5 @@
 import * as cookie from 'cookie'
-import * as api from '$lib/api'
+import { send } from '$lib/send'
 import {minify} from 'html-minifier'
 import { dev, prerendering } from '$app/env'
 
@@ -22,35 +22,45 @@ const min_opts = {
     sortClassName: true
 }
 
-export function getSession(request){
+export function getSession(request) {
     return {
-        // token: request.locals.token
+        user: request.locals.user
     }
 }
 
-export async function handle({ request, resolve}) {
-    const cookies = cookie.parse(request.headers.cookie || '')
-    const token = cookies.token
-    const res = api.get('tokens', token)
-    if (res.ok) {
-        request.locals.token = token
+export async function handle({ request, render}) {
+    const { token } = cookie.parse(request.headers.cookie || '')
+
+    const res = await send({method: 'GET', path: 'tokens', auth: token })
+
+    if (res.error) {
+        request.locals.user = null
+        /*
+            return {
+                headers: {
+                    Location: `http://${request.host}/login`
+                },
+                status: 301
+            }
+        */
     } else {
-        request.locals.token = null
+        request.locals.user = res
     }
 
-    if(request.headers['x-forwarded-proto'] !== 'https' && !dev){
-        const path = request.path || '/'
-        return {
-            headers: {
-                Location: `https://${request.host}${path}`
-            },  
-            status: 301
+    if(!dev){
+        if (request.headers['x-forwarded-proto'] !== 'https') {
+            const path = request.path === '/' ? '/apexlinks' : request.path
+            return {
+                headers: {
+                    Location: `https://${request.host}${path}`
+                },  
+                status: 301
+            }
         }
-    } else {
-        //
     }
 
-    const response = await resolve(request)
+    const response = await render(request)
+
     if(prerendering && response.headers['content-type'] === 'text/html') {
         response.body = minify(response.body, min_opts)
     }

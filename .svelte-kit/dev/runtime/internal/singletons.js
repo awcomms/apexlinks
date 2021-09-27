@@ -1,9 +1,20 @@
-/** @type {import('./router').Router?} */
+/** @type {import('./router').Router} */
 let router;
 
-/** @param {import('./router').Router?} _ */
+/** @type {string} */
+let base = '';
+
+/** @type {string} */
+let assets = '/.';
+
+/** @param {import('./router').Router} _ */
 function init(_) {
 	router = _;
 }
 
-export { init, router };
+/** @param {{ base: string, assets: string }} paths */
+function set_paths(paths) {
+	({ base, assets } = paths);
+}
+
+export { assets, base, init, router, set_paths };

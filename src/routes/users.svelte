@@ -23,7 +23,7 @@
         Column,
         PaginationNav,
     } from 'carbon-components-svelte'
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     import {
         userTags
     } from '$lib/stores'

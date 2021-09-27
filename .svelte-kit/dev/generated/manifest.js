@@ -8,7 +8,6 @@ const c = [
 	() => import("..\\..\\..\\src\\routes\\add_item.svelte"),
 	() => import("..\\..\\..\\src\\routes\\add_room.svelte"),
 	() => import("..\\..\\..\\src\\routes\\my_rooms.svelte"),
-	() => import("..\\..\\..\\src\\routes\\enter.svelte"),
 	() => import("..\\..\\..\\src\\routes\\event\\[id].svelte"),
 	() => import("..\\..\\..\\src\\routes\\items\\[id].svelte"),
 	() => import("..\\..\\..\\src\\routes\\login.svelte"),
@@ -47,26 +46,23 @@ export const routes = [
 	// src/routes/my_rooms.svelte
 	[/^\/my_rooms\/?$/, [c[0], c[8]], [c[1]]],
 
-	// src/routes/enter.svelte
-	[/^\/enter\/?$/, [c[0], c[9]], [c[1]]],
-
 	// src/routes/event/[id].svelte
-	[/^\/event\/([^/]+?)\/?$/, [c[0], c[10]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/event\/([^/]+?)\/?$/, [c[0], c[9]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/items/[id].svelte
-	[/^\/items\/([^/]+?)\/?$/, [c[0], c[11]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/items\/([^/]+?)\/?$/, [c[0], c[10]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/login.svelte
-	[/^\/login\/?$/, [c[0], c[12]], [c[1]]],
+	[/^\/login\/?$/, [c[0], c[11]], [c[1]]],
 
 	// src/routes/rooms/[id].svelte
-	[/^\/rooms\/([^/]+?)\/?$/, [c[0], c[13]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/rooms\/([^/]+?)\/?$/, [c[0], c[12]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/rooms.svelte
-	[/^\/rooms\/?$/, [c[0], c[14]], [c[1]]],
+	[/^\/rooms\/?$/, [c[0], c[13]], [c[1]]],
 
 	// src/routes/users.svelte
-	[/^\/users\/?$/, [c[0], c[15]], [c[1]]],
+	[/^\/users\/?$/, [c[0], c[14]], [c[1]]],
 
 	// src/routes/auth/login.js
 	[/^\/auth\/login\/?$/],
@@ -78,24 +74,25 @@ export const routes = [
 	[/^\/auth\/join\/?$/],
 
 	// src/routes/beee.svelte
-	[/^\/beee\/?$/, [c[0], c[16]], [c[1]]],
+	[/^\/beee\/?$/, [c[0], c[15]], [c[1]]],
 
 	// src/routes/edit/[id].svelte
-	[/^\/edit\/([^/]+?)\/?$/, [c[0], c[17]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/edit\/([^/]+?)\/?$/, [c[0], c[16]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/edit.svelte
-	[/^\/edit\/?$/, [c[0], c[18]], [c[1]]],
+	[/^\/edit\/?$/, [c[0], c[17]], [c[1]]],
 
 	// src/routes/item/[id].svelte
-	[/^\/item\/([^/]+?)\/?$/, [c[0], c[19]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/item\/([^/]+?)\/?$/, [c[0], c[18]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/room/[id].svelte
-	[/^\/room\/([^/]+?)\/?$/, [c[0], c[20]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/room\/([^/]+?)\/?$/, [c[0], c[19]], [c[1]], (m) => ({ id: d(m[1])})],
+
+	// src/routes/send.js
+	[/^\/send\/?$/],
 
 	// src/routes/[username].svelte
-	[/^\/([^/]+?)\/?$/, [c[0], c[21]], [c[1]], (m) => ({ username: d(m[1])})]
+	[/^\/([^/]+?)\/?$/, [c[0], c[20]], [c[1]], (m) => ({ username: d(m[1])})]
 ];
 
-// we import the root layout/error components eagerly, so that
-// connectivity errors after initialisation don't nuke the app
 export const fallback = [c[0](), c[1]()];

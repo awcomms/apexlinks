@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({page}){
         let {username} = page.params
         let user = await api.get(`users/${username}`)
@@ -30,7 +30,7 @@
     import Email20 from 'carbon-icons-svelte/lib/Email20'
     import Location20 from 'carbon-icons-svelte/lib/Location20'
     import { session } from '$app/stores'
-    import {parseMarkdown} from '$lib/utils'
+    import {parseMarkdown} from '$lib/utils/parseMarkdown'
 
     let about
     if (user.about) about = parseMarkdown(user.about)

@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function preload({params}){
         let {id} = params
         let event = await api.get(`events/${id}`)
@@ -20,7 +20,7 @@
         Link,
         Column,
     } from 'carbon-components-svelte'
-    import {parseMarkdown} from '$lib/utils'
+    import {parseMarkdown} from '$lib/utils/parseMarkdown'
     import { session } from '$app/stores'
     
     let itext

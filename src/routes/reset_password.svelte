@@ -1,7 +1,7 @@
 <svelte:window on:keydown={keydown} />
 
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({ page }){
         let token = page.query.q
         let res = await api.get('check_reset_password_token', token)
@@ -28,7 +28,7 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation'
     import { notify } from '$lib/stores'
-    import { post } from '$lib/utils'
+    import { post } from '$lib/utils/fetch/post'
 
     let password
     let password2

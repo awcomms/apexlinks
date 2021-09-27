@@ -1,5 +1,5 @@
 <script context="module">
-    import * as api from '$lib/api.js';
+    import { api } from '$lib/api.js';
     export async function load({ session }) {
         let token = session.token
         if (!token){
@@ -47,8 +47,10 @@
     import Tag from '$lib/components/Tag.svelte'
     import { 
         checkEmail,
+    } from '$lib/utils/checkEmail'
+    import {
         abslink 
-    } from '$lib/utils'
+    } from '$lib/utils/abslink'
 
     let config = {
         key: dev ? pk_test : process.env.PAYSTACK,

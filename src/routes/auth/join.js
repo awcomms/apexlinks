@@ -1,4 +1,4 @@
-import * as api from '$lib/api'
+import { api } from '$lib/api'
 import {respond} from '$lib/_respond'
 
 export function post(req, res) {

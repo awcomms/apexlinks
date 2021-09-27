@@ -1,4 +1,4 @@
-import * as api from '$lib/api'
+import { api } from '$lib/api'
 
 export async function post(req) {
     req.locals.token = null

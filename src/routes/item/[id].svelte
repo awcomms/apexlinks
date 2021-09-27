@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({session, page}){
         let user
         let token = session.token
@@ -31,7 +31,7 @@
         Link,
         Column,
     } from 'carbon-components-svelte'
-    import {parseMarkdown} from '$lib/utils'
+    import {parseMarkdown} from '$lib/utils/parseMarkdown'
 
     item.fields = item.fields || []
     

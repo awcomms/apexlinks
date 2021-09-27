@@ -1,5 +1,5 @@
 <script context='module'>
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     export async function load({ page, session }){
         let token = session.token
         let {id} = page.params

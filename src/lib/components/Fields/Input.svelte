@@ -30,12 +30,12 @@
     />
 {:else if field.type === 'number'}
     <NumberInput 
-        labelText={field.label}
+        placeholder={field.label}
         bind:value={field.number}
     />
-<!-- {:else if field.type === 'range'}
+{:else if field.type === 'range'}
     <NumberInput label='Minimum value' bind:value={field.min} />
-    <NumberInput label='Maximum value' bind:value={field.max} /> -->
+    <NumberInput label='Maximum value' bind:value={field.max} />
 {:else}
     <Input
         bind:ref

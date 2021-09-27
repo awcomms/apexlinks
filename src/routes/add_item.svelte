@@ -20,7 +20,7 @@
 
 <script>
     export let user = {}
-    import {initialCaps} from '$lib/utils'
+    import {initialCaps} from '$lib/utils/initialCaps'
     import Image from '$lib/components/Image.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import Input from '$lib/components/Input/Input.svelte'
@@ -36,7 +36,7 @@
     } from 'carbon-components-svelte'
     import { goto } from '$app/navigation'
     import { session } from '$app/stores'
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
 
     $: itype = initialCaps(itype)
 

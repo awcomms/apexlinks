@@ -43,7 +43,7 @@
         Row,
     } from 'carbon-components-svelte'
     import Tag from "$lib/components/Tag.svelte";
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
     import { goto } from '$app/navigation'
 
     let page = 0

@@ -1,5 +1,5 @@
 import Root from '../../generated/root.svelte';
-import { fallback, routes } from '../../generated/manifest.js';
+import { routes, fallback } from '../../generated/manifest.js';
 import { g as get_base_uri } from '../chunks/utils.js';
 import { writable } from 'svelte/store';
 import { init } from './singletons.js';
@@ -13,8 +13,8 @@ function scroll_state() {
 }
 
 /**
- * @param {Node | null} node
- * @returns {HTMLAnchorElement | SVGAElement | null}
+ * @param {Node} node
+ * @returns {HTMLAnchorElement | SVGAElement}
  */
 function find_anchor(node) {
 	while (node && node.nodeName.toUpperCase() !== 'A') node = node.parentNode; // SVG <a> elements have a lowercase name
@@ -22,33 +22,25 @@ function find_anchor(node) {
 }
 
 class Router {
-	/**
-	 * @param {{
+	/** @param {{
 	 *    base: string;
 	 *    routes: import('types/internal').CSRRoute[];
 	 *    trailing_slash: import('types/internal').TrailingSlash;
-	 *    renderer: import('./renderer').Renderer
-	 * }} opts
-	 */
-	constructor({ base, routes, trailing_slash, renderer }) {
+	 * }} opts */
+	constructor({ base, routes, trailing_slash }) {
 		this.base = base;
 		this.routes = routes;
 		this.trailing_slash = trailing_slash;
+	}
 
+	/** @param {import('./renderer').Renderer} renderer */
+	init(renderer) {
 		/** @type {import('./renderer').Renderer} */
 		this.renderer = renderer;
 		renderer.router = this;
 
 		this.enabled = true;
 
-		// make it possible to reset focus
-		document.body.setAttribute('tabindex', '-1');
-
-		// create initial history entry, so we can return here
-		history.replaceState(history.state || {}, '', location.href);
-	}
-
-	init_listeners() {
 		if ('scrollRestoration' in history) {
 			history.scrollRestoration = 'manual';
 		}
@@ -84,7 +76,7 @@ class Router {
 			}, 50);
 		});
 
-		/** @param {MouseEvent|TouchEvent} event */
+		/** @param {MouseEvent} event */
 		const trigger_prefetch = (event) => {
 			const a = find_anchor(/** @type {Node} */ (event.target));
 			if (a && a.href && a.hasAttribute('sveltekit:prefetch')) {
@@ -95,7 +87,7 @@ class Router {
 		/** @type {NodeJS.Timeout} */
 		let mousemove_timeout;
 
-		/** @param {MouseEvent|TouchEvent} event */
+		/** @param {MouseEvent} event */
 		const handle_mousemove = (event) => {
 			clearTimeout(mousemove_timeout);
 			mousemove_timeout = setTimeout(() => {
@@ -134,7 +126,7 @@ class Router {
 			// Ignore if tag has
 			// 1. 'download' attribute
 			// 2. 'rel' attribute includes external
-			const rel = (a.getAttribute('rel') || '').split(/\s+/);
+			const rel = a.getAttribute('rel')?.split(/\s+/);
 
 			if (a.hasAttribute('download') || (rel && rel.includes('external'))) {
 				return;
@@ -148,18 +140,23 @@ class Router {
 			if (!this.owns(url)) return;
 
 			const noscroll = a.hasAttribute('sveltekit:noscroll');
-
 			history.pushState({}, '', url.href);
-			this._navigate(url, noscroll ? scroll_state() : null, false, [], url.hash);
+			this._navigate(url, noscroll ? scroll_state() : null, [], url.hash);
 			event.preventDefault();
 		});
 
 		addEventListener('popstate', (event) => {
 			if (event.state && this.enabled) {
 				const url = new URL(location.href);
-				this._navigate(url, event.state['sveltekit:scroll'], false, []);
+				this._navigate(url, event.state['sveltekit:scroll'], []);
 			}
 		});
+
+		// make it possible to reset focus
+		document.body.setAttribute('tabindex', '-1');
+
+		// create initial history entry, so we can return here
+		history.replaceState(history.state || {}, '', location.href);
 	}
 
 	/** @param {URL} url */
@@ -169,39 +166,32 @@ class Router {
 
 	/**
 	 * @param {URL} url
-	 * @returns {import('./types').NavigationInfo | undefined}
+	 * @returns {import('./types').NavigationInfo}
 	 */
 	parse(url) {
 		if (this.owns(url)) {
-			const path = url.pathname.slice(this.base.length) || '/';
+			const path = decodeURIComponent(url.pathname.slice(this.base.length) || '/');
 
-			const decoded_path = decodeURI(path);
-			const routes = this.routes.filter(([pattern]) => pattern.test(decoded_path));
+			const routes = this.routes.filter(([pattern]) => pattern.test(path));
 
 			const query = new URLSearchParams(url.search);
 			const id = `${path}?${query}`;
 
-			return { id, routes, path, decoded_path, query };
+			return { id, routes, path, query };
 		}
 	}
 
 	/**
-	 * @typedef {Parameters<typeof import('$app/navigation').goto>} GotoParams
-	 *
-	 * @param {GotoParams[0]} href
-	 * @param {GotoParams[1]} opts
+	 * @param {string} href
+	 * @param {{ noscroll?: boolean, replaceState?: boolean }} opts
 	 * @param {string[]} chain
 	 */
-	async goto(
-		href,
-		{ noscroll = false, replaceState = false, keepfocus = false, state = {} } = {},
-		chain
-	) {
+	async goto(href, { noscroll = false, replaceState = false } = {}, chain) {
 		const url = new URL(href, get_base_uri(document));
 
 		if (this.enabled && this.owns(url)) {
-			history[replaceState ? 'replaceState' : 'pushState'](state, '', href);
-			return this._navigate(url, noscroll ? scroll_state() : null, keepfocus, chain, url.hash);
+			history[replaceState ? 'replaceState' : 'pushState']({}, '', href);
+			return this._navigate(url, noscroll ? scroll_state() : null, chain, url.hash);
 		}
 
 		location.href = url.href;
@@ -234,12 +224,11 @@ class Router {
 
 	/**
 	 * @param {URL} url
-	 * @param {{ x: number, y: number }?} scroll
-	 * @param {boolean} keepfocus
+	 * @param {{ x: number, y: number }} scroll
 	 * @param {string[]} chain
 	 * @param {string} [hash]
 	 */
-	async _navigate(url, scroll, keepfocus, chain, hash) {
+	async _navigate(url, scroll, chain, hash) {
 		const info = this.parse(url);
 
 		if (!info) {
@@ -254,11 +243,11 @@ class Router {
 				(has_trailing_slash && this.trailing_slash === 'never') ||
 				(!has_trailing_slash &&
 					this.trailing_slash === 'always' &&
-					!(info.path.split('/').pop() || '').includes('.'));
+					!info.path.split('/').pop().includes('.'));
 
 			if (incorrect) {
 				info.path = has_trailing_slash ? info.path.slice(0, -1) : info.path + '/';
-				history.replaceState({}, '', `${this.base}${info.path}${location.search}`);
+				history.replaceState({}, '', `${info.path}${location.search}`);
 			}
 		}
 
@@ -269,28 +258,21 @@ class Router {
 
 		await this.renderer.update(info, chain, false);
 
-		if (!keepfocus) {
-			document.body.focus();
-		}
+		document.body.focus();
 
 		const deep_linked = hash && document.getElementById(hash.slice(1));
 		if (scroll) {
 			scrollTo(scroll.x, scroll.y);
 		} else if (deep_linked) {
-			// Here we use `scrollIntoView` on the element instead of `scrollTo`
-			// because it natively supports the `scroll-margin` and `scroll-behavior`
-			// CSS properties.
-			deep_linked.scrollIntoView();
+			// scroll is an element id (from a hash), we need to compute y
+			scrollTo(0, deep_linked.getBoundingClientRect().top + scrollY);
 		} else {
 			scrollTo(0, 0);
 		}
 	}
 }
 
-/**
- * Hash using djb2
- * @param {import('types/hooks').StrictBody} value
- */
+/** @param {import('types/hooks').StrictBody} value */
 function hash(value) {
 	let hash = 5381;
 	let i = value.length;
@@ -309,19 +291,11 @@ function hash(value) {
  * @returns {import('types/internal').NormalizedLoadOutput}
  */
 function normalize(loaded) {
-	const has_error_status =
-		loaded.status && loaded.status >= 400 && loaded.status <= 599 && !loaded.redirect;
-	if (loaded.error || has_error_status) {
-		const status = loaded.status;
+	// TODO should this behaviour be dev-only?
 
-		if (!loaded.error && has_error_status) {
-			return {
-				status: status || 500,
-				error: new Error()
-			};
-		}
-
+	if (loaded.error) {
 		const error = typeof loaded.error === 'string' ? new Error(loaded.error) : loaded.error;
+		const status = loaded.status;
 
 		if (!(error instanceof Error)) {
 			return {
@@ -361,21 +335,6 @@ function normalize(loaded) {
 	return /** @type {import('types/internal').NormalizedLoadOutput} */ (loaded);
 }
 
-/**
- * @param {unknown} err
- * @return {Error}
- */
-function coalesce_to_error(err) {
-	return err instanceof Error ? err : new Error(JSON.stringify(err));
-}
-
-/**
- * @typedef {import('types/internal').CSRComponent} CSRComponent
- *
- * @typedef {Partial<import('types/page').Page>} Page
- * @typedef {{ from: Page; to: Page }} Navigating
- */
-
 /** @param {any} value */
 function page_store(value) {
 	const store = writable(value);
@@ -408,25 +367,27 @@ function page_store(value) {
 
 /**
  * @param {RequestInfo} resource
- * @param {RequestInit} [opts]
+ * @param {RequestInit} opts
  */
 function initial_fetch(resource, opts) {
 	const url = typeof resource === 'string' ? resource : resource.url;
 
-	let selector = `script[data-type="svelte-data"][data-url="${url}"]`;
+	let selector = `script[type="svelte-data"][url="${url}"]`;
 
 	if (opts && typeof opts.body === 'string') {
-		selector += `[data-body="${hash(opts.body)}"]`;
+		selector += `[body="${hash(opts.body)}"]`;
 	}
 
 	const script = document.querySelector(selector);
-	if (script && script.textContent) {
+	if (script) {
 		const { body, ...init } = JSON.parse(script.textContent);
 		return Promise.resolve(new Response(body, init));
 	}
 
 	return fetch(resource, opts);
 }
+
+/** @typedef {import('types/internal').CSRComponent} CSRComponent */
 
 class Renderer {
 	/** @param {{
@@ -441,8 +402,8 @@ class Renderer {
 		this.fallback = fallback;
 		this.host = host;
 
-		/** @type {import('./router').Router | undefined} */
-		this.router;
+		/** @type {import('./router').Router} */
+		this.router = null;
 
 		this.target = target;
 
@@ -454,16 +415,14 @@ class Renderer {
 
 		/** @type {import('./types').NavigationState} */
 		this.current = {
-			// @ts-ignore - we need the initial value to be null
 			page: null,
-			session_id: 0,
+			session_id: null,
 			branch: []
 		};
 
 		/** @type {Map<string, import('./types').NavigationResult>} */
 		this.cache = new Map();
 
-		/** @type {{id: string | null, promise: Promise<import('./types').NavigationResult> | null}} */
 		this.loading = {
 			id: null,
 			promise: null
@@ -471,7 +430,7 @@ class Renderer {
 
 		this.stores = {
 			page: page_store({}),
-			navigating: writable(/** @type {Navigating | null} */ (null)),
+			navigating: writable(null),
 			session: writable(session)
 		};
 
@@ -483,11 +442,11 @@ class Renderer {
 		this.stores.session.subscribe(async (value) => {
 			this.$session = value;
 
-			if (!ready || !this.router) return;
+			if (!ready) return;
 			this.session_id += 1;
 
 			const info = this.router.parse(new URL(location.href));
-			if (info) this.update(info, [], true);
+			this.update(info, [], true);
 		});
 		ready = true;
 	}
@@ -501,16 +460,20 @@ class Renderer {
 	 * }} selected
 	 */
 	async start({ status, error, nodes, page }) {
-		/** @type {Array<import('./types').BranchNode | undefined>} */
+		/** @type {import('./types').BranchNode[]} */
 		const branch = [];
 
 		/** @type {Record<string, any>} */
 		let context = {};
 
-		/** @type {import('./types').NavigationResult | undefined} */
+		/** @type {import('./types').NavigationResult} */
 		let result;
 
-		let error_args;
+		/** @type {number} */
+		let new_status;
+
+		/** @type {Error} new_error */
+		let new_error;
 
 		try {
 			for (let i = 0; i < nodes.length; i += 1) {
@@ -520,8 +483,8 @@ class Renderer {
 					module: await nodes[i],
 					page,
 					context,
-					status: is_leaf ? status : undefined,
-					error: is_leaf ? error : undefined
+					status: is_leaf && status,
+					error: is_leaf && error
 				});
 
 				branch.push(node);
@@ -529,12 +492,8 @@ class Renderer {
 				if (node && node.loaded) {
 					if (node.loaded.error) {
 						if (error) throw node.loaded.error;
-						error_args = {
-							status: node.loaded.status,
-							error: node.loaded.error,
-							path: page.path,
-							query: page.query
-						};
+						new_status = node.loaded.status;
+						new_error = node.loaded.error;
 					} else if (node.loaded.context) {
 						context = {
 							...context,
@@ -544,15 +503,18 @@ class Renderer {
 				}
 			}
 
-			result = error_args
-				? await this._load_error(error_args)
-				: await this._get_navigation_result_from_branch({ page, branch });
-		} catch (/** @type {unknown} */ e) {
+			result = await this._get_navigation_result_from_branch({ page, branch });
+		} catch (e) {
 			if (error) throw e;
 
+			new_status = 500;
+			new_error = e;
+		}
+
+		if (new_error) {
 			result = await this._load_error({
-				status: 500,
-				error: coalesce_to_error(e),
+				status: new_status,
+				error: new_error,
 				path: page.path,
 				query: page.query
 			});
@@ -639,7 +601,6 @@ class Renderer {
 		this.loading.promise = null;
 		this.loading.id = null;
 
-		if (!this.router) return;
 		const leaf_node = navigation_result.state.branch[navigation_result.state.branch.length - 1];
 		if (leaf_node && leaf_node.module.router === false) {
 			this.router.disable();
@@ -665,8 +626,8 @@ class Renderer {
 
 		if (!this.invalidating) {
 			this.invalidating = Promise.resolve().then(async () => {
-				const info = this.router && this.router.parse(new URL(location.href));
-				if (info) await this.update(info, [], true);
+				const info = this.router.parse(new URL(location.href));
+				await this.update(info, [], true);
 
 				this.invalidating = null;
 			});
@@ -700,16 +661,15 @@ class Renderer {
 	 * @returns {Promise<import('./types').NavigationResult>}
 	 */
 	async _get_navigation_result(info, no_cache) {
-		if (this.loading.id === info.id && this.loading.promise) {
+		if (this.loading.id === info.id) {
 			return this.loading.promise;
 		}
 
 		for (let i = 0; i < info.routes.length; i += 1) {
 			const route = info.routes[i];
 
-			// check if endpoint route
 			if (route.length === 1) {
-				return { reload: true, props: {}, state: this.current };
+				return { reload: true };
 			}
 
 			// load code for subsequent routes immediately, if they are as
@@ -718,10 +678,7 @@ class Renderer {
 			while (j < info.routes.length) {
 				const next = info.routes[j];
 				if (next[0].toString() === route[0].toString()) {
-					// if it's a page route
-					if (next.length !== 1) {
-						next[1].forEach((loader) => loader());
-					}
+					if (next.length !== 1) next[1].forEach((loader) => loader());
 					j += 1;
 				} else {
 					break;
@@ -731,7 +688,8 @@ class Renderer {
 			const result = await this._load(
 				{
 					route,
-					info
+					path: info.path,
+					query: info.query
 				},
 				no_cache
 			);
@@ -750,11 +708,11 @@ class Renderer {
 	 *
 	 * @param {{
 	 *   page: import('types/page').Page;
-	 *   branch: Array<import('./types').BranchNode | undefined>
+	 *   branch: import('./types').BranchNode[]
 	 * }} opts
 	 */
 	async _get_navigation_result_from_branch({ page, branch }) {
-		const filtered = /** @type {import('./types').BranchNode[] } */ (branch.filter(Boolean));
+		const filtered = branch.filter(Boolean);
 
 		/** @type {import('./types').NavigationResult} */
 		const result = {
@@ -769,8 +727,7 @@ class Renderer {
 		};
 
 		for (let i = 0; i < filtered.length; i += 1) {
-			const loaded = filtered[i].loaded;
-			if (loaded) result.props[`props_${i}`] = await loaded.props;
+			if (filtered[i].loaded) result.props[`props_${i}`] = await filtered[i].loaded.props;
 		}
 
 		if (
@@ -812,6 +769,7 @@ class Renderer {
 	}
 
 	/**
+	 *
 	 * @param {{
 	 *   status?: number;
 	 *   error?: Error;
@@ -905,21 +863,17 @@ class Renderer {
 	/**
 	 * @param {import('./types').NavigationCandidate} selected
 	 * @param {boolean} no_cache
-	 * @returns {Promise<import('./types').NavigationResult | undefined>} undefined if fallthrough
+	 * @returns {Promise<import('./types').NavigationResult>}
 	 */
-	async _load({ route, info: { path, decoded_path, query } }, no_cache) {
-		const key = `${decoded_path}?${query}`;
+	async _load({ route, path, query }, no_cache) {
+		const key = `${path}?${query}`;
 
-		if (!no_cache) {
-			const cached = this.cache.get(key);
-			if (cached) return cached;
+		if (!no_cache && this.cache.has(key)) {
+			return this.cache.get(key);
 		}
 
 		const [pattern, a, b, get_params] = route;
-		const params = get_params
-			? // the pattern is for the route which we've already matched to this path
-			  get_params(/** @type {RegExpExecArray}  */ (pattern.exec(decoded_path)))
-			: {};
+		const params = get_params ? get_params(pattern.exec(path)) : {};
 
 		const changed = this.current.page && {
 			path: path !== this.current.page.path,
@@ -931,24 +885,24 @@ class Renderer {
 		/** @type {import('types/page').Page} */
 		const page = { host: this.host, path, query, params };
 
-		/** @type {Array<import('./types').BranchNode | undefined>} */
+		/** @type {import('./types').BranchNode[]} */
 		const branch = [];
 
 		/** @type {Record<string, any>} */
 		let context = {};
 		let context_changed = false;
 
-		/** @type {number | undefined} */
+		/** @type {number} */
 		let status = 200;
 
-		/** @type {Error | undefined} */
-		let error;
+		/** @type {Error} */
+		let error = null;
 
 		// preload modules
 		a.forEach((loader) => loader());
 
 		load: for (let i = 0; i < a.length; i += 1) {
-			/** @type {import('./types').BranchNode | undefined} */
+			/** @type {import('./types').BranchNode} */
 			let node;
 
 			try {
@@ -984,9 +938,7 @@ class Renderer {
 
 						if (node.loaded.redirect) {
 							return {
-								redirect: node.loaded.redirect,
-								props: {},
-								state: this.current
+								redirect: node.loaded.redirect
 							};
 						}
 
@@ -1011,7 +963,7 @@ class Renderer {
 					if (b[i]) {
 						let error_loaded;
 
-						/** @type {import('./types').BranchNode | undefined} */
+						/** @type {import('./types').BranchNode} */
 						let node_loaded;
 						let j = i;
 						while (!(node_loaded = branch[j])) {
@@ -1027,7 +979,7 @@ class Renderer {
 								context: node_loaded.context
 							});
 
-							if (error_loaded && error_loaded.loaded && error_loaded.loaded.error) {
+							if (error_loaded.loaded.error) {
 								continue;
 							}
 
@@ -1062,7 +1014,7 @@ class Renderer {
 
 	/**
 	 * @param {{
-	 *   status?: number;
+	 *   status: number;
 	 *   error: Error;
 	 *   path: string;
 	 *   query: URLSearchParams
@@ -1089,7 +1041,7 @@ class Renderer {
 				error,
 				module: await this.fallback[1],
 				page,
-				context: (node && node.loaded && node.loaded.context) || {}
+				context: node && node.loaded && node.loaded.context
 			})
 		];
 
@@ -1097,7 +1049,7 @@ class Renderer {
 	}
 }
 
-// @ts-ignore - value will be replaced on build step
+// @ts-ignore
 
 /** @param {{
  *   paths: {
@@ -1122,6 +1074,14 @@ async function start({ paths, target, session, host, route, spa, trailing_slash,
 		throw new Error('Missing target element. See https://kit.svelte.dev/docs#configuration-target');
 	}
 
+	const router =
+		route &&
+		new Router({
+			base: paths.base,
+			routes,
+			trailing_slash
+		});
+
 	const renderer = new Renderer({
 		Root,
 		fallback,
@@ -1130,25 +1090,23 @@ async function start({ paths, target, session, host, route, spa, trailing_slash,
 		host
 	});
 
-	const router = route
-		? new Router({
-				base: paths.base,
-				routes,
-				trailing_slash,
-				renderer
-		  })
-		: null;
-
 	init(router);
 	set_paths(paths);
 
 	if (hydrate) await renderer.start(hydrate);
-	if (router) {
-		if (spa) router.goto(location.href, { replaceState: true }, []);
-		router.init_listeners();
-	}
+	if (route) router.init(renderer);
+
+	if (spa) router.goto(location.href, { replaceState: true }, []);
 
 	dispatchEvent(new CustomEvent('sveltekit:start'));
+}
+
+if (import.meta.env.VITE_SVELTEKIT_SERVICE_WORKER) {
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register(
+			/** @type {string} */ (import.meta.env.VITE_SVELTEKIT_SERVICE_WORKER)
+		);
+	}
 }
 
 export { start };

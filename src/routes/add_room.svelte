@@ -33,7 +33,7 @@
         username
     } from '$lib/stores'
     import { goto } from '$app/navigation'
-    import * as api from '$lib/api'
+    import { api } from '$lib/api'
 
     let nameInvalid
     let userInvalid

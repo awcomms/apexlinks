@@ -49,7 +49,7 @@
     invalidText={field.invalidText}
 />
 
-<Select bind:selected={field.type}>
+<Select labelText='Filter type' bind:selected={field.type}>
     {#each types as type}
         <SelectItem value={type.value} text={type.text} />
     {/each}

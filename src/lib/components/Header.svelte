@@ -2,11 +2,11 @@
 
 <script>
   import SideNavLink from './SideNavLink.svelte'
-  import * as api from '$lib/api'
+  import { api } from '$lib/api'
   import url8 from '$lib/url8'
   import {
     post
-  } from '$lib/utils.js'
+  } from '$lib/utils/fetch/post'
   import {
     goto
   } from '$app/navigation'
@@ -26,15 +26,7 @@
     SideNav,
     Header,
   } from "carbon-components-svelte"
-  import {
-    onMount
-  } from 'svelte'
 
-  onMount(async()=>{
-    user = await api.get('user', $session.token)
-  })
-
-  let user
   let show
   let installRef
   let installPrompt
@@ -59,14 +51,6 @@
         })
   }
 
-  const prompt=()=>{
-    window.addEventListener('beforeInstallPrompt', (e)=>{
-      e.preventDefault()
-      deferredPrompt = e
-      deferredPrompt.prompt()
-    })
-  }
-
   const getSub=()=>{
     navigator.serviceWorker.ready
     .then((registration)=>{
@@ -86,22 +70,20 @@
         return registration.pushManager.subscribe(options)
       })
     }).then((sub)=>{
-      api.post('subs', {id: user.id, sub: sub})
+      api.post('subs', {id: $session.user.id, sub: sub})
     })
   }
 
-/*
   if(typeof window != 'undefined'){
-    if(navigator && navigator.serviceWorker && user){
+    if(navigator && navigator.serviceWorker && $session.user){
       getSub()  
     }
-  }*/
+  }
 
   const exit=async()=>{
-    $session.token = null
+    $session.user = null
     await post('/auth/exit')
     goto('/login')
-    console.log('ce', $session.token)
   }
 </script>
 
@@ -122,20 +104,20 @@
 
 <SideNav bind:isOpen={$isSideNavOpen}>
   <SideNavItems>
-    {#if !$session.token}
+    {#if !$session.user}
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
       <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/login'/>
     {/if}
-    {#if $session.token && user}
-      <SideNavMenu text='Rooms'>
+    {#if $session.user}
+      <!-- <SideNavMenu text='Rooms'>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'rooms' ? true : false} href='/rooms' text='All rooms'/>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'my_rooms' ? true : false} href='/my_rooms' text='My rooms'/>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'add_room' ? true : false} href='/add_room' text='Add room'/>
-      </SideNavMenu>
+      </SideNavMenu> -->
       <SideNavLink isSelected={$page.path.split('/')[1] == 'add_item' ? true : false} href='/add_item' text='Add Item'/>
-      <SideNavLink isSelected={$page.path.split('/')[1] == 'items' ? true : false}  href='/items/{user.id}' text='My Items'/>
+      <SideNavLink isSelected={$page.path.split('/')[1] == 'items' ? true : false}  href='/items/{$session.user.id}' text='My Items'/>
       <SideNavLink isSelected={$page.path.split('/')[1] == 'edit' ? true : false}  href='/edit' text='Edit'/>
       <SideNavLink text='Exit' href='' on:click={exit} />
     {/if}
