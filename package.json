@@ -19,11 +19,11 @@
     "marked": "3.0.4",
     "socket.io-client": "^4.2.0",
     "svelte-paystack": "^0.1.4",
-    "svelte-preprocess": "^4.9.7"
+    "svelte-preprocess": "^4.9.8"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.44.4",
+    "carbon-components-svelte": "^0.44.5",
     "eslint": "^7.32.0",
     "eslint-plugin-svelte3": "^3.2.1",
     "svelte": "^3.43.1"
