@@ -1,15 +1,15 @@
 <script context='module'>
     import { api } from '$lib/api'
     export async function load({session}){
-        let token = session.token
-        if(!token){
+        let user = session.user
+        if(!user){
             return {
                 status: 302,
                 redirect: '/login'
             }
         }
         let rooms
-        let {items, total, page} = await api.get('xrooms', user.token) || {}
+        let {items, total, page} = await api.get('xrooms') || {}
         if (Array.isArray(items)) {
             rooms = items
         } else {
@@ -53,7 +53,7 @@
 
     let get=async()=>{
         let tagString = JSON.stringify(tags)
-        let res = await api.get(`xrooms?tags=${tagString}&page=${page}`, user.token)
+        let res = await api.get(`xrooms?tags=${tagString}&page=${page}`)
         rooms = res.items
         total = res.total
     }

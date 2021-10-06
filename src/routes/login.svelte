@@ -4,7 +4,7 @@
     import { api } from '$lib/api'
     export async function load({ page, session }) {
         let n = page.query.n
-        if (session.token) {
+        if (session.user) {
             return {
                 status: 302,
                 redirect: '/',
@@ -23,7 +23,7 @@
 
     import {
         Row,
-        FluidForm,
+        Form,
         Button,
         Column,
         ButtonSet,
@@ -150,12 +150,13 @@
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
         passwordInvalid = r.passwordInvalid
-        if (r.token) {
-            $session.token = await r.token
-            $isSideNavOpen = true
+        if (r.user) {
+            $session.user = r.user
             goto('/')
         }
     }
+
+    let a = 'C:/code/mine/task/package.json'
 
     const join  = async function() {
         joinLoading = true
@@ -202,6 +203,13 @@
         usernameError = r.usernameError
         passwordInvalid = r.passwordInvalid
         passwordError = r.passwordError
+        if (r.ok) {
+            if (r.token) {
+                goto('/')
+            } else {
+                goto('/login')
+            }
+        }
     }
 </script>
 
@@ -217,7 +225,7 @@
         <h2>List your business, products and services</h2>
     </Column>
     <Column sm={8} md={8} lg={8} xlg={8}>
-        <FluidForm>
+        <Form>
             {#if newUser}
                 <Input
                     bind:invalid={emailInvalid}
@@ -287,7 +295,7 @@
                     {userText}
                 </Button>
             </ButtonSet>
-        </FluidForm>
+        </Form>
     </Column>
     <Column>
     <!-- {#if resetPasswordRes}

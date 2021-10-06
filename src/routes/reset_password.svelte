@@ -2,9 +2,8 @@
 
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({ page }){
-        let token = page.query.q
-        let res = await api.get('check_reset_password_token', token)
+    export async function load(){
+        let res = await api.get('check_reset_password_token')
         if(!res.r){
             return {
                 status: 302,
@@ -15,8 +14,6 @@
 </script>
 
 <script>
-    export let token
-
     import {
         InlineLoading,
         ButtonSet,
@@ -65,7 +62,7 @@
             loading = false
             return
         }
-        let res = await api.put('reset_password', {password}, token).finally(
+        let res = await api.put('reset_password', {password}).finally(
             (r)=>{
                 loading=false
                 return r

@@ -1,7 +1,7 @@
 <script context='module'>
     export async function load({page, session}){
-        let token = session.token
-        if(!token){
+        let user = session.user
+        if(!user){
             return {
                 status: 302,
                 redirect: '/login',
@@ -10,7 +10,7 @@
         let {id} = page.params
         let tagString = JSON.stringify([])
         let url = `xrooms?id=${id}&tags=${tagString}&page=1`
-        let res = await api.get(url, user.token)
+        let res = await api.get(url)
         if (res.error){
             return {
                 status: res.status,

@@ -1,20 +1,20 @@
 <script context='module'>
     import { api } from '$lib/api'
     export async function load({page, session}){
-        let token = session.token
+        let user = session.user
         const {id} = page.params
-        if(!token){
+        if(!user){
             return {
                 status: 302,
                 redirect: 'login'
             }
         }
-        const room = await api.get(`rooms/${id}`, user.token)
+        const room = await api.get(`rooms/${id}`)
         // if(!room.open && !room.users.includes(user.username)){
         //     this.error('Unauthorized')
         // }
         let items, total
-        let res = await api.get(`messages?id=${id}`, user.token)
+        let res = await api.get(`messages?id=${id}`)
         items = res.items
         page = res.page
         total = res.total
@@ -66,7 +66,7 @@
     })
 
     socket.on('msg', async(obj)=>{
-        await api.put(`seen?id=${id}`, {}, user.token)
+        await api.put(`seen?id=${id}`, {})
         items = [...items, obj]
         updateScroll()
     })
@@ -79,7 +79,7 @@
     }
 
     const get=async()=>{
-        res = await api.get(`messages?id=${id}&page=${page+1}`, user.token)
+        res = await api.get(`messages?id=${id}&page=${page+1}`)
         items = res.items
         total = res.total
         page++
@@ -87,7 +87,7 @@
 
     const exit=async()=>{
         socket.emit('leave', room.id)
-        await api.put('leave', {id:room.id}, user.token)
+        await api.put('leave', {id:room.id})
         goto('/')
     }
 
@@ -107,7 +107,7 @@
         let obj = {user: user.username, id, value}
         items = [...items, obj]
         socket.emit('msg', obj)
-        await api.post('messages', {id, value}, user.token)
+        await api.post('messages', {id, value})
         updateScroll()
         value=''
     }

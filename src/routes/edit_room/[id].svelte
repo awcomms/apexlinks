@@ -1,16 +1,16 @@
 <script context='module'>
     import { api } from '$lib/api'
     export async function load({ page, session }){
-        let token = session.token
+        let user = session.user
         let {id} = page.params
         let room = await api.get(`rooms/${id}`)
-        if (!token){
+        if (!user){
             return {
                 status: 302,
                 redirect: '/login',
             }
         }
-        let user = await api.get('user', token)
+        let user = await api.get('user')
         if (!(room.user == user.username)){
             return {
                 error: "You're not authorized to edit this room",
@@ -48,7 +48,7 @@
     let delOpen
 
     let del = async function(){
-        let res = await api.del(`rooms/${room.id}`, user.token)
+        let res = await api.del(`rooms/${room.id}`)
         if (res.yes){
             goto(`/rooms/${user.id}`)
         }
@@ -60,7 +60,7 @@
             name,
             tags,
         }
-        let res = await api.put('rooms', data, user.token)
+        let res = await api.put('rooms', data)
         if (res.nameError) {
             nameInvalid = true
         }

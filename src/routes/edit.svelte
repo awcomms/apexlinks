@@ -1,14 +1,7 @@
 <script context="module">
     import { api } from '$lib/api.js';
     export async function load({ session }) {
-        let token = session.token
-        if (!token){
-            return {
-                status: 302,
-                redirect: '/login'
-            }
-        }
-        let user = await api.get('user', token)
+        let user = session.user
         if(!user){
             return {
                 status: 302,
@@ -73,7 +66,6 @@
     let email = user.email
     let phone = user.phone
     let about = user.about
-    let token = user.token
     let data = user.data
     let name = user.name
     let fields = user.fields || []
@@ -152,8 +144,9 @@
             tags,
             name,
         } 
-        let res = await api.put('users', dt, token).finally(
+        let res = await api.put('users', dt).finally(
             (r)=>{
+                console.log('edit res: ', r)
                 loading = false
                 return r
             }

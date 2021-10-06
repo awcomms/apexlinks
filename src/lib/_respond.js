@@ -4,7 +4,8 @@ export function respond(body) {
 			status: 401, 
 			body 
 		}
-	} else if(body.token) {
+	} else if (body.token) {
+		console.log('response token: ', body.token)
 		return {
 			headers: {
 				'set-cookie': `token=${body.token}; SameSite=Strict; HttpOnly; Max-Age=67376900; Path=/; Secure; HttpOnly;`

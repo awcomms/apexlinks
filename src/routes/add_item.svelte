@@ -2,24 +2,17 @@
 
 <script context="module">
     export async function load({ session }) {
-        let user = await api.get('user', session.token)
-        console.log(user)
+        const user = session.user
         if (!user) {
             return {
                 status: 302,
                 redirect: 'login'
             }
         }
-        return {
-            props: {
-                user
-            }
-        }
     }
 </script>
 
 <script>
-    export let user = {}
     import {initialCaps} from '$lib/utils/initialCaps'
     import Image from '$lib/components/Image.svelte'
     import Tag from '$lib/components/Tag.svelte'
@@ -35,7 +28,6 @@
         FluidForm,
     } from 'carbon-components-svelte'
     import { goto } from '$app/navigation'
-    import { session } from '$app/stores'
     import { api } from '$lib/api'
 
     $: itype = initialCaps(itype)
@@ -72,7 +64,7 @@
             itype,
             itext
         }
-        let res = await api.post('items', data, $session.token).finally(
+        let res = await api.post('items', data).finally(
             (r)=>{
                 loading=false
                 return r

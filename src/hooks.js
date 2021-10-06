@@ -31,20 +31,21 @@ export function getSession(request) {
 export async function handle({ request, render}) {
     const { token } = cookie.parse(request.headers.cookie || '')
 
+    console.log('handle token', token)
+
     const res = await send({method: 'GET', path: 'tokens', auth: token })
 
     if (res.error) {
-        request.locals.user = null
-        /*
-            return {
-                headers: {
-                    Location: `http://${request.host}/login`
-                },
-                status: 301
-            }
-        */
+        // request.locals.user = null
+        // return {
+        //     headers: {
+        //         Location: `${dev ? 'http': 'https'}://${request.host}/login`
+        //     },
+        //     status: 301
+        // }
     } else {
         request.locals.user = res
+        request.locals.token = token
     }
 
     if(!dev){

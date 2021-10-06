@@ -1,14 +1,14 @@
 <script context='module'> 
     import { api } from '$lib/api'
     export async function load({session}){
-        let token = session.token
-        if(token){
+        let user = session.user
+        if(user){
             return {
                 status: 302,
                 redirect: '/login',
             }
         }
-        let user = await api.get('user', token)
+        let user = await api.get('user')
         return {
             props: {
                 user
@@ -35,14 +35,14 @@
     let got
 
     let go=async(room)=>{
-        await api.put('join', {id: room.id}, user.token)
+        await api.put('join', {id: room.id})
         goto(`/room/${room.id}`)
     }
 
     let get = async function(){
         let tagString = JSON.stringify($roomTags)
         let url = `rooms?tags=${tagString}&page=${page+1}`
-        let res = await api.get(url, user.token)
+        let res = await api.get(url)
         if(Array.isArray(res.items)){
             rooms = res.items
         }

@@ -78,7 +78,7 @@
         {/if}
         <br />
         <!-- {#if } -->
-            <Link href='/items/{user.id}'>Items</Link>
+            <!-- <Link href='/items/{user.id}'>Items</Link> -->
         <!-- {/if} -->
     </Column>
 </Row>

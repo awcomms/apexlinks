@@ -4,6 +4,7 @@ const c = [
 	() => import("..\\..\\..\\src\\routes\\index.svelte"),
 	() => import("..\\..\\..\\src\\routes\\reset_password.svelte"),
 	() => import("..\\..\\..\\src\\routes\\how_it_works.svelte"),
+	() => import("..\\..\\..\\src\\routes\\item_search.svelte"),
 	() => import("..\\..\\..\\src\\routes\\edit_room\\[id].svelte"),
 	() => import("..\\..\\..\\src\\routes\\add_item.svelte"),
 	() => import("..\\..\\..\\src\\routes\\add_room.svelte"),
@@ -13,7 +14,6 @@ const c = [
 	() => import("..\\..\\..\\src\\routes\\login.svelte"),
 	() => import("..\\..\\..\\src\\routes\\rooms\\[id].svelte"),
 	() => import("..\\..\\..\\src\\routes\\rooms.svelte"),
-	() => import("..\\..\\..\\src\\routes\\users.svelte"),
 	() => import("..\\..\\..\\src\\routes\\beee.svelte"),
 	() => import("..\\..\\..\\src\\routes\\edit\\[id].svelte"),
 	() => import("..\\..\\..\\src\\routes\\edit.svelte"),
@@ -34,35 +34,35 @@ export const routes = [
 	// src/routes/how_it_works.svelte
 	[/^\/how_it_works\/?$/, [c[0], c[4]], [c[1]]],
 
+	// src/routes/item_search.svelte
+	[/^\/item_search\/?$/, [c[0], c[5]], [c[1]]],
+
 	// src/routes/edit_room/[id].svelte
-	[/^\/edit_room\/([^/]+?)\/?$/, [c[0], c[5]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/edit_room\/([^/]+?)\/?$/, [c[0], c[6]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/add_item.svelte
-	[/^\/add_item\/?$/, [c[0], c[6]], [c[1]]],
+	[/^\/add_item\/?$/, [c[0], c[7]], [c[1]]],
 
 	// src/routes/add_room.svelte
-	[/^\/add_room\/?$/, [c[0], c[7]], [c[1]]],
+	[/^\/add_room\/?$/, [c[0], c[8]], [c[1]]],
 
 	// src/routes/my_rooms.svelte
-	[/^\/my_rooms\/?$/, [c[0], c[8]], [c[1]]],
+	[/^\/my_rooms\/?$/, [c[0], c[9]], [c[1]]],
 
 	// src/routes/event/[id].svelte
-	[/^\/event\/([^/]+?)\/?$/, [c[0], c[9]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/event\/([^/]+?)\/?$/, [c[0], c[10]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/items/[id].svelte
-	[/^\/items\/([^/]+?)\/?$/, [c[0], c[10]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/items\/([^/]+?)\/?$/, [c[0], c[11]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/login.svelte
-	[/^\/login\/?$/, [c[0], c[11]], [c[1]]],
+	[/^\/login\/?$/, [c[0], c[12]], [c[1]]],
 
 	// src/routes/rooms/[id].svelte
-	[/^\/rooms\/([^/]+?)\/?$/, [c[0], c[12]], [c[1]], (m) => ({ id: d(m[1])})],
+	[/^\/rooms\/([^/]+?)\/?$/, [c[0], c[13]], [c[1]], (m) => ({ id: d(m[1])})],
 
 	// src/routes/rooms.svelte
-	[/^\/rooms\/?$/, [c[0], c[13]], [c[1]]],
-
-	// src/routes/users.svelte
-	[/^\/users\/?$/, [c[0], c[14]], [c[1]]],
+	[/^\/rooms\/?$/, [c[0], c[14]], [c[1]]],
 
 	// src/routes/auth/login.js
 	[/^\/auth\/login\/?$/],

@@ -1,8 +1,8 @@
 <script context='module'>
     import { api } from '$lib/api'
     export async function load({ page, session}){
-        let token = session.token
-        if (!token){
+        let user = session.user
+        if (!user){
             return {
                 status: 302,
                 redirect: '/login'
@@ -10,7 +10,6 @@
         }
         let {id} = page.params
         let item = await api.get(`items/${id}`)
-        let user = await api.get('user', token)
         if (item.user !== user.username){
             return {
                 status: 302,
@@ -19,7 +18,6 @@
         }
         return {
             props: {
-                token,
                 item,
                 user
             }
@@ -28,7 +26,6 @@
 </script>
 
 <script>
-    export let token
     export let item
     export let user
     import { goto } from '$app/navigation'
@@ -50,7 +47,6 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { abslink } from '$lib/utils/abslink'
 
-    $: console.log(linkInvalid)
     $: itype = initialCaps(itype)
 
     let nameInvalid
@@ -85,7 +81,7 @@
 
     const del=async()=>{
         delLoading = true
-        let res = await api.del(`items/${item.id}`, token).finally(
+        let res = await api.del(`items/${item.id}`).finally(
             (r)=>{
                 delLoading = false
                 return r
@@ -99,7 +95,6 @@
     const edit=async()=>{
         editLoading = true
         if(redirect && !abslink.test(link)){
-            console.log('invalid')
             linkInvalid = true
             editLoading = false
             return
@@ -116,9 +111,8 @@
             name,
             tags,
         }
-        let res = await api.put(`items/${item.id}`, data, token).finally(
+        let res = await api.put(`items/${item.id}`, data).finally(
             (r)=>{
-                console.log(r)
                 editLoading = false
                 return r
             }

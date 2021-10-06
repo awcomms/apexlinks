@@ -1,7 +1,7 @@
 <script context="module">
     export async function load({ session }) {
-        let token = session.token
-        if (!token) {
+        let user = session.user
+        if (!user) {
             return {
                 status: 302,
                 redirect: '/login'
@@ -16,7 +16,6 @@
 </script>
 
 <script>
-    export let token = ''
     import Input from '$lib/components/Input/Input.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {
@@ -78,7 +77,7 @@
             name,
             tags,
         }
-        let res = await api.post('rooms', data, token)
+        let res = await api.post('rooms', data)
         if (res.nameError) {
             nameError = res.nameError
             nameInvalid = true

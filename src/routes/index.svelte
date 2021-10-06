@@ -1,13 +1,23 @@
 <script context='module'>
-    export async function load({page, session}){
+    export async function load({session}){
+        let user = session.user
+        if (!user){
+            return {
+                status: 302,
+                redirect: '/login'
+            }
+        }
         return {
             props: {
+                user
             }
         }
     }
 </script>
 
 <script>
+    export let user
+
     import {
         Row,
         Column,
@@ -15,46 +25,27 @@
     } from 'carbon-components-svelte'
     import { api } from '$lib/api'
     import {
-        itemFields,
-        itemTags,
-        notify,
+        userTags
     } from '$lib/stores'
-    import Filter16 from 'carbon-icons-svelte/lib/Filter16'
-    import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
-    import Filters from '$lib/components/Filters.svelte';
 
     $: if (got) get(page)
 
-    let filtersOpen
-
-    let items = []
+    let users = []
     let page = 0
     let total = 0
     let pages = 0
 
     let got
 
-    const go=async(item)=>{
-        item = await api.get(`items/${item.id}`)
-        if(!item || item.error){
-            $notify = {
-                title: error
-            }
-            return
-        } else {
-            goto(`/item/${item.id}`)
-        }
-    }
-
-    const get = async()=>{
-        let tagString = JSON.stringify($itemTags)
-        let fieldString = JSON.stringify($itemFields)
-        let url = `items?fields=${fieldString}&$tags=${tagString}&page=${page+1}`
+    const get = async function(){
+        let tagString = JSON.stringify($userTags)
+        let url = `users?tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
+        console.log('r.i', res.items)
         if(Array.isArray(res.items)){
-            items = res.items
+            users = res.items
             total = res.total
             pages = res.pages
             got = true
@@ -62,46 +53,26 @@
     }
 </script>
 
-{#if notify == 'resetSuccess'}
-    <ResetSuccess />
-{/if}
-
 <svelte:head>
     <title>Apexlinks</title>
 </svelte:head>
 
-<Filters
-    bind:fields={$itemFields}
-    bind:open={filtersOpen}
-    on:search={get}
-/>
+<Tag on:change={get} placeholder='Search' bind:tags={$userTags} />    
 
-<Tag 
-    on:iconClick={()=>{filtersOpen=!filtersOpen}} 
-    bind:tags={$itemTags}
-    placeholder='Search'
-    icon={Filter16}
-    on:change={get}
-    button
-/>    
-
-{#each items as item}
+{#each users as user}
     <br />
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={go} class='pointer item'>
-                {#if item.image}
-                    <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={item.image}>
+            <div on:click={goto(`/${user.username}`)} class='pointer user'>
+                {#if user.image}
+                    <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={user.image}>
                 {:else}
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src='/placeholder.png'>
                 {/if}
                 <div class='label'>
-                    <h4>{item.name}</h4>
-                    {#if item.user}
-                        <p class='bx--link--sm'>{item.user}</p>
-                    {/if}
-                    {#if item.itype}
-                        <p class='bx--link--sm'>{item.itype}</p>
+                    <h4>{user.name}</h4>
+                    {#if user.username}
+                        <p class='bx--link--sm'>{user.username}</p>
                     {/if}
                 </div>
             </div>
@@ -129,7 +100,7 @@
     .label {
         padding-left: 0.5rem
     }
-    .item {
+    .user {
         display: flex;
         flex-direction: row;
     }

@@ -42,6 +42,7 @@ export function send({ method, path, data, auth }) {
 				return res.text
 			}
 		}).catch((err)=>{
+			console.log(err)
 			return
 		})
 }

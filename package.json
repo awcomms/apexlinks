@@ -12,20 +12,20 @@
   "dependencies": {
     "@sveltejs/adapter-node": "^1.0.0-next.20",
     "@sveltejs/site-kit": "^1.4.0",
-    "carbon-icons-svelte": "^10.36.0",
+    "carbon-icons-svelte": "^10.38.0",
     "cookie": "^0.4.1",
     "dotenv": "^10.0.0",
     "html-minifier": "^4.0.0",
-    "marked": "3.0.2",
+    "marked": "3.0.4",
     "socket.io-client": "^4.2.0",
     "svelte-paystack": "^0.1.4",
-    "svelte-preprocess": "^4.8.0"
+    "svelte-preprocess": "^4.9.7"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.42.2",
+    "carbon-components-svelte": "^0.44.4",
     "eslint": "^7.32.0",
-    "eslint-plugin-svelte3": "^3.2.0",
-    "svelte": "^3.42.4"
+    "eslint-plugin-svelte3": "^3.2.1",
+    "svelte": "^3.43.1"
   }
 }
