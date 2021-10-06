@@ -1,0 +1,1 @@
+import{p as a}from"./post-5b27026c.js";const t={get:async(t,d)=>await a("/send",{endpoint:t,method:"GET",data:d}),put:async(t,d)=>await a("/send",{endpoint:t,method:"PUT",data:d}),post:async(t,d)=>await a("/send",{endpoint:t,method:"POST",data:d}),del:async(t,d)=>await a("/send",{endpoint:t,method:"DEL",data:d})};export{t as a};

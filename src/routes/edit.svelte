@@ -3,6 +3,7 @@
     export async function load({ session }) {
         let user = session.user
         if(!user){
+            console.log('load-session not user')
             return {
                 status: 302,
                 redirect: '/login'
@@ -94,23 +95,27 @@
     const edit=async()=>{
         loading = true
         if(website && !abslink.test(website)){
+            console.log('website err')
             websiteInvalid = true
             editLoading = false
             return
         }
         if (!email){
+            console.log('not email err')
             emailInvalid = true
             emailError = 'Empty'
             loading = false
             return
         }
         if (!checkEmail(email)){
+            console.log('check email err')
             emailInvalid = true
             emailError = 'Unaccepted'
             loading = false
             return 
         }
         if (!username){
+            console.log('username err')
             usernameInvalid = true
             usernameError = 'Empty'
             loading = false
@@ -118,6 +123,7 @@
         }
         if(username !== user.username){
             if(await api.get(`check_username/${username}`).then(r => !r.res)){
+                console.log('api check_username err')
                 usernameInvalid = true
                 usernameError = 'Username taken'
                 loading = false
@@ -125,6 +131,7 @@
             }
         }
         if (checkEmail(username)){
+            console.log('check email username err')
             usernameInvalid = true
             usernameError = 'Unaccepted'
             loading = false

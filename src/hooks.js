@@ -30,11 +30,10 @@ export function getSession(request) {
 
 export async function handle({ request, render}) {
     const { token } = cookie.parse(request.headers.cookie || '')
-
     console.log('handle token', token)
-
     const res = await send({method: 'GET', path: 'tokens', auth: token })
-
+    console.log('handle api res: ', res)
+    
     if (res.error) {
         // request.locals.user = null
         // return {
@@ -43,13 +42,14 @@ export async function handle({ request, render}) {
         //     },
         //     status: 301
         // }
-    } else {
+    } else if (res.id) {
         request.locals.user = res
         request.locals.token = token
     }
 
     if(!dev){
         if (request.headers['x-forwarded-proto'] !== 'https') {
+            console.log('request.path: ', request.path)
             const path = request.path === '/' ? '/apexlinks' : request.path
             return {
                 headers: {

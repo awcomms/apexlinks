@@ -1,8 +1,9 @@
 <script context='module'>
-    import { api } from '$lib/api'
+    import { send } from '$lib/send'
     export async function load({page}){
         let {username} = page.params
-        let user = await api.get(`users/${username}`)
+        
+        let user = await send({method: 'GET', path: `users/${username}`})
         if (user.error){
             return {
                 status: user.status,
@@ -19,6 +20,8 @@
 
 <script>
     export let user = {}
+    
+    import { api } from '$lib/api'
     import {
         Column,
         Link,

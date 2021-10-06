@@ -2,13 +2,12 @@
     import { api } from '$lib/api'
     export async function load({session}){
         let user = session.user
-        if(user){
+        if(!user){
             return {
                 status: 302,
                 redirect: '/login',
             }
         }
-        let user = await api.get('user')
         return {
             props: {
                 user

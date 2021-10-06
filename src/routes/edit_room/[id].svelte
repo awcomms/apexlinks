@@ -10,7 +10,6 @@
                 redirect: '/login',
             }
         }
-        let user = await api.get('user')
         if (!(room.user == user.username)){
             return {
                 error: "You're not authorized to edit this room",
