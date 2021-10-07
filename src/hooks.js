@@ -28,7 +28,7 @@ export function getSession(request) {
     }
 }
 
-export async function handle({ request, render}) {
+export async function handle({ request, resolve}) {
     const { token } = cookie.parse(request.headers.cookie || '')
     console.log('handle token', token)
     const res = await send({method: 'GET', path: 'tokens', auth: token })
@@ -52,7 +52,7 @@ export async function handle({ request, render}) {
         }
     }
 
-    const response = await render(request)
+    const response = await resolve(request)
 
     if(prerendering && response.headers['content-type'] === 'text/html') {
         response.body = minify(response.body, min_opts)
