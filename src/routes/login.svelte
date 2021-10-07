@@ -222,7 +222,6 @@
 <Row noGutter>
     <Column sm={8} md={8} lg={8} xlg={8}>
         <h1 id='head'>Apexlinks</h1>
-        <h2>List your business, products and services</h2>
     </Column>
     <Column sm={8} md={8} lg={8} xlg={8}>
         <Form>
@@ -308,7 +307,7 @@
 <style>
     @font-face {
         font-family: round;
-        src: url(junegull.ttf) format('ttf');
+        src: url('/junegull.ttf');
     }
     #head {
         font-family: round;

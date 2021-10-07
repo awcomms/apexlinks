@@ -34,15 +34,7 @@ export async function handle({ request, render}) {
     const res = await send({method: 'GET', path: 'tokens', auth: token })
     console.log('handle api res: ', res)
     
-    if (res.error) {
-        // request.locals.user = null
-        // return {
-        //     headers: {
-        //         Location: `${dev ? 'http': 'https'}://${request.host}/login`
-        //     },
-        //     status: 301
-        // }
-    } else if (res.id) {
+    if (res.id) {
         request.locals.user = res
         request.locals.token = token
     }

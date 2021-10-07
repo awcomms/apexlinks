@@ -16,8 +16,6 @@
 </script>
 
 <script>
-    export let user
-
     import {
         Row,
         Column,
@@ -62,7 +60,7 @@
 {#each users as user}
     <br />
     <Row noGutter>
-        <Column lg={1} sm={1} md={1} xlg={1}>
+        <Column lg={4} sm={4} md={4} xlg={4}>
             <div on:click={goto(`/${user.username}`)} class='pointer user'>
                 {#if user.image}
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src={user.image}>

@@ -3,7 +3,6 @@
     export async function load({ session }) {
         let user = session.user
         if(!user){
-            console.log('load-session not user')
             return {
                 status: 302,
                 redirect: '/login'
@@ -20,9 +19,9 @@
 <svelte:window on:keydown={keydown} />
 
 <script>
+    console.log(typeof(process.env.PAYSTACK_TEST))
     export let user = {}
     import { goto } from '$app/navigation';
-    import { pk_test } from '$lib/vars';
     import {
         InlineLoading,
         FluidForm,
@@ -33,7 +32,6 @@
         Column,
         Row,
     } from 'carbon-components-svelte'
-    import { dev } from '$app/env'
     import Fields from '$lib/components/Fields/Fields.svelte'
     import Paystack from '$lib/components/Paystack.svelte'
     import Input from '$lib/components/Input/Input.svelte'
@@ -47,7 +45,7 @@
     } from '$lib/utils/abslink'
 
     let config = {
-        key: dev ? pk_test : process.env.PAYSTACK,
+        key: process.env.PAYSTACK_TEST === 'true' ? process.env.PAYSTACK_TEST_KEY : process.env.PAYSTACK_LIVE_KEY,
         email: user.email,
         metadata: {
             id: user.id
@@ -70,6 +68,7 @@
     let data = user.data
     let name = user.name
     let fields = user.fields || []
+    console.log('after user.fields', fields)
     let tags = user.tags || []
 
     let usernameInvalid
@@ -93,6 +92,9 @@
     }
 
     const edit=async()=>{
+        let req_fields = fields.map((f) => {
+            return {label: f.label, value: f.value}
+        })
         loading = true
         if(website && !abslink.test(website)){
             console.log('website err')
@@ -146,6 +148,7 @@
             email,
             phone,
             about,
+            fields: req_fields,
             image,
             data,
             tags,
@@ -192,18 +195,19 @@
 
 <Row noGutter>
     <Column>
-        <Checkbox bind:checked={hidden} labelText='Hidden'/>
+        <Checkbox bind:checked={hidden} labelText='Hide profile from public'/>
     </Column>
 </Row>
 
 <Tag bind:tags />
 
-
-<Row>
+<br />
+<Row noGutter>
     <Column>
         <Fields pin bind:fields />
     </Column>
 </Row>
+<br />
 
 <Row noGutter>
     <Column>

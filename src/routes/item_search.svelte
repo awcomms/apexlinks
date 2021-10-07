@@ -62,10 +62,6 @@
     }
 </script>
 
-{#if notify == 'resetSuccess'}
-    <ResetSuccess />
-{/if}
-
 <svelte:head>
     <title>Apexlinks</title>
 </svelte:head>

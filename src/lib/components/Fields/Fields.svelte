@@ -10,6 +10,8 @@
     } from 'carbon-components-svelte'
     import Field from './Field.svelte'
 
+    $: console.log('fields: ', fields)
+
     const cancel=(field)=>{
         field = field.dirty
     }

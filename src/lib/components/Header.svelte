@@ -80,9 +80,9 @@
     }
   }
 
-  const exit=async()=>{
+  const exit=()=>{
     $session.user = null
-    await post('/auth/exit')
+    post('/auth/exit')
     goto('/login')
   }
 </script>
