@@ -1,7 +1,6 @@
 {
   "name": "apexlinks",
   "type": "module",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "svelte-kit dev --port 3700",
@@ -10,7 +9,7 @@
     "start": "node build"
   },
   "dependencies": {
-    "@sveltejs/adapter-node": "^1.0.0-next.20",
+    "@sveltejs/adapter-node": "next",
     "@sveltejs/site-kit": "^1.4.0",
     "carbon-icons-svelte": "^10.38.0",
     "cookie": "^0.4.1",

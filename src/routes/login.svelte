@@ -203,12 +203,10 @@
         usernameError = r.usernameError
         passwordInvalid = r.passwordInvalid
         passwordError = r.passwordError
-        if (r.ok) {
-            if (r.token) {
-                goto('/')
-            } else {
-                goto('/login')
-            }
+        if (r.token) {
+            goto('/')
+        } else {
+            console.log('wait what?')
         }
     }
 </script>

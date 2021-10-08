@@ -1,9 +1,9 @@
-let local='http://localhost:5000'
-let live='https://api.apexlinks.org'
+import { dev } from '$app/env'
 
-export let base
+let local = 'http://localhost:5000'
+let live = process.env.API
 
-if (process.env.NODE_ENV === 'development') {base=local} else {base=live}
+export let base = dev ? local : live
 
 export function send({ method, path, data, auth }) {
 	console.log('path: ', path, '|', 'method: ', method)
