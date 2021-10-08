@@ -30,13 +30,10 @@
     export let rooms
     export let total
     export let page
-    export let user
     import {
         Row,
-        Link,
         Column,
     } from 'carbon-components-svelte'
-    import {onMount} from 'svelte'
     import Tag from '$lib/components/Tag.svelte'
     import { goto } from '$app/navigation'
 

@@ -1,7 +1,7 @@
 import { dev } from '$app/env'
 
 let local = 'http://localhost:5000'
-let live = process.env.API
+let live = import.meta.env.VITE_API
 
 export let base = dev ? local : live
 

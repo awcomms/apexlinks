@@ -73,17 +73,10 @@
     let joinLoading
 
     const keydown=(e)=>{
-        if(e.ctrlKey){
-            switch(e.keyCode){
-                case 13:
-                    join()
-            }            
-        } else {
-            switch(e.keyCode){
-                case 13:
-                    login()
-            }
-        }
+        switch(e.keyCode){
+            case 13:
+                newUser ? join(): login()
+        }            
     }
 
     const validateEmail=()=>{

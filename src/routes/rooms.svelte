@@ -17,7 +17,6 @@
 </script>
 
 <script>
-    export let user
     import {
         Row,
         Column
