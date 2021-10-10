@@ -52,15 +52,15 @@
         {#if user.username}
             <div>
                 <User20 />
-                <span class='heading'>{user.username}</span>
+                <span class='heading'><span class=username-slash>/</span>{user.username}</span>
             </div>
         {/if}
-        {#if user.address}
+        <!-- {#if user.address}
             <div>
                 <Location20 />
                 <span class='heading'>{user.address}</span>
             </div>
-        {/if}
+        {/if} -->
         {#if user.show_email && user.email}
             <div>
                 <Email20 />
@@ -73,16 +73,6 @@
                 <a class='heading bx--link' href={user.website}>{user.website}</a>
             </div>
         {/if}
-        {#if user.phone}
-            <div>
-                <Phone20 />
-                <span class='heading'>{user.phone}</span>
-            </div>
-        {/if}
-        <br />
-        <!-- {#if } -->
-            <!-- <Link href='/items/{user.id}'>Items</Link> -->
-        <!-- {/if} -->
     </Column>
 </Row>
 
@@ -97,5 +87,7 @@
 </Row>
 
 <style>
-    
+    .username-slash {
+        color: blue;
+    }   
 </style>

@@ -19,7 +19,7 @@
 <svelte:window on:keydown={keydown} />
 
 <script>
-    export let user = {}
+    export let user
     import { goto } from '$app/navigation';
     import {
         InlineLoading,
@@ -36,6 +36,12 @@
     import Input from '$lib/components/Input/Input.svelte'
     import Image from '$lib/components/Image.svelte'
     import Tag from '$lib/components/Tag.svelte'
+    import {
+        browser
+    } from '$app/env'
+    import {
+        session
+    } from '$app/stores'
     import {
         PAYSTACK_TEST,
         PAYSTACK_TEST_KEY,
@@ -85,7 +91,7 @@
     let usernameInvalid
     let usernameError
 
-    let websiteError = 'Add a url scheme to the link, something like "http://, at the beginning'
+    let websiteError = 'Add a url scheme to the start of the link, "http://" or "https://"'
     let websiteInvalid
 
     let emailInvalid
@@ -110,7 +116,7 @@
         if(website && !abslink.test(website)){
             console.log('website err')
             websiteInvalid = true
-            editLoading = false
+            loading = false
             return
         }
         if (!email){
@@ -173,6 +179,7 @@
             }
         )
         if (res.id) {
+            $session.user = res
             goto(`/${res.username}`)
         }
     }

@@ -1,7 +1,15 @@
 <script>
+    export let autoFocusInvalid = true
     export let ref = null
     export let value = ''
     export let password = ''
+    import {
+        onMount
+    } from 'svelte'
+
+    onMount(() => {
+        if (autoFocusInvalid) ref.focus()
+    })
 
     import {
         PasswordInput,

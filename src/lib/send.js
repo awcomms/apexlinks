@@ -10,8 +10,8 @@ export function send({ method, path, data, auth }) {
 	const opts = { method, headers: {} }
 
 	if (auth) {
-		if (auth.username && auth.password) {
-			opts.headers['auth'] = Buffer.from(`${auth.username}:${auth.password}`).toString('base64')
+		if (auth.username) {
+			opts.headers['auth'] = Buffer.from(`${auth.username}:${auth.password || ''}`).toString('base64')
 		} else {
 			opts.headers['auth'] = auth
 		}

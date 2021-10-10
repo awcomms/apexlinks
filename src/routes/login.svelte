@@ -24,6 +24,7 @@
     import {
         Row,
         Form,
+        Modal,
         Button,
         Column,
         ButtonSet,
@@ -32,12 +33,13 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
+    import { newUser } from '$lib/stores' 
     import { isSideNavOpen, notify } from '$lib/stores'
     import { post } from '$lib/utils/fetch/post'
     import { checkEmail } from '$lib/utils/checkEmail'
     import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
 
-    $: if(newUser) {
+    $: if($newUser) {
         userText = 'Login instead'
     } else {
         userText = 'Join instead'
@@ -48,7 +50,6 @@
         goto('/login')
     }
 
-    let newUser
     let userText
 
     let usernameInvalid = false
@@ -72,10 +73,17 @@
     let loginLoading
     let joinLoading
 
+    let noPassword
+    let noPasswordModal
+
+    const checkNoPassword = async() => {
+        noPassword = await api.get(`users/check-no-password/${username}`).then(r => r.res)
+    }
+
     const keydown=(e)=>{
         switch(e.keyCode){
             case 13:
-                newUser ? join(): login()
+                $newUser ? join(): login()
         }            
     }
 
@@ -95,7 +103,7 @@
     }
 
     const toggleNewUser=()=>{
-        newUser = !newUser
+        $newUser = !$newUser
     }
 
     const resetPassword=async()=>{
@@ -153,22 +161,16 @@
 
     const join  = async function() {
         joinLoading = true
-        if (newUser && !email){
+        if ($newUser && !email){
             emailInvalid = true
             emailError = 'Empty'
             joinLoading = false
             return
         }
-        if (!checkEmail(email)){
-            emailInvalid = true
-            emailError = 'Unaccepted'
-            joinLoading = false
-            return 
-        }
         if (!username){
             usernameInvalid = true
             usernameError = 'Empty'
-            joinloading = false
+            joinLoading = false
             return
         }
         if (checkEmail(username)){
@@ -177,10 +179,8 @@
             joinLoading = false
             return
         }
-        if (!password){
-            passwordInvalid = true
-            passwordError = 'Empty'
-            joinloading = false
+        if (!password && !noPassword){
+            noPasswordModal = true
             return
         }
         usernameInvalid=false
@@ -205,8 +205,8 @@
             passwordInvalid = true
             passwordError = r.passwordError
         }
-        if (r.token) {
-            console.log('is r.token')
+        if (r.user) {
+            $session.user = r.user
             goto('/edit')
         } else {
             console.log('wait what?')
@@ -215,6 +215,21 @@
 </script>
 
 <NavNotification />
+
+<Modal
+    danger
+    bind:open={noPasswordModal}
+    modalHeading='Create user account without a password'
+    primaryButtonText='Confirm'
+    secondaryButtonText='Cancel'
+    on:click:button--primary={()=>{noPasswordModal=false; noPassword=true; join();}}
+    on:click:button--secondary={()=>{noPasswordModal=false}}
+>
+    <p>
+        This will create a user account without a password, allowing
+        anyone to access it. Continue?
+    </p>
+</Modal>
 
 <svelte:head>
     <title>Login</title>
@@ -226,7 +241,7 @@
     </Column>
     <Column sm={8} md={8} lg={8} xlg={8}>
         <Form>
-            {#if newUser}
+            {#if $newUser}
                 <Input
                     bind:invalid={emailInvalid}
                     invalidText={emailError}
@@ -242,7 +257,9 @@
                 bind:value={username}
                 bind:ref={usernameRef}
                 labelText='Username'
+                on:blure={checkNoPassword}
             />
+            {#if !noPassword}
             <Input
                 bind:invalid={passwordInvalid}
                 invalidText={passwordError}
@@ -251,8 +268,9 @@
                 bind:ref={passwordRef}
                 password
             />
+            {/if}
             <ButtonSet stacked>
-                {#if !newUser}
+                {#if !$newUser}
                     <Button as let:props>
                         <div on:click={login} {...props}>
                             <p>Login</p>
@@ -275,7 +293,7 @@
                     </Button> -->
                 {/if}
                 
-                {#if newUser}
+                {#if $newUser}
                     <Button as let:props>
                         <div on:click={join} {...props}>
                             <p>Join</p>

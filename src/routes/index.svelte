@@ -16,6 +16,7 @@
 </script>
 
 <script>
+    export let user
     import {
         Row,
         Column,
@@ -24,6 +25,7 @@
     import { api } from '$lib/api'
     import {
         users,
+        newUser,
         userTags
     } from '$lib/stores'
     import Tag from '$lib/components/Tag.svelte'
@@ -60,7 +62,16 @@
     bind:tags={$userTags}
     placeholder='Search'
     on:change={get}
-/>      
+/>
+
+<!-- {#if !got && !user}
+    <Row noGutter>
+        <Column>
+            <p>This is a global business directory</p>
+            <p on:click={()=>{$newUser = true; goto('/login')}} style="color: blue; cursor: pointer;">Click here if you'd like to list your business, products and services here</p>
+        </Column>
+    </Row>
+{/if} -->
 
 {#each $users as user}
     <br />
