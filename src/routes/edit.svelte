@@ -19,8 +19,6 @@
 <svelte:window on:keydown={keydown} />
 
 <script>
-    console.log(typeof(process.env.PAYSTACK_TEST))
-
     export let user = {}
     import { goto } from '$app/navigation';
     import {
@@ -50,16 +48,23 @@
         abslink 
     } from '$lib/utils/abslink'
 
+    console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
+    console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
+    console.log('PAYSTACK_LIVE_KEY', PAYSTACK_LIVE_KEY, typeof(PAYSTACK_LIVE_KEY))
+
     let config = {
         key: PAYSTACK_TEST === 'true' ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
         email: user.email,
         metadata: {
             id: user.id
         },
-        amount: 190233,
+        amount: 3000,
         currency: "NGN",
         embed: false,
-        value: "Pay"
+        value: "Pay",
+        callback: () => {
+            api.put('/users/activate', {id: user.id})
+        }
     }
 
     let show_email = user.show_email

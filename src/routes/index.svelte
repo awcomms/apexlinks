@@ -23,6 +23,7 @@
     } from 'carbon-components-svelte'
     import { api } from '$lib/api'
     import {
+        users,
         userTags
     } from '$lib/stores'
     import Tag from '$lib/components/Tag.svelte'
@@ -30,7 +31,7 @@
 
     $: if (got) get(page)
 
-    let users = []
+    $users = []
     let page = 0
     let total = 0
     let pages = 0
@@ -43,7 +44,7 @@
         let res = await api.get(url)
         console.log('r.i', res.items)
         if(Array.isArray(res.items)){
-            users = res.items
+            $users = res.items
             total = res.total
             pages = res.pages
             got = true
@@ -55,9 +56,13 @@
     <title>Apexlinks</title>
 </svelte:head>
 
-<Tag on:change={get} placeholder='Search' bind:tags={$userTags} />    
+<Tag
+    bind:tags={$userTags}
+    placeholder='Search'
+    on:change={get}
+/>      
 
-{#each users as user}
+{#each $users as user}
     <br />
     <Row noGutter>
         <Column lg={4} sm={4} md={4} xlg={4}>
@@ -68,7 +73,7 @@
                     <img style='vertical-align: top;' height='52px' width='52px' alt='profile pic' src='/placeholder.png'>
                 {/if}
                 <div class='label'>
-                    <h4>{user.name}</h4>
+                    <h4>{user.username}</h4>
                     {#if user.username}
                         <p class='bx--link--sm'>{user.username}</p>
                     {/if}

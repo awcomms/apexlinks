@@ -192,12 +192,22 @@
                 return r
             }
         )
-        usernameInvalid = r.usernameInvalid
-        usernameError = r.usernameError
-        passwordInvalid = r.passwordInvalid
-        passwordError = r.passwordError
+        console.log('join r: ', r)
+        if (r.emailError) {
+            emailInvalid = true
+            emailError = r.emailError
+        }
+        if (r.usernameError) {
+            usernameInvalid = true
+            usernameError = r.usernameError
+        }
+        if (r.emailError) {
+            passwordInvalid = true
+            passwordError = r.passwordError
+        }
         if (r.token) {
-            goto('/')
+            console.log('is r.token')
+            goto('/edit')
         } else {
             console.log('wait what?')
         }

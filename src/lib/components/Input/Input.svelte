@@ -1,4 +1,5 @@
 <script>
+    export let autovalidate = true
     export let ref = null
     export let value = ''
     export let invalid = false
@@ -8,10 +9,18 @@
 
     let current = Valid
 
+    $: if (autovalidate) {
+        autovalid(value)
+    }
+
     $: if (invalid) {
         current = Invalid
     } else {
         current = Valid
+    }
+
+    const autovalid = () => {
+        invalid = false
     }
 </script>
 
