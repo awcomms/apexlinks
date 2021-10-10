@@ -28,16 +28,15 @@
         Column,
         Row
     } from 'carbon-components-svelte'
-    import User20 from 'carbon-icons-svelte/lib/User20'
-    import Earth20 from 'carbon-icons-svelte/lib/Earth20'
-    import Email20 from 'carbon-icons-svelte/lib/Email20'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
 
     let tagLabels = []
 
     $userTags.forEach(t => {
-        label = t.split(':')[0]
-        if (label) tagLabels = [...tagLabels, label]
+        if (t) {
+            let label = t.split(':')[0]
+            if (label) tagLabels = [...tagLabels, label]
+        }
     })
 
     let about
@@ -51,31 +50,9 @@
         </Column>
     {/if}
     <Column lg={4} sm={4} md={4} xlg={4}>
-        {#if user.name}
-            <p style='font-weight: 600;'>{user.name}</p>
-        {/if}
         {#if user.username}
             <div>
-                <User20 />
                 <span class='heading'><span class=username-slash>/</span>{user.username}</span>
-            </div>
-        {/if}
-        <!-- {#if user.address}
-            <div>
-                <Location20 />
-                <span class='heading'>{user.address}</span>
-            </div>
-        {/if} -->
-        {#if user.show_email && user.email}
-            <div>
-                <Email20 />
-                <span class='heading'>{user.email}</span>
-            </div>
-        {/if}
-        {#if user.website}
-            <div>
-                <Earth20 />
-                <a class='heading bx--link' href={user.website}>{user.website}</a>
             </div>
         {/if}
     </Column>
@@ -83,11 +60,26 @@
 
 <br />
 
-{#each field as user.fields}
+{#if user.name}
+    <p>User: name: {user.name}</p>
+{/if}
+{#if user.email}
+    <p>User: email: {user.email}</p>
+{/if}
+{#if user.phone}
+    <p>User: phone: {user.phone}</p>
+{/if}
+{#if user.website}
+    <p>User: external link: <a href={user.website}>{user.website}</a></p>
+{/if}
+
+</br />
+
+<!-- {#each field as user.fields}
     {#if tagLabels.contains(field.label)}
         <p>{field.label}: {field.value}</p>
     {/if}
-{/each}
+{/each} -->
 
 <Row>
     <Column lg={6} sm={6} md={6} xlg={6}>
@@ -98,6 +90,9 @@
 </Row>
 
 <style>
+    .heading {
+        font-weight: 600;
+    }
     .username-slash {
         color: blue;
     }   

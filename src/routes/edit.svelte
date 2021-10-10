@@ -244,7 +244,7 @@
             <Input 
                 invalid={websiteInvalid}
                 invalidText={websiteError}
-                labelText='Link' 
+                labelText='External link - could be a website' 
                 bind:value={website} 
             />
             <TextArea rows={11} placeholder='About (Markdown)' bind:value={about} />
