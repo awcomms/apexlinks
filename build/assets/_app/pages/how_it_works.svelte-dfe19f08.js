@@ -1,9 +1,0 @@
-import{S as A,i as v,s as H,a1 as b,j as p,m as f,o as u,x as d,u as g,v as $,a2 as j,e as h,t as _,k as C,c as w,a as x,g as k,d as c,n as E,f as l,a4 as y}from"../chunks/vendor-cce9f310.js";function S(i){let t,a,e,s,r;return{c(){t=h("h1"),a=_("How Apexlinks works"),e=C(),s=h("p"),r=_(`Apexlinks works by matching tags in your searches \r
-            with tags in user profiles and item's tags.\r
-            Approximate matching is used, which means mispellings\r
-            and partially matching tags are also matched, arranged\r
-            in descending order from the closest match.`)},l(n){t=w(n,"H1",{});var o=x(t);a=k(o,"How Apexlinks works"),o.forEach(c),e=E(n),s=w(n,"P",{});var m=x(s);r=k(m,`Apexlinks works by matching tags in your searches \r
-            with tags in user profiles and item's tags.\r
-            Approximate matching is used, which means mispellings\r
-            and partially matching tags are also matched, arranged\r
-            in descending order from the closest match.`),m.forEach(c)},m(n,o){l(n,t,o),y(t,a),l(n,e,o),l(n,s,o),y(s,r)},d(n){n&&c(t),n&&c(e),n&&c(s)}}}function q(i){let t,a;return t=new j({props:{sm:8,md:8,lg:8,xlg:8,$$slots:{default:[S]},$$scope:{ctx:i}}}),{c(){p(t.$$.fragment)},l(e){f(t.$$.fragment,e)},m(e,s){u(t,e,s),a=!0},p(e,s){const r={};s&1&&(r.$$scope={dirty:s,ctx:e}),t.$set(r)},i(e){a||(d(t.$$.fragment,e),a=!0)},o(e){g(t.$$.fragment,e),a=!1},d(e){$(t,e)}}}function P(i){let t,a;return t=new b({props:{$$slots:{default:[q]},$$scope:{ctx:i}}}),{c(){p(t.$$.fragment)},l(e){f(t.$$.fragment,e)},m(e,s){u(t,e,s),a=!0},p(e,[s]){const r={};s&1&&(r.$$scope={dirty:s,ctx:e}),t.$set(r)},i(e){a||(d(t.$$.fragment,e),a=!0)},o(e){g(t.$$.fragment,e),a=!1},d(e){$(t,e)}}}class z extends A{constructor(t){super();v(this,t,null,P,H,{})}}export{z as default};

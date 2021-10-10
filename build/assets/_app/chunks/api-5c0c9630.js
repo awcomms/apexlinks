@@ -1,1 +1,0 @@
-import{p as s}from"./post-5b27026c.js";const o={get:async(a,t)=>await s("/send",{endpoint:a,method:"GET",data:t}),put:async(a,t)=>await s("/send",{endpoint:a,method:"PUT",data:t}),post:async(a,t)=>await s("/send",{endpoint:a,method:"POST",data:t}),del:async(a,t)=>await s("/send",{endpoint:a,method:"DEL",data:t})};export{o as a};
