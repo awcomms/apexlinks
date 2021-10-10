@@ -73,7 +73,7 @@
     <p>User: external link: <a href={user.website}>{user.website}</a></p>
 {/if}
 
-</br />
+<br />
 
 <!-- {#each field as user.fields}
     {#if tagLabels.contains(field.label)}
