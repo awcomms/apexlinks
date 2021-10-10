@@ -1,4 +1,5 @@
 <script>
+    export let helperText
     export let button = false
     export let tags = []
     export let is_focused = false
@@ -77,6 +78,7 @@
             on:iconClick
             on:blur={blur}
             bind:value
+            bind:helperText
             placeholder={tags.length > 0 ? `${tags.length} ${tags.length > 1 ? 'tags' : 'tag'}` : 'Add tag'}
             {...$$restProps}
             {button}

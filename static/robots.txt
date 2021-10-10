@@ -1,5 +1,4 @@
 User-Agent: *
-Allow: /how_it_works
 
 Disallow: /auth
 Disallow: /edit
@@ -11,6 +10,5 @@ Disallow: /rooms
 Disallow: /add_item
 Disallow: /add_room
 Disallow: /edit
-Disallow: /
 Disallow: /my_rooms
 Disallow: /test

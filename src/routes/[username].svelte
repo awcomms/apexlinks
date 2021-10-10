@@ -61,25 +61,25 @@
 <br />
 
 {#if user.name}
-    <p>User: name: {user.name}</p>
+    <p>name: {user.name}</p>
 {/if}
 {#if user.email}
-    <p>User: email: {user.email}</p>
+    <p>email: {user.email}</p>
 {/if}
 {#if user.phone}
-    <p>User: phone: {user.phone}</p>
+    <p>phone: {user.phone}</p>
 {/if}
 {#if user.website}
-    <p>User: external link: <a href={user.website}>{user.website}</a></p>
+    <p>external link: <a href={user.website}>{user.website}</a></p>
 {/if}
 
 <br />
 
-<!-- {#each field as user.fields}
+{#each field as user.fields}
     {#if tagLabels.contains(field.label)}
         <p>{field.label}: {field.value}</p>
     {/if}
-{/each} -->
+{/each}
 
 <Row>
     <Column lg={6} sm={6} md={6} xlg={6}>

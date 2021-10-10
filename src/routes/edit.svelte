@@ -217,7 +217,10 @@
     </Column>
 </Row>
 
-<Tag bind:tags />
+<Tag
+    helperText = 'Users can use tags to find you'
+    bind:tags
+/>
 
 <br />
 <Row noGutter>
