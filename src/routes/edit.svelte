@@ -54,9 +54,9 @@
         abslink 
     } from '$lib/utils/abslink'
 
-    console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
-    console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
-    console.log('PAYSTACK_LIVE_KEY', PAYSTACK_LIVE_KEY, typeof(PAYSTACK_LIVE_KEY))
+    // console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
+    // console.log('PAYSTACK_TEST_KEY', PAYSTACK_TEST, typeof(PAYSTACK_TEST_KEY))
+    // console.log('PAYSTACK_LIVE_KEY', PAYSTACK_LIVE_KEY, typeof(PAYSTACK_LIVE_KEY))
 
     let config = {
         key: PAYSTACK_TEST === 'true' ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,

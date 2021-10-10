@@ -21,19 +21,24 @@
 <script>
     export let user = {}
     
-    import { api } from '$lib/api'
+    import {
+        userTags
+    } from '$lib/stores'
     import {
         Column,
-        Link,
         Row
     } from 'carbon-components-svelte'
     import User20 from 'carbon-icons-svelte/lib/User20'
-    import Phone20 from 'carbon-icons-svelte/lib/Phone20'
     import Earth20 from 'carbon-icons-svelte/lib/Earth20'
     import Email20 from 'carbon-icons-svelte/lib/Email20'
-    import Location20 from 'carbon-icons-svelte/lib/Location20'
-    import { session } from '$app/stores'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
+
+    let tagLabels = []
+
+    $userTags.forEach(t => {
+        label = t.split(':')[0]
+        if (label) tagLabels = [...tagLabels, label]
+    })
 
     let about
     if (user.about) about = parseMarkdown(user.about)
@@ -77,6 +82,12 @@
 </Row>
 
 <br />
+
+{#each field as user.fields}
+    {#if tagLabels.contains(field.label)}
+        <p>{field.label}: {field.value}</p>
+    {/if}
+{/each}
 
 <Row>
     <Column lg={6} sm={6} md={6} xlg={6}>
