@@ -53,7 +53,8 @@
 </script>
 
 <svelte:head>
-    <title>Apexlinks</title>
+    <title>Search Apexlinks</title>
+    <meta name=description content='Search apexlinks.org for products, services and business globally'>
 </svelte:head>
 
 <Tag
