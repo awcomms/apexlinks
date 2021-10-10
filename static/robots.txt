@@ -4,9 +4,7 @@ Disallow: /auth
 Disallow: /edit
 Disallow: /edit_room
 Disallow: /item
-Disallow: /items
 Disallow: /room
-Disallow: /rooms
 Disallow: /add_item
 Disallow: /add_room
 Disallow: /edit
