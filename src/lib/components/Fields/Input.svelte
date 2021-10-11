@@ -1,4 +1,5 @@
 <script>
+    export let ref
     export let field = {}
 
     import {
@@ -16,8 +17,6 @@
         if(ref) ref.focus()
         field.focused = true
     })
-
-    let ref
 </script>
 
 {#if field.type === 'text'}

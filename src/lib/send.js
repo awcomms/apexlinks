@@ -35,14 +35,13 @@ export function send({ method, path, data, auth }) {
 				if(json.error && !json.status){
 					json.status = res.status
 				}
-				console.log('json: ', json)
+				// console.log('json: ', json)
 				return json
 			} catch (err) {
-				console.log('res.text: ', res.text)
+				// console.log('res.text: ', res.text)
 				return res.text
 			}
 		}).catch((err)=>{
-			console.log(err)
 			return
 		})
 }

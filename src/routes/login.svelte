@@ -146,7 +146,6 @@
                 loginLoading=false
                 return res
             })
-        console.log('login response: ', r)
         usernameError = r.usernameError
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
@@ -192,7 +191,6 @@
                 return r
             }
         )
-        console.log('join r: ', r)
         if (r.emailError) {
             emailInvalid = true
             emailError = r.emailError
@@ -209,7 +207,6 @@
             $session.user = r.user
             goto('/edit')
         } else {
-            console.log('wait what?')
         }
     }
 </script>

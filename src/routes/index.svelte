@@ -42,7 +42,6 @@
         let tagString = JSON.stringify($userTags)
         let url = `users?tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
-        console.log('r.i', res.items)
         if(Array.isArray(res.items)){
             $users = res.items
             total = res.total

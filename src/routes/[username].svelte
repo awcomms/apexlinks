@@ -2,7 +2,6 @@
     import { send } from '$lib/send'
     export async function load({page}){
         let {username} = page.params
-        
         let user = await send({method: 'GET', path: `users/${username}`})
         if (user.error){
             return {
@@ -18,25 +17,45 @@
     }
 </script>
 
+<svelte:head>
+    <meta name=keywords content={
+        (()=>{
+           let stringOfTags = ''
+           user.tags.forEach((t, i, a) => {
+               let tagString = i === a.length-1 ? t : `${t}, `
+               stringOfTags = stringOfTags.concat(tagString)
+           })
+           return stringOfTags
+        })()
+    }>
+    <meta name=description content="{user.name}'s Apexlinks page">
+    <title>/{user.username} - Apexlinks</title>
+    <script id=ld type="application/ld+json"></script>
+</svelte:head>
+
 <script>
-    export let user = {}
+    export let user
     
     import {
-        userTags
-    } from '$lib/stores'
-    import {
         Column,
+        Link,
         Row
     } from 'carbon-components-svelte'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
+import { onMount } from 'svelte';
 
     let tagLabels = []
+    let tagsString = ''
 
-    $userTags.forEach(t => {
-        if (t) {
-            let label = t.split(':')[0]
-            if (label) tagLabels = [...tagLabels, label]
+    onMount(()=>{
+        let ld = {
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
         }
+        user.fields.forEach(field => {
+            if (!(field.label in ld)) ld[field.label] = field.value
+        })
+        document.getElementById('ld').innerText = JSON.stringify(ld)
     })
 
     let about
@@ -60,26 +79,16 @@
 
 <br />
 
-{#if user.name}
-    <p>name: {user.name}</p>
-{/if}
-{#if user.email}
-    <p>email: {user.email}</p>
-{/if}
-{#if user.phone}
-    <p>phone: {user.phone}</p>
-{/if}
-{#if user.website}
-    <p>external link: <a href={user.website}>{user.website}</a></p>
-{/if}
-
-<br />
-
-{#each field as user.fields}
-    {#if tagLabels.contains(field.label)}
-        <p>{field.label}: {field.value}</p>
+{#each user.fields as field}
+    <p class="heading">{field.label}</p>
+    {#if field.type === 'link'}
+        <Link href={field.value}>{field.value}</Link>
+    {:else}
+        <p>{field.value}</p>
     {/if}
 {/each}
+
+<br />
 
 <Row>
     <Column lg={6} sm={6} md={6} xlg={6}>
