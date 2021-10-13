@@ -8,19 +8,19 @@
         redirect: "/login",
       };
     }
-    let {schemas} = await send({method: 'GET', path: 'schema/organization'})
-    console.log('schemas: ', schemas)
+    let {schema} = await send({method: 'GET', path: 'users/schema'})
+    console.log('items: ', schema)
     return {
       props: {
         user,
-        schemas
+        items:schema
       },
     };
   }
 </script>
 
 <script>
-  export let user, schemas;
+  export let user, items;
 
   import { api } from "$lib/api.js";
   import { goto } from "$app/navigation";
@@ -216,7 +216,7 @@
 <br />
 <Row noGutter>
   <Column>
-    <Fields combobox={true} bind:items={schemas} pin bind:fields />
+    <Fields combobox={true} {items} pin bind:fields />
   </Column>
 </Row>
 <br />

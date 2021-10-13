@@ -7,13 +7,14 @@
     if (combobox) {
       if (field.label) {
         items.forEach((i) => {
+          console.log('item id', i)
           i.score = ratio(i.label, field.label);
         });
         items.sort((a, b) => b.score - a.score);
       } else {
         items.sort((a, b) => {
-          aLabel = a.label.toLowerCase();
-          bLabel = b.label.toLowerCase();
+          let aLabel = a.label.toLowerCase();
+          let bLabel = b.label.toLowerCase();
           return aLabel < bLabel ? -1 : 1;
         });
       }
@@ -24,6 +25,8 @@
   export let items;
   export let ref;
   export let field = {};
+
+  items.forEach(i => console.log('i', i.id))
 
   import {
     ComboBox,
