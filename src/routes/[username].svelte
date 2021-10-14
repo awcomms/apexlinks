@@ -35,7 +35,6 @@
 
 <script>
     export let user
-    
     import {
         Column,
         Link,
@@ -68,35 +67,23 @@ import { onMount } from 'svelte';
             <img style='width: 100%;' alt='user display _image' src={user.image}>
         </Column>
     {/if}
-    <Column lg={4} sm={4} md={4} xlg={4}>
-        {#if user.username}
-            <div>
-                <span class='heading'><span class=username-slash>/</span>{user.username}</span>
-            </div>
-        {/if}
-    </Column>
+    {#if user.username}
+        <div>
+            <span class='heading'><span class=username-slash>/</span>{user.username}</span>
+        </div>
+    {/if}
 </Row>
 
 <br />
 
 {#each user.fields as field}
     <p class="heading">{field.label}</p>
-    {#if field.type === 'link'}
+    {#if field.link}
         <Link href={field.value}>{field.value}</Link>
     {:else}
         <p>{field.value}</p>
     {/if}
 {/each}
-
-<br />
-
-<Row>
-    <Column lg={6} sm={6} md={6} xlg={6}>
-        {#if about}
-            <p>{@html about}</p>
-        {/if}
-    </Column>
-</Row>
 
 <style>
     .heading {

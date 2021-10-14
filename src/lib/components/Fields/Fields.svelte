@@ -1,39 +1,39 @@
 <script>
+  $: fields = $storeFields
+
   export let combobox;
   export let items;
   export let prompt = "Add Custom Field";
   export let pin = false;
   export let fields = [];
 
-  let container;
-
-  import { Button, Column, Row } from "carbon-components-svelte";
+  import {
+    Button
+  } from "carbon-components-svelte";
   import Field from "./Field.svelte";
 
+  import {
+    storeFields
+  } from './store'
+
+  let id = Math.max(fields.map(f => f.id))
+
+  $storeFields = fields
+  let container;
+  
   const scrollTo = (field) => {
-    console.log('should scroll')
     // container.scrollTop = field.offsetTop;
   };
 
-  const checkForDuplicate = (field) => {
-    for (let f of fields) {
-      if (f.label === field.label && f !== field) {
-        return true;
-      } else {
-        console.log('different')
-        return false;
-      }
+  const edit = (e) => {
+    let field = $storeFields.find(f => f.id === e.detail)
+    if (!field) {
+      return
     }
-  };
-
-  const cancel = (field) => {
-    field = field.dirty;
-  };
-
-  const edit = (field) => {
-    if (fields.find((f) => f.label == field.label && f !== field)) {
+    if ($storeFields.find((f) => f.label === field.label && f !== field)) {
       field.invalid = true;
       field.invalidText = "A field with that label already exists";
+      field.helperText = 'Click here to scroll to the already existing field' //TODO
       return;
     }
     field.new = false;
@@ -41,14 +41,15 @@
   };
 
   const del = (field) => {
-    fields = fields.filter((f) => f.id != field.id);
+    $storeFields = $storeFields.filter(f => f !== field);
   };
 
   const add = () => {
-    fields.forEach((field) => {
+    $storeFields.forEach((field) => {
       field.focused = false;
     });
     let field = {
+      id,
       pinned: false,
       type: "text",
       new: true,
@@ -58,20 +59,24 @@
       invalid: false,
       error: false,
     };
-    fields = [...fields, field];
+    $storeFields = [...$storeFields, field];
+    id++
   };
 </script>
 
 <div bind:this={container}>
-  {#each fields as field}
+  {#each $storeFields as field}
     <div bind:this={field.cotainerRef}>
       <Field
         {combobox}
         {items}
-        on:del={del(field)}
+        on:del={()=>{del(field)}}
         bind:field
         on:enter
+        on:helperClick={()=>{scrollTo(field)}}
         bind:ref={field.ref}
+        on:kd-13={edit}
+        on:edit={()=>{field.edit = false; field.new = false;}}
         {pin}
       />
     </div>

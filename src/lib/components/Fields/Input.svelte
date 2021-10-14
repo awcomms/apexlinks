@@ -1,5 +1,5 @@
 <script>
-    export let ref
+    export let ref = null
     export let field = {}
 
     import {
@@ -19,31 +19,14 @@
     })
 </script>
 
-{#if field.type === 'text'}
-    <Input
+<Input
     bind:ref
+    on:keydown
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}
     invalidText={field.invalidText}
-    />
-{:else if field.type === 'number'}
-    <NumberInput 
-        placeholder={field.label}
-        bind:value={field.number}
-    />
-{:else if field.type === 'range'}
-    <NumberInput label='Minimum value' bind:value={field.min} />
-    <NumberInput label='Maximum value' bind:value={field.max} />
-{:else}
-    <Input
-        bind:ref
-        labelText={field.label}
-        bind:value={field.value}
-        bind:invalid={field.invalid}
-        invalidText={field.invalidText}
-    />
-{/if}
+/>
 
 <Button
     iconDescription='Edit'

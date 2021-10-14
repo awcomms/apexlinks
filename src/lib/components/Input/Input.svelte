@@ -27,6 +27,7 @@
 <svelte:component 
     bind:ref
     on:input
+    on:keydown
     this={current}
     {...$$restProps}
     bind:value 

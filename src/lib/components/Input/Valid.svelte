@@ -12,6 +12,7 @@
 {#if password}
     <PasswordInput
         on:input
+        on:keydown
         bind:ref
         bind:value
         {...$$restProps}
@@ -19,6 +20,7 @@
 {:else}
     <TextInput
         on:input
+        on:keydown
         bind:ref
         bind:value
         {...$$restProps} 

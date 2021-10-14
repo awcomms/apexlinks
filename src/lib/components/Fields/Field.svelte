@@ -1,11 +1,11 @@
-<svelte:window on:keydown={keydown} />
-
 <script>
+    $: console.log(field.label)
+
     export let combobox
     export let items
     export let pin = false
     export let field = {}
-    export let ref
+    export let ref = null
 
     import {
         Button
@@ -16,32 +16,22 @@
     import Pin from '$lib/components/Pin/Pin.svelte'
     import { createEventDispatcher, onMount } from 'svelte'
 
+    let current
+
     $: if (field.edit) {
         current = Edit
-    } else if (!field.edit) {
+    } else {
         current = Input
     }
 
     const dispatch = createEventDispatcher()
 
-    let current
-
-    const keydown=(e)=>{
-        switch(e.keyCode){
-            case 13:
-                if (field.focused){
-                    if(field.edit){
-                        field.edit = false
-                    } else if(!field.edit) {
-                        dispatch('enter')
-                    }
-                }
-        }
+    const fieldKeydown=(e)=>{
+        dispatch(`kd-${e.keyCode}`, field.id)
     }
 
     onMount(()=>{
         // field.offsetTop = field.containerRef.offsetTop
-        // console.log('foffsetTop: ', field.offsetTop)
     })
 </script>
 
@@ -52,7 +42,8 @@
     on:cancel
     on:edit
     on:del
-    on:accept
+    on:label-kd-13={fieldKeydown}
+    on:helperClick
     bind:field
     bind:ref
 />

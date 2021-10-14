@@ -9,7 +9,6 @@
       };
     }
     let {schema} = await send({method: 'GET', path: 'users/schema'})
-    console.log('items: ', schema)
     return {
       props: {
         user,

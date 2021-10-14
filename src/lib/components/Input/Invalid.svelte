@@ -20,6 +20,7 @@
 {#if password}
     <PasswordInput
         on:input
+        on:keydown
         invalid
         bind:ref
         bind:value
@@ -28,6 +29,7 @@
 {:else}
     <TextInput
         on:input
+        on:keydown
         invalid
         bind:ref
         bind:value

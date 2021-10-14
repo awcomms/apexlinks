@@ -1,13 +1,8 @@
 <script>
-  $: ((selectedIndex) => {
-    if (items && items[selectedIndex]) field.label = items[selectedIndex].text;
-  })();
-
   $: (() => {
     if (combobox) {
       if (field.label) {
         items.forEach((i) => {
-          console.log('item id', i)
           i.score = ratio(i.label, field.label);
         });
         items.sort((a, b) => b.score - a.score);
@@ -23,10 +18,8 @@
 
   export let combobox;
   export let items;
-  export let ref;
+  export let ref = null;
   export let field = {};
-
-  items.forEach(i => console.log('i', i.id))
 
   import {
     ComboBox,
@@ -38,16 +31,17 @@
   import Input from "$lib/components/Input/Input.svelte";
   import Close16 from "carbon-icons-svelte/lib/Close16";
   import Checkmark16 from "carbon-icons-svelte/lib/Checkmark16";
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
 
+  const dispatch = createEventDispatcher()
   let selectedIndex;
-
-  const dispatch = createEventDispatcher();
-
-  import { onMount } from "svelte";
+  let qLabel = field.label
 
   onMount(() => {
-    if (ref) ref.focus();
+    if (ref) {
+      ref.value = qLabel
+      ref.focus()
+    };
     field.focused = true;
   });
 
@@ -69,34 +63,29 @@
       text: "Range",
     },
   ];
-
-  const accept = (field) => {
-    dispatch("accept", field);
-  };
 </script>
 
 {#if combobox}
   <ComboBox
     titleText="Label"
     bind:items
+    bind:ref
     bind:selectedIndex
+    on:keydown={(e)=>{dispatch(`label-kd-${e.keyCode}`)}}
     bind:value={field.label}
   />
 {:else}
   <Input
-    bind:ref
     labelText="Label"
+    bind:ref
     bind:value={field.label}
     bind:invalid={field.invalid}
-    invalidText={field.invalidText}
+    bind:helperText={field.helperText}
+    bind:invalidText={field.invalidText}
+    on:helperClick
+    on:keydown
   />
 {/if}
-
-<Select labelText="Filter type" bind:selected={field.type}>
-  {#each types as type}
-    <SelectItem value={type.value} text={type.text} />
-  {/each}
-</Select>
 
 {#if !field.new}
   <Button
@@ -106,8 +95,8 @@
     size="field"
     icon={Close16}
     on:click={() => {
-      field.edit = false;
       field = field.dirty;
+      field.edit = false;
     }}
   />
 {/if}
@@ -118,7 +107,5 @@
   kind="ghost"
   size="field"
   icon={Checkmark16}
-  on:click={() => {
-    accept(field);
-  }}
+  on:click={()=>{dispatch('edit')}}
 />
