@@ -35,11 +35,14 @@
 
   const dispatch = createEventDispatcher()
   let selectedIndex;
+
+  // used to keep label before field went to edit mode
   let qLabel = field.label
 
   onMount(() => {
     if (ref) {
       ref.value = qLabel
+      field.label = ref.value
       ref.focus()
     };
     field.focused = true;
