@@ -11,24 +11,18 @@
   import Field from "./Field.svelte";
 
   const scrollTo = (field) => {
-    container.scrollTop = field.offsetTop;
+    console.log('should scroll')
+    // container.scrollTop = field.offsetTop;
   };
 
   const checkForDuplicate = (field) => {
     for (let f of fields) {
-      if (f.label === field.label) {
+      if (f.label === field.label && f !== field) {
         return true;
+      } else {
+        console.log('different')
+        return false;
       }
-    }
-  };
-
-  const accept = (e) => {
-    field = e.detail;
-    if (field.new) field.new = false;
-    if (checkForDuplicate(field)) {
-      field.invalid = true;
-      field.error = "A field with this label already exists";
-      scrollTo(field);
     }
   };
 
@@ -78,9 +72,6 @@
         bind:field
         on:enter
         bind:ref={field.ref}
-        on:accept={() => {
-          accept(field);
-        }}
         {pin}
       />
     </div>
