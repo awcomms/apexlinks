@@ -32,9 +32,10 @@ export async function handle({ request, resolve}) {
     const { token } = cookie.parse(request.headers.cookie || '')
     console.log('handle token', token)
     const res = await send({method: 'GET', path: 'tokens', auth: token })
+
     console.log('handle api res: ', res)
     
-    if (res.id) {
+    if (res && res.id) {
         request.locals.user = res
         request.locals.token = token
     }
