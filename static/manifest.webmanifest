@@ -1,7 +1,7 @@
 {
     "dir": "ltr",
     "lang": "en",
-    "categories": ["list", "items", "tags", "discover"],
+    "categories": ["yellow pages", "business directory", "list", "items", "tags", "discover"],
     "description": "Find",
     "theme_color": "#e0e0e0",
     "background_color": "#ffffff",

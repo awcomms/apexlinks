@@ -16,14 +16,18 @@
 </script>
 
 <script>
+    export let user
+
     import {
         Row,
         Column,
         PaginationNav,
+        Link,
     } from 'carbon-components-svelte'
     import { api } from '$lib/api'
     import {
         users,
+        newUser,
         userTags
     } from '$lib/stores'
     import Tag from '$lib/components/Tag.svelte'
@@ -38,7 +42,12 @@
 
     let got
 
-    const get = async function(){
+    const gotoJoin = () => {
+        $newUser = true
+        goto('/login')
+    }
+
+    const get = async () => {
         let tagString = JSON.stringify($userTags)
         let url = `users?tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
@@ -52,8 +61,20 @@
 </script>
 
 <svelte:head>
-    <title>Search Apexlinks</title>
-    <meta name=description content='Search apexlinks.org for products, services and business globally'>
+    <title>Apexlinks - search for products, businesses and services</title>
+    <meta
+        name=keywords
+        content='
+            business directory,
+            yellow pages,
+            business catalogues
+        '
+    >
+    <meta
+        name=description
+        content='Search apexlinks.org for products, services and businesses globally
+        and near you using filters and tags'
+    >
 </svelte:head>
 
 <Tag
@@ -82,6 +103,23 @@
         </Column>
     </Row>
 {/each}
+
+{#if !(got && user)}
+    <Row noGutter>
+        <Column>
+            <p>This is a global directory for products, businesses, and services</p>
+            <Link
+                href=''
+                on:click={(e)=>{
+                    e.preventDefault;
+                    gotoJoin();
+                }}
+            >
+                Click here to join
+            </Link>
+        </Column>
+    </Row>
+{/if}
 
 {#if got && total < 1}
     <Row noGutter>

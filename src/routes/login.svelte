@@ -237,8 +237,9 @@
         <h1 id='head'>Apexlinks</h1>
         <p>
             A global directory for goods, services and businesses,
-            enabling them to be found faster and easier
+            enabling them to be found faster and easier.
         </p>
+        <p>Also SEO</p>
     </Column>
     <Column sm={8} md={8} lg={8} xlg={8}>
         <Form>
@@ -292,9 +293,7 @@
                             {/if}
                         </div>                
                     </Button> -->
-                {/if}
-                
-                {#if $newUser}
+                {:else}
                     <Button as let:props>
                         <div on:click={join} {...props}>
                             <p>Join</p>

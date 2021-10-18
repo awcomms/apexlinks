@@ -41,7 +41,7 @@
         Row
     } from 'carbon-components-svelte'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
-import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     let tagLabels = []
     let tagsString = ''
@@ -49,7 +49,7 @@ import { onMount } from 'svelte';
     onMount(()=>{
         let ld = {
             '@context': 'https://schema.org',
-            '@type': 'LocalBusiness',
+            '@type': 'Organization',
         }
         user.fields.forEach(field => {
             if (!(field.label in ld)) ld[field.label] = field.value

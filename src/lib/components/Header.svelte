@@ -89,7 +89,6 @@
 
 <Header 
   persistentHamburgerMenu={true}
-  company="AngelWings Communications"
   platFormName='Apexlinks'
   bind:isSideNavOpen={$isSideNavOpen}
   href='/'
