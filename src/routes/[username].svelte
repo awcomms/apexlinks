@@ -43,9 +43,6 @@
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
     import { onMount } from 'svelte';
 
-    let tagLabels = []
-    let tagsString = ''
-
     onMount(()=>{
         let ld = {
             '@context': 'https://schema.org',

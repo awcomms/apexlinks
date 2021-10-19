@@ -10,13 +10,11 @@
     import Edit16 from 'carbon-icons-svelte/lib/Edit16'
 
     import {
+        createEventDispatcher,
         onMount
     } from 'svelte'
 
-    onMount(()=>{
-        if(ref) ref.focus()
-        field.focused = true
-    })
+  const dispatch = createEventDispatcher()
 </script>
 
 <Input
@@ -25,6 +23,7 @@
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}
+    on:keydown={(e)=>{dispatch('valueKeydown', e)}}
     invalidText={field.invalidText}
 />
 

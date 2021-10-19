@@ -1,20 +1,31 @@
 <script>
   $: fields = $storeFields
 
-  export let combobox;
-  export let items;
-  export let prompt = "Add Custom Field";
+  export let prompt = "Add new field";
   export let pin = false;
   export let fields = [];
+  export let combobox;
+  export let items;
 
-  import {
-    Button
-  } from "carbon-components-svelte";
   import Field from "./Field.svelte";
 
   import {
     storeFields
   } from './store'
+  import {
+    onMount
+  } from 'svelte'
+
+  onMount(()=>{
+    currentFieldRef.focus()
+  })
+
+  let currentFieldRef
+  let currentField = {
+    value: '',
+    label: '',
+    edit: true
+  }
 
   let id = Math.max(fields.map(f => f.id))
 
@@ -52,17 +63,27 @@
       id,
       pinned: false,
       type: "text",
-      new: true,
-      label: "",
-      value: "",
-      edit: true,
+      label: currentField.label,
+      value: currentField.value,
       invalid: false,
       error: false,
     };
     $storeFields = [...$storeFields, field];
+    currentField.edit = true
+    currentField.value = ''
+    currentField.label = ''
+    currentFieldRef.focus()
     id++
   };
 </script>
+
+<Field
+  label={prompt}
+  bind:ref={currentFieldRef}
+  bind:field={currentField}
+  deleteButton={false}
+  on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
+/>
 
 <div bind:this={container}>
   {#each $storeFields as field}
@@ -81,8 +102,4 @@
       />
     </div>
   {/each}
-</div>
-
-<div>
-  <Button on:click={add}>{prompt}</Button>
 </div>

@@ -1,8 +1,10 @@
 <script>
     $: console.log(field.label)
 
+    export let label
     export let combobox
     export let items
+    export let deleteButton = true
     export let pin = false
     export let field = {}
     export let ref = null
@@ -24,6 +26,24 @@
         current = Input
     }
 
+    const valueKeydown = (e) => {
+        console.log('ck e', e)
+        if (e.detail.shiftKey) {
+            if (e.detail.code === 'Enter') {
+                console.log('ck Enter')
+                field.edit = !field.edit
+            }
+        }
+    }
+
+    const labelKeydown = (e) => {
+        console.log('ck e', e)
+        if (e.detail.code === 'Enter') {
+            console.log('ck Enter')
+            field.edit = !field.edit
+        }
+    }
+
     const dispatch = createEventDispatcher()
 
     const fieldKeydown=(e)=>{
@@ -36,9 +56,13 @@
 </script>
 
 <svelte:component
+    {label}
     bind:combobox
     bind:items
     this={current}
+    on:labelKeydown={labelKeydown}
+    on:valueKeydown
+    on:valueKeydown={valueKeydown}
     on:cancel
     on:edit
     on:del
@@ -48,14 +72,16 @@
     bind:ref
 />
 
-<Button
-    iconDescription='Delete'
-    hasIconOnly
-    kind='ghost'
-    size='field'
-    icon={Delete16}
-    on:click={()=>{dispatch('del')}}
-/>
+{#if deleteButton}
+    <Button
+        iconDescription='Delete'
+        hasIconOnly
+        kind='ghost'
+        size='field'
+        icon={Delete16}
+        on:click={()=>{dispatch('del')}}
+    />
+{/if}
 
 {#if pin}
     <Pin

@@ -16,6 +16,7 @@
     }
   })();
 
+  export let label = 'Label'
   export let combobox;
   export let items;
   export let ref = null;
@@ -43,9 +44,7 @@
     if (ref) {
       ref.value = qLabel
       field.label = ref.value
-      ref.focus()
     };
-    field.focused = true;
   });
 
   const types = [
@@ -70,23 +69,23 @@
 
 {#if combobox}
   <ComboBox
-    titleText="Label"
+    titleText={label}
     bind:items
     bind:ref
     bind:selectedIndex
-    on:keydown={(e)=>{dispatch(`label-kd-${e.keyCode}`)}}
+    on:keydown={(e)=>{dispatch('labelKeydown', e)}}
     bind:value={field.label}
   />
 {:else}
   <Input
-    labelText="Label"
+    labelText={label}
     bind:ref
     bind:value={field.label}
     bind:invalid={field.invalid}
     bind:helperText={field.helperText}
     bind:invalidText={field.invalidText}
+    on:keydown={(e)=>{dispatch('labelKeydown', e)}}
     on:helperClick
-    on:keydown
   />
 {/if}
 
