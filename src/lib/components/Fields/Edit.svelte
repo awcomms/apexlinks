@@ -44,7 +44,9 @@
     if (ref) {
       ref.value = qLabel
       field.label = ref.value
+      ref.focus()
     };
+    field.focused = true;
   });
 
   const types = [

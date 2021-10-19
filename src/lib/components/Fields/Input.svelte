@@ -15,6 +15,11 @@
     } from 'svelte'
 
   const dispatch = createEventDispatcher()
+    
+  onMount(()=>{
+    if(ref) ref.focus()
+    field.focused = true
+})
 </script>
 
 <Input

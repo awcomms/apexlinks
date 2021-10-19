@@ -85,7 +85,7 @@
   on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
 />
 
-<div bind:this={container}>
+<div class="container" bind:this={container}>
   {#each $storeFields as field}
     <div bind:this={field.cotainerRef}>
       <Field
