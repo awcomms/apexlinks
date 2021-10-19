@@ -24,16 +24,21 @@
         PaginationNav,
         Link,
     } from 'carbon-components-svelte'
+    import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import { api } from '$lib/api'
     import {
         users,
         newUser,
-        userTags
+        userTags,
+        userFields
     } from '$lib/stores'
+    import Filters from '$lib/components/Filters.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
 
     $: if (got) get(page)
+
+    let filtersOpen
 
     $users = []
     let page = 0
@@ -77,11 +82,20 @@
     >
 </svelte:head>
 
-<Tag
+<Filters
+    bind:fields={$userFields}
+    bind:open={filtersOpen}
+    on:search={get}
+/>
+
+<Tag 
+    on:iconClick={()=>{filtersOpen=!filtersOpen}} 
     bind:tags={$userTags}
     placeholder='Search'
+    icon={Filter16}
     on:change={get}
-/>
+    button
+/>  
 
 {#each $users as user}
     <br />

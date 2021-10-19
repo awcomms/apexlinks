@@ -24,7 +24,8 @@
   let currentField = {
     value: '',
     label: '',
-    edit: true
+    edit: true,
+    new: true
   }
 
   let id = Math.max(fields.map(f => f.id))
@@ -82,6 +83,7 @@
   bind:ref={currentFieldRef}
   bind:field={currentField}
   deleteButton={false}
+  on:edit={add}
   on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
 />
 

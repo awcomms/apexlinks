@@ -1,12 +1,3 @@
-<script context='module'>
-    export async function load({page, session}){
-        return {
-            props: {
-            }
-        }
-    }
-</script>
-
 <script>
     import {
         Row,
@@ -20,7 +11,6 @@
         notify,
     } from '$lib/stores'
     import Filter16 from 'carbon-icons-svelte/lib/Filter16'
-    import ResetSuccess from '$lib/components/Notifications/ResetSuccess.svelte'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
     import Filters from '$lib/components/Filters.svelte';
