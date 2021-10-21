@@ -37,7 +37,7 @@
   $storeFields = fields
   let container;
   
-  currentLabelKeydown = (e, field) => {
+  const currentLabelKeydown = (e, field) => {
     if (e.key == 'Enter') {
       if (field.edit) {
         field.edit = false
@@ -47,7 +47,7 @@
     }
   }
 
-  currentValueKeydown = (e) => {
+  const currentValueKeydown = (e) => {
     if (e.key == 'Enter') {
       add()
     }
