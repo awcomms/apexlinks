@@ -22,7 +22,8 @@ export function send({ method, path, data, auth }) {
 		opts.body = JSON.stringify(data);
 	}
 
-	return fetch(`${base}/${path}`, opts)
+	try {
+		return fetch(`${base}/${path}`, opts)
 		.then(async (r) => {
 			return {
 				status: r.status,
@@ -44,6 +45,9 @@ export function send({ method, path, data, auth }) {
 		}).catch((err)=>{
 			return
 		})
+	} catch {
+		return {}
+	}
 }
 
 export function get(path, auth) {

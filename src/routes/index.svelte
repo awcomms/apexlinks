@@ -16,19 +16,15 @@
 </script>
 
 <script>
-    export let user
-
     import {
         Row,
         Column,
         PaginationNav,
-        Link,
     } from 'carbon-components-svelte'
     import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import { api } from '$lib/api'
     import {
         users,
-        newUser,
         userTags,
         userFields
     } from '$lib/stores'
@@ -47,14 +43,10 @@
 
     let got
 
-    const gotoJoin = () => {
-        $newUser = true
-        goto('/login')
-    }
-
     const get = async () => {
         let tagString = JSON.stringify($userTags)
-        let url = `users?tags=${tagString}&page=${page+1}`
+        let fieldString = JSON.stringify($userFields)
+        let url = `users?fields=${fieldString}&tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
         if(Array.isArray(res.items)){
             $users = res.items
@@ -64,23 +56,6 @@
         }
     }
 </script>
-
-<svelte:head>
-    <title>Apexlinks - search for products, businesses and services</title>
-    <meta
-        name=keywords
-        content='
-            business directory,
-            yellow pages,
-            business catalogues
-        '
-    >
-    <meta
-        name=description
-        content='Search apexlinks.org for products, services and businesses globally
-        and near you using filters and tags'
-    >
-</svelte:head>
 
 <Filters
     bind:fields={$userFields}
@@ -118,27 +93,10 @@
     </Row>
 {/each}
 
-{#if !(got && user)}
-    <Row noGutter>
-        <Column>
-            <p>This is a global directory for products, businesses, and services</p>
-            <Link
-                href=''
-                on:click={(e)=>{
-                    e.preventDefault;
-                    gotoJoin();
-                }}
-            >
-                Click here to join
-            </Link>
-        </Column>
-    </Row>
-{/if}
-
 {#if got && total < 1}
     <Row noGutter>
         <Column>
-            <p>There doesn't seem to be any results</p>        
+            <p>No results</p>        
         </Column>
     </Row>
 {/if}

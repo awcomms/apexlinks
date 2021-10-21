@@ -60,6 +60,7 @@
     bind:combobox
     bind:items
     this={current}
+    on:labelKeydown
     on:labelKeydown={labelKeydown}
     on:valueKeydown
     on:valueKeydown={valueKeydown}
@@ -89,3 +90,5 @@
         on:click={()=>{field.pinned = !field.pinned}}
     />
 {/if}
+
+<slot />

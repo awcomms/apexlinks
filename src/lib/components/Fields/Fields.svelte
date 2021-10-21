@@ -7,6 +7,10 @@
   export let combobox;
   export let items;
 
+  import {
+    Button
+  } from 'carbon-components-svelte'
+  import ArrowUp16 from 'carbon-icons-svelte/lib/ArrowUp16'
   import Field from "./Field.svelte";
 
   import {
@@ -33,24 +37,41 @@
   $storeFields = fields
   let container;
   
-  const scrollTo = (field) => {
-    // container.scrollTop = field.offsetTop;
-  };
+  currentLabelKeydown = (e, field) => {
+    if (e.key == 'Enter') {
+      if (field.edit) {
+        field.edit = false
+      } else {
+        add()
+      }
+    }
+  }
 
-  const edit = (e) => {
-    let field = $storeFields.find(f => f.id === e.detail)
-    if (!field) {
-      return
+  currentValueKeydown = (e) => {
+    if (e.key == 'Enter') {
+      add()
     }
-    if ($storeFields.find((f) => f.label === field.label && f !== field)) {
-      field.invalid = true;
-      field.invalidText = "A field with that label already exists";
-      field.helperText = 'Click here to scroll to the already existing field' //TODO
-      return;
+  }
+
+  const fieldLabelKeydown = (e) => {
+    if (e.key == 'Enter') {
+      let field = $storeFields.find(f => f.id !== field.id && f.label === field.label)
+      if (field) {
+        field.ref.focus()
+        return
+      }
+      if (field.new) {
+        field.new = false
+      }
+      field.edit = false
     }
-    field.new = false;
-    field.edit = false;
-  };
+  }
+
+  const fieldValueKeydown = (e, field) => {
+    if (e.key == 'Enter') {
+      field.edit = !field.edit
+    }
+  }
 
   const del = (field) => {
     $storeFields = $storeFields.filter(f => f !== field);
@@ -79,12 +100,13 @@
 </script>
 
 <Field
-  label={prompt}
+  on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
   bind:ref={currentFieldRef}
+  on:labelKeydown={(e)=>{currentLabelKeydown(e, currentField)}}
+  on:labelKeydown={(e)=>{currentValueKeydown(e, currentField)}}
   bind:field={currentField}
   deleteButton={false}
-  on:edit={add}
-  on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
+  label={prompt}
 />
 
 <div class="container" bind:this={container}>
@@ -93,15 +115,22 @@
       <Field
         {combobox}
         {items}
+        on:labelKeydown={(e)=>{fieldLabelKeydown(e, field)}}
+        on:valueKeydown={(e)=>{fieldValueKeydown(e, field)}}
         on:del={()=>{del(field)}}
-        bind:field
-        on:enter
-        on:helperClick={()=>{scrollTo(field)}}
         bind:ref={field.ref}
-        on:kd-13={edit}
-        on:edit={()=>{field.edit = false; field.new = false;}}
+        bind:field
         {pin}
-      />
+      >
+        <Button
+          iconDescription="Go to 'Add new field'"
+          hasIconOnly
+          kind='ghost'
+          size='small'
+          icon={ArrowUp16}
+          on:click={()=>{currentFieldRef.focus()}}
+        />
+      </Field>
     </div>
   {/each}
 </div>

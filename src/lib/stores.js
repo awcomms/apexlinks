@@ -1,13 +1,11 @@
 import { writable } from 'svelte/store'
-storage = window.localStorage
 
-function store(name) {
+function store() {
     const { subscribe, set } = writable([])
 
     return {
         subscribe,
         set: (value) => {
-            storage.set
             set(value)
         }
     }
