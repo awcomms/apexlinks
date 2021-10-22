@@ -1,9 +1,9 @@
 <script>
     export let ref = null
     export let field = {}
+    export let acceptKey
 
     import {
-        NumberInput,
         Button
     } from 'carbon-components-svelte'
     import Input from '$lib/components/Input/Input.svelte'    
@@ -20,6 +20,12 @@
     if(ref) ref.focus()
     field.focused = true
 })
+
+const valueKeydown = (e) => {
+    if (e.key === acceptKey) {
+      dispatch('valueAccept')
+    }
+  }
 </script>
 
 <Input
@@ -28,7 +34,7 @@
     labelText={field.label}
     bind:value={field.value}
     bind:invalid={field.invalid}
-    on:keydown={(e)=>{dispatch('valueKeydown', e)}}
+    on:keydown={valueKeydown}
     invalidText={field.invalidText}
 />
 
@@ -36,7 +42,7 @@
     iconDescription='Edit'
     hasIconOnly
     kind='ghost'
-    size='field'
+    size='small'
     icon={Edit16}
-    on:click={()=>{field.dirty=field; field.edit=true}}
+    on:click={()=>{delete(field.dirty); field.dirty = field; field.edit=true}}
 />

@@ -1,6 +1,4 @@
 <script>
-  $: fields = $storeFields
-
   export let prompt = "Add new field";
   export let pin = false;
   export let fields = [];
@@ -35,55 +33,62 @@
   let id = Math.max(fields.map(f => f.id))
 
   $storeFields = fields
-  let container;
+
+  const getDuplicateLabel = (field) => {
+    let duplicate
+    if (typeof field.id === 'number') {
+      duplicate = $storeFields.find(f => f.id !== field.id && f.label === field.label)
+    } else {
+      duplicate = $storeFields.find(f => f.label === field.label)
+    }
+    return duplicate
+  }
+
+  const resolveDuplicateLabel = (field) => {
+    let duplicate = getDuplicateLabel(field)
+    if (duplicate) {
+      duplicate.ref.focus()
+      return true
+    }
+  }
   
-  const currentLabelKeydown = (e, field) => {
-    if (e.key == 'Enter') {
-      if (field.edit) {
-        field.edit = false
-      } else {
-        add()
+  const currentLabelAccept = () => {
+    if (resolveDuplicateLabel(currentField)) {
+        return
       }
-    }
+    currentField.edit = false
   }
 
-  const currentValueKeydown = (e) => {
-    if (e.key == 'Enter') {
-      add()
-    }
+  const currentValueAccept = () => {
+    add()
+    currentField.edit = true
+    currentField.label = ''
+    currentField.value = ''
+    currentFieldRef.focus()
   }
 
-  const fieldLabelKeydown = (e) => {
-    if (e.key == 'Enter') {
-      let field = $storeFields.find(f => f.id !== field.id && f.label === field.label)
-      if (field) {
-        field.ref.focus()
+  const fieldlabelAccept = (field) => {
+      if (resolveDuplicateLabel(field)) {
         return
       }
       if (field.new) {
         field.new = false
       }
       field.edit = false
-    }
   }
 
-  const fieldValueKeydown = (e, field) => {
-    if (e.key == 'Enter') {
+  const fieldvalueAccept = (field) => {
       field.edit = !field.edit
-    }
   }
 
   const del = (field) => {
-    $storeFields = $storeFields.filter(f => f !== field);
+    $storeFields = $storeFields.filter(f => f.id !== field.id);
   };
 
   const add = () => {
-    $storeFields.forEach((field) => {
-      field.focused = false;
-    });
     let field = {
       id,
-      pinned: false,
+      hidden: false,
       type: "text",
       label: currentField.label,
       value: currentField.value,
@@ -91,46 +96,40 @@
       error: false,
     };
     $storeFields = [...$storeFields, field];
-    currentField.edit = true
-    currentField.value = ''
-    currentField.label = ''
-    currentFieldRef.focus()
     id++
   };
 </script>
 
 <Field
-  on:valueKeydown={(e)=>{if (e.detail.code === 'Enter') add()}}
   bind:ref={currentFieldRef}
-  on:labelKeydown={(e)=>{currentLabelKeydown(e, currentField)}}
-  on:labelKeydown={(e)=>{currentValueKeydown(e, currentField)}}
+  on:labelAccept={currentLabelAccept}
+  on:valueAccept={currentValueAccept}
   bind:field={currentField}
   deleteButton={false}
   label={prompt}
+  acceptKey='Enter'
 />
 
-<div class="container" bind:this={container}>
-  {#each $storeFields as field}
-    <div bind:this={field.cotainerRef}>
-      <Field
-        {combobox}
-        {items}
-        on:labelKeydown={(e)=>{fieldLabelKeydown(e, field)}}
-        on:valueKeydown={(e)=>{fieldValueKeydown(e, field)}}
-        on:del={()=>{del(field)}}
-        bind:ref={field.ref}
-        bind:field
-        {pin}
-      >
+{#each $storeFields as field}
+    <Field
+      {combobox}
+      {items}
+      on:labelAccept={()=>{fieldlabelAccept(field)}}
+      on:valueAccept={()=>{fieldvalueAccept(field)}}
+      on:del={()=>{del(field)}}
+      bind:ref={field.ref}
+      bind:field
+      {pin}
+    >
+      <svelte:fragment slot='cba'>
         <Button
           iconDescription="Go to 'Add new field'"
           hasIconOnly
           kind='ghost'
-          size='small'
+          size='field'
           icon={ArrowUp16}
           on:click={()=>{currentFieldRef.focus()}}
         />
-      </Field>
-    </div>
-  {/each}
-</div>
+      </svelte:fragment>
+    </Field>
+{/each}

@@ -1,6 +1,5 @@
 <script>
-    $: console.log(field.label)
-
+    export let acceptKey = 'Enter'
     export let label
     export let combobox
     export let items
@@ -16,7 +15,7 @@
     import Input from '$lib/components/Fields/Input.svelte'
     import Edit from '$lib/components/Fields/Edit.svelte'
     import Pin from '$lib/components/Pin/Pin.svelte'
-    import { createEventDispatcher, onMount } from 'svelte'
+    import { createEventDispatcher } from 'svelte'
 
     let current
 
@@ -26,48 +25,20 @@
         current = Input
     }
 
-    const valueKeydown = (e) => {
-        console.log('ck e', e)
-        if (e.detail.shiftKey) {
-            if (e.detail.code === 'Enter') {
-                console.log('ck Enter')
-                field.edit = !field.edit
-            }
-        }
-    }
-
-    const labelKeydown = (e) => {
-        console.log('ck e', e)
-        if (e.detail.code === 'Enter') {
-            console.log('ck Enter')
-            field.edit = !field.edit
-        }
-    }
-
     const dispatch = createEventDispatcher()
-
-    const fieldKeydown=(e)=>{
-        dispatch(`kd-${e.keyCode}`, field.id)
-    }
-
-    onMount(()=>{
-        // field.offsetTop = field.containerRef.offsetTop
-    })
 </script>
 
 <svelte:component
+    bind:acceptKey
     {label}
     bind:combobox
     bind:items
     this={current}
-    on:labelKeydown
-    on:labelKeydown={labelKeydown}
-    on:valueKeydown
-    on:valueKeydown={valueKeydown}
+    on:labelAccept
+    on:valueAccept
     on:cancel
     on:edit
     on:del
-    on:label-kd-13={fieldKeydown}
     on:helperClick
     bind:field
     bind:ref
@@ -78,7 +49,7 @@
         iconDescription='Delete'
         hasIconOnly
         kind='ghost'
-        size='field'
+        size='small'
         icon={Delete16}
         on:click={()=>{dispatch('del')}}
     />
@@ -91,4 +62,4 @@
     />
 {/if}
 
-<slot />
+<slot name='cba' />

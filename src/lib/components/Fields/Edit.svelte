@@ -17,6 +17,7 @@
   })();
 
   export let label = 'Label'
+  export let acceptKey
   export let combobox;
   export let items;
   export let ref = null;
@@ -24,8 +25,6 @@
 
   import {
     ComboBox,
-    SelectItem,
-    Select,
     Button,
   } from "carbon-components-svelte";
   import { ratio } from "fuzzball";
@@ -49,24 +48,11 @@
     field.focused = true;
   });
 
-  const types = [
-    {
-      value: "text",
-      text: "Text",
-    },
-    {
-      value: "number",
-      text: "Number",
-    },
-    {
-      value: "link",
-      text: "Link",
-    },
-    {
-      value: "range",
-      text: "Range",
-    },
-  ];
+  const editKeydown = (e) => {
+    if (e.key === acceptKey) {
+      dispatch('labelAccept')
+    }
+  }
 </script>
 
 {#if combobox}
@@ -75,7 +61,7 @@
     bind:items
     bind:ref
     bind:selectedIndex
-    on:keydown={(e)=>{dispatch('labelKeydown', e)}}
+    on:keydown={editKeydown}
     bind:value={field.label}
   />
 {:else}
@@ -86,7 +72,7 @@
     bind:invalid={field.invalid}
     bind:helperText={field.helperText}
     bind:invalidText={field.invalidText}
-    on:keydown={(e)=>{dispatch('labelKeydown', e)}}
+    on:keydown={editKeydown}
     on:helperClick
   />
 {/if}
@@ -111,5 +97,5 @@
   kind="ghost"
   size="field"
   icon={Checkmark16}
-  on:click={()=>{dispatch('edit')}}
+  on:click={()=>{dispatch('labelAccept')}}
 />

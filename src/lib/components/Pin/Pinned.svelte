@@ -9,7 +9,7 @@
     iconDescription='Unpin field'
     hasIconOnly
     kind='ghost'
-    size='field'
+    size='small'
     icon={PinFilled16}
     on:click
 />
