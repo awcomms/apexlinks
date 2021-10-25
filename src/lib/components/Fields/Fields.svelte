@@ -8,6 +8,9 @@
   import {
     Button
   } from 'carbon-components-svelte'
+  // import BButton from "$lib/components/BButton/B.svelte";
+  import View16 from 'carbon-icons-svelte/lib/View16'
+  import ViewOff16 from 'carbon-icons-svelte/lib/ViewOff16'
   import ArrowUp16 from 'carbon-icons-svelte/lib/ArrowUp16'
   import Field from "./Field.svelte";
 
@@ -21,6 +24,18 @@
   onMount(()=>{
     currentFieldRef.focus()
   })
+
+  let offText='Make this field visible'
+  let hiddenFirst = {
+    icon: ViewOff16,
+    text: offText
+  }
+
+  let onText='Hide this field. Field will still be used to rank you in search and SEO'
+  let hiddenSecond = {
+    icon: View16,
+    text: onText
+  }
 
   let currentFieldRef
   let currentField = {
@@ -122,6 +137,11 @@
       {pin}
     >
       <svelte:fragment slot='cba'>
+        <!-- <BButton
+          bind:control={field.hidden}
+          first={hiddenFirst}
+          second={hiddenSecond}
+        /> -->
         <Button
           iconDescription="Go to 'Add new field'"
           hasIconOnly

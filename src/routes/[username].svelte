@@ -3,7 +3,12 @@
     export async function load({page}){
         let {username} = page.params
         let user = await send({method: 'GET', path: `users/${username}`})
-        if (user.error){
+        if (!user) {
+            return {
+                status: 404,
+                error: 'User not found'
+            }
+        } else if (user && user.error) {
             return {
                 status: user.status,
                 error: user.error

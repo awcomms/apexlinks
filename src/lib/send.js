@@ -1,11 +1,12 @@
 import { dev } from '$app/env'
 
-let local = 'http://localhost:5000'
+let local = 'http://127.0.0.1:5000'
 let live = import.meta.env.VITE_API
 
 export let base = dev ? local : live
 
 export function send({ method, path, data, auth }) {
+	console.log('ye')
 	console.log('path: ', path, '|', 'method: ', method)
 	const opts = { method, headers: {} }
 

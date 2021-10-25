@@ -14,7 +14,6 @@
     import Delete16 from 'carbon-icons-svelte/lib/Delete16'
     import Input from '$lib/components/Fields/Input.svelte'
     import Edit from '$lib/components/Fields/Edit.svelte'
-    import Pin from '$lib/components/Pin/Pin.svelte'
     import { createEventDispatcher } from 'svelte'
 
     let current
@@ -52,13 +51,6 @@
         size='small'
         icon={Delete16}
         on:click={()=>{dispatch('del')}}
-    />
-{/if}
-
-{#if pin}
-    <Pin
-        bind:pinned={field.pinned}
-        on:click={()=>{field.pinned = !field.pinned}}
     />
 {/if}
 

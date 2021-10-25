@@ -1,12 +1,12 @@
 <script context='module'>
     export async function load({session}){
         let user = session.user
-        // if (!user){
-        //     return {
-        //         status: 302,
-        //         redirect: '/login'
-        //     }
-        // }
+        if (!user){
+            return {
+                status: 302,
+                redirect: '/login'
+            }
+        }
         return {
             props: {
                 user

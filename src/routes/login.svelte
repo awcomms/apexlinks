@@ -1,26 +1,17 @@
 <svelte:window on:keydown={keydown} />
 
 <script context="module">
-    import { api } from '$lib/api'
-    export async function load({ page, session }) {
-        let n = page.query.n
-        if (session.user) {
-            return {
-                status: 302,
-                redirect: '/',
-            }
-        }
-        return {
-            props: {
-                n
-            }
-        }
-    }
+    // export async function load({ session }) {
+    //     if (session.user) {
+    //         return {
+    //             status: 302,
+    //             redirect: '/',
+    //         }
+    //     }
+    // }
 </script>
     
 <script>
-    export let n = ''
-
     import {
         Row,
         Form,
@@ -30,11 +21,11 @@
         ButtonSet,
         InlineLoading,
     } from 'carbon-components-svelte';
+    import { api } from '$lib/api'
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
     import { newUser } from '$lib/stores' 
-    import { isSideNavOpen, notify } from '$lib/stores'
     import { post } from '$lib/utils/fetch/post'
     import { checkEmail } from '$lib/utils/checkEmail'
     import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
@@ -43,11 +34,6 @@
         userText = 'Login instead'
     } else {
         userText = 'Join instead'
-    }
-
-    if(n && process.browser) {
-        $notify = n
-        goto('/login')
     }
 
     let userText

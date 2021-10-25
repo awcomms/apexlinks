@@ -27,7 +27,6 @@
     InlineLoading,
     FluidForm,
     Checkbox,
-    TextArea,
     Button,
     Column,
     Row,
@@ -215,7 +214,7 @@
 <br />
 <Row noGutter>
   <Column>
-    <Fields combobox={true} {items} pin bind:fields />
+    <Fields combobox={true} {items} bind:fields />
   </Column>
 </Row>
 <br />
@@ -232,7 +231,7 @@
       <Input
         invalid={websiteInvalid}
         invalidText={websiteError}
-        labelText="External link - could be a website"
+        labelText="Link - Website or other"
         bind:value={website}
       />
     </FluidForm>

@@ -16,17 +16,17 @@
     "dotenv": "^10.0.0",
     "fuzzball": "^2.0.2",
     "html-minifier": "^4.0.0",
-    "marked": "3.0.7",
-    "socket.io-client": "^4.2.0",
-    "svelte-paystack": "^0.1.4",
+    "marked": "3.0.8",
+    "socket.io-client": "^4.3.2",
+    "svelte-paystack": "^0.2.2",
     "svelte-preprocess": "^4.9.8"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.44.5",
-    "eslint": "^7.32.0",
+    "carbon-components-svelte": "^0.47.3",
+    "eslint": "^8.1.0",
     "eslint-plugin-svelte3": "^3.2.1",
     "prettier": "^2.4.1",
-    "svelte": "^3.43.1"
+    "svelte": "^3.44.0"
   }
 }
