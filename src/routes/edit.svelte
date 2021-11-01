@@ -42,8 +42,8 @@
     PAYSTACK_TEST_KEY,
     PAYSTACK_LIVE_KEY,
   } from "$lib/env";
-  import { checkEmail } from "$lib/utils/checkEmail";
-  import { abslink } from "$lib/utils/abslink";
+  // import { checkEmail } from "$lib/utils/checkEmail";
+  // import { abslink } from "$lib/utils/abslink";
 
   // console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
   // console.log('PAYSTACK_TEST_KEY', PAYSTACK_TEST, typeof(PAYSTACK_TEST_KEY))
@@ -51,7 +51,7 @@
 
   let config = {
     key: PAYSTACK_TEST === "true" ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
-    email: user.email,
+    email: user.email, // TODO
     metadata: {
       id: user.id,
     },
@@ -64,29 +64,17 @@
     },
   };
 
-  let show_email = user.show_email;
   let username = user.username;
   let hidden = user.hidden;
-  let address = user.address;
-  let website = user.website;
   let image = user.image;
-  let email = user.email;
-  let phone = user.phone;
-  let about = user.about;
-  let data = user.data;
-  let name = user.name;
   let fields = user.fields || [];
   let tags = user.tags || [];
 
   let usernameInvalid;
   let usernameError;
 
-  let websiteError =
-    'Add a url scheme to the start of the link, "http://" or "https://"';
-  let websiteInvalid;
-
-  let emailInvalid;
-  let emailError;
+  // let emailInvalid;
+  // let emailError;
 
   let loading;
 
@@ -100,27 +88,23 @@
   };
 
   const edit = async () => {
+    console.log(fields)
     let req_fields = fields.map((f) => {
       return { label: f.label, value: f.value };
     });
     loading = true;
-    if (website && !abslink.test(website)) {
-      websiteInvalid = true;
-      loading = false;
-      return;
-    }
-    if (!email) {
-      emailInvalid = true;
-      emailError = "Empty";
-      loading = false;
-      return;
-    }
-    if (!checkEmail(email)) {
-      emailInvalid = true;
-      emailError = "Unaccepted";
-      loading = false;
-      return;
-    }
+    // if (!email) {
+    //   emailInvalid = true;
+    //   emailError = "Empty";
+    //   loading = false;
+    //   return;
+    // }
+    // if (!checkEmail(email)) {
+    //   emailInvalid = true;
+    //   emailError = "Unaccepted";
+    //   loading = false;
+    //   return;
+    // }
     if (!username) {
       usernameInvalid = true;
       usernameError = "Empty";
@@ -135,26 +119,19 @@
         return;
       }
     }
-    if (checkEmail(username)) {
-      usernameInvalid = true;
-      usernameError = "Unaccepted";
-      loading = false;
-      return;
-    }
+    // if (checkEmail(username)) {
+    //   usernameInvalid = true;
+    //   usernameError = "Unaccepted";
+    //   loading = false;
+    //   return;
+    // }
     let dt = {
-      show_email,
+      // show_email,
       username,
       hidden,
-      website,
-      address,
-      email,
-      phone,
-      about,
       fields: req_fields,
       image,
-      data,
       tags,
-      name,
     };
     let res = await api.put("users", dt).finally((r) => {
       loading = false;
@@ -227,12 +204,6 @@
         bind:invalid={usernameInvalid}
         bind:value={username}
         labelText="Username"
-      />
-      <Input
-        invalid={websiteInvalid}
-        invalidText={websiteError}
-        labelText="Link - Website or other"
-        bind:value={website}
       />
     </FluidForm>
   </Column>

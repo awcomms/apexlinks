@@ -2,10 +2,13 @@
     export let open = false
     export let fields = []
 
+    export let extraFields = []
+
     import {
         Modal
     } from 'carbon-components-svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
+    import Field from '$lib/components/Fields/Field.svelte'
     import { createEventDispatcher } from 'svelte'
 
     const dispatch = createEventDispatcher()
@@ -23,6 +26,15 @@
     hasForm
     bind:open
 >
+    {#each extraFields as extraField}
+        <Field
+            autoAccept
+            bind:field={extraField}
+            deleteButton={false}
+            acceptKey='Enter'
+        />
+    {/each}
+
     <Fields
         on:enter={()=>{open=false; dispatch('search')}}
         prompt='Add Filter'

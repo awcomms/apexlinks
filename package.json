@@ -8,6 +8,19 @@
     "export": "svelte-kit export",
     "start": "node build"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ],
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.svelte$": "svelte-jester"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "svelte"
+    ]
+  },
   "dependencies": {
     "@sveltejs/adapter-node": "next",
     "@sveltejs/site-kit": "^1.4.0",
@@ -23,10 +36,14 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
+    "@testing-library/jest-dom": "^5.14.1",
+    "babel-jest": "^27.3.1",
     "carbon-components-svelte": "^0.47.3",
     "eslint": "^8.1.0",
     "eslint-plugin-svelte3": "^3.2.1",
+    "jest": "^27.3.1",
     "prettier": "^2.4.1",
-    "svelte": "^3.44.0"
+    "svelte": "^3.44.0",
+    "svelte-jester": "^2.1.5"
   }
 }

@@ -48,6 +48,7 @@
   let id = Math.max(fields.map(f => f.id))
 
   $storeFields = fields
+  $: fields = $storeFields
 
   const getDuplicateLabel = (field) => {
     let duplicate
@@ -146,7 +147,7 @@
           iconDescription="Go to 'Add new field'"
           hasIconOnly
           kind='ghost'
-          size='field'
+          size='small'
           icon={ArrowUp16}
           on:click={()=>{currentFieldRef.focus()}}
         />

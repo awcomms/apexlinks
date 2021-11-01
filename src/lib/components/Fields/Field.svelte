@@ -1,10 +1,10 @@
 <script>
+    export let autoAccept = false
     export let acceptKey = 'Enter'
     export let label
     export let combobox
     export let items
     export let deleteButton = true
-    export let pin = false
     export let field = {}
     export let ref = null
 
@@ -24,6 +24,18 @@
         current = Input
     }
 
+    const labelAccept = () => {
+        if (autoAccept) {
+            field.edit = false
+        }
+    }
+
+    const valueAccept = () => {
+        if (autoAccept) {
+            field.edit = true
+        }
+    }
+
     const dispatch = createEventDispatcher()
 </script>
 
@@ -33,7 +45,9 @@
     bind:combobox
     bind:items
     this={current}
+    on:labelAccept={labelAccept}
     on:labelAccept
+    on:valueAccept={valueAccept}
     on:valueAccept
     on:cancel
     on:edit

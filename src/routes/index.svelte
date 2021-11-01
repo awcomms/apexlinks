@@ -24,6 +24,9 @@
     import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import { api } from '$lib/api'
     import {
+        extraFields
+    } from '$lib/_stores/index'
+    import {
         users,
         userTags,
         userFields
@@ -36,6 +39,17 @@
 
     let filtersOpen
 
+    $extraFields = [
+        {
+            label: 'user ID',
+            value: ''
+        },
+        {
+            label: 'username',
+            value: ''
+        }
+    ]
+
     $users = []
     let page = 0
     let total = 0
@@ -45,8 +59,10 @@
 
     const get = async () => {
         let tagString = JSON.stringify($userTags)
-        let fieldString = JSON.stringify($userFields)
-        let url = `users?fields=${fieldString}&tags=${tagString}&page=${page+1}`
+        let fields = $userFields.map((uf) => ({label: uf.label, value: uf.value}))
+        let fieldString = JSON.stringify(fields)
+        let extraString = JSON.stringify($extraFields)
+        let url = `users?extraFields=${extraString}fields=${fieldString}&tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
         if(Array.isArray(res.items)){
             $users = res.items
@@ -58,6 +74,7 @@
 </script>
 
 <Filters
+    bind:extraFields={$extraFields}
     bind:fields={$userFields}
     bind:open={filtersOpen}
     on:search={get}

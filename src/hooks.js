@@ -40,8 +40,6 @@ export async function handle({ request, resolve}) {
 
     if(!dev){
         if (request.headers['x-forwarded-proto'] !== 'https') {
-            console.log('request.path: ', request.path)
-            const path = request.path === '/' ? '/apexlinks' : request.path
             return {
                 headers: {
                     Location: `https://${request.host}${path}`

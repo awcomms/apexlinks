@@ -42,9 +42,9 @@
     export let user
     import {
         Column,
-        Link,
         Row
     } from 'carbon-components-svelte'
+    import DisplayField from '$lib/components/DisplayField.svelte'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
     import { onMount } from 'svelte';
 
@@ -63,28 +63,23 @@
     if (user.about) about = parseMarkdown(user.about)
 </script>
 
-<Row>
-    {#if user.image}
-        <Column lg={2} sm={2} md={2} xlg={2}>
-            <img style='width: 100%;' alt='user display _image' src={user.image}>
-        </Column>
-    {/if}
-    {#if user.username}
-        <div>
-            <span class='heading'><span class=username-slash>/</span>{user.username}</span>
-        </div>
-    {/if}
-</Row>
+{#if user.image}
+    <Column lg={2} sm={2} md={2} xlg={2}>
+        <img style='width: 100%;' alt='user display _image' src={user.image}>
+    </Column>
+{/if}
+{#if user.username}
+    <DisplayField field={{label: 'username', value: user.username}} />
+{/if}
+
+<br />
+
+<DisplayField field={{label: 'id', value: user.id}} />
 
 <br />
 
 {#each user.fields as field}
-    <p class="heading">{field.label}</p>
-    {#if field.link}
-        <Link href={field.value}>{field.value}</Link>
-    {:else}
-        <p>{field.value}</p>
-    {/if}
+    <DisplayField {field} />
 {/each}
 
 <style>
