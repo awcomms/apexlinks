@@ -5,7 +5,7 @@
         if(!user){
             return {
                 status: 302,
-                redirect: '/login'
+                redirect: '/index'
             }
         }
         let rooms

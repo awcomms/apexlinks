@@ -1,10 +1,12 @@
 <script>
+    export let editable = true
     export let autoAccept = false
     export let acceptKey = 'Enter'
     export let label
     export let combobox
     export let items
-    export let deleteButton = true
+    export let valueItems
+    export let deletable = true
     export let field = {}
     export let ref = null
 
@@ -18,7 +20,7 @@
 
     let current
 
-    $: if (field.edit) {
+    $: if (field.edit && editable) {
         current = Edit
     } else {
         current = Input
@@ -44,6 +46,7 @@
     {label}
     bind:combobox
     bind:items
+    bind:valueItems
     this={current}
     on:labelAccept={labelAccept}
     on:labelAccept
@@ -57,7 +60,7 @@
     bind:ref
 />
 
-{#if deleteButton}
+{#if deletable}
     <Button
         iconDescription='Delete'
         hasIconOnly

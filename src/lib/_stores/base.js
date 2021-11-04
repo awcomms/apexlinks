@@ -10,7 +10,7 @@ const setStorageIfBrowser = (value, name) => {
     if (browser) setStorage(value, name)
 }
 
-function store(name) {
+export function store(name) {
     let storeValue
     if (browser) {
         storeValue = window.localStorage.getItem(name)
@@ -31,5 +31,3 @@ function store(name) {
         }
     }
 }
-
-export const extraFields = store('extraFields')

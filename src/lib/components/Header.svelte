@@ -83,7 +83,7 @@
   const exit=()=>{
     $session.user = null
     post('/auth/exit')
-    goto('/login')
+    goto('/index')
   }
 </script>
 
@@ -107,7 +107,7 @@
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
-      <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/login'/>
+      <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/index'/>
     {/if}
     {#if $session.user}
       <!-- <SideNavMenu text='Rooms'>

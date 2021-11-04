@@ -121,10 +121,12 @@
   on:labelAccept={currentLabelAccept}
   on:valueAccept={currentValueAccept}
   bind:field={currentField}
-  deleteButton={false}
+  deletable={false}
   label={prompt}
   acceptKey='Enter'
 />
+
+<slot name='customFields' />
 
 {#each $storeFields as field}
     <Field

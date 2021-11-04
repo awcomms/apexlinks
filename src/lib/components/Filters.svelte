@@ -26,18 +26,21 @@
     hasForm
     bind:open
 >
-    {#each extraFields as extraField}
+
+    <!-- {#each extraFields as extraField}
         <Field
             autoAccept
             bind:field={extraField}
-            deleteButton={false}
+            deletable={false}
             acceptKey='Enter'
         />
-    {/each}
+    {/each} -->
 
     <Fields
         on:enter={()=>{open=false; dispatch('search')}}
         prompt='Add Filter'
         bind:fields
-    />
+    >
+        <slot slot='customFields' name='customFields' />
+    </Fields>
 </Modal>

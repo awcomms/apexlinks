@@ -7,7 +7,7 @@
         if (!user){
             return {
                 status: 302,
-                redirect: '/login',
+                redirect: '/index',
             }
         }
         if (!(room.user == user.username)){

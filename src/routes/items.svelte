@@ -1,4 +1,19 @@
+<script context='module'>
+    export const load = async () => {
+        let countries = await api.get('countries').then(r => r.res)
+        let markets = await api.get('markets').then(r => r.res)
+        let states = await api.get('states').then(r => r.res)
+        let cities = await api.get('cities').then(r => r.res)
+        return {
+            props: {
+                countries, markets, states, cities
+            }
+        }
+    }
+</script>
+
 <script>
+    export let countries, markets, states, cities
     import {
         Row,
         Column,
@@ -10,10 +25,64 @@
         itemTags,
         notify,
     } from '$lib/stores'
+    import {
+        extraFields
+    } from '$lib/_stores/items'
     import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
+    import Field from '$lib/components/Fields/Field.svelte';
     import Filters from '$lib/components/Filters.svelte';
+
+    // get value via label from extra fields
+    const g = (label) => {
+        return $extraFields.find(e => e.label===label).value
+    }
+
+    console.log('countries', countries)
+
+    $extraFields = []
+
+    $: (async ($extraFields) => {
+        if (!Array.isArray(extraFields)) return
+        let marketsUrl = 'markets?'
+        marketsUrl.concat(`&country=${g('country')}`)
+        marketsUrl.concat(`&state=${g('state')}`)
+        marketsUrl.concat(`&city=${g('city')}`)
+        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+        
+        let statesUrl = 'states?'
+        statesUrl.concat(`&country=${g('country')}`)
+        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+        
+        let citiesUrl = 'cities?'
+        citiesUrl.concat(`&country=${g('country')}`)
+        citiesUrl.concat(`&state=${g('state')}`)
+        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+    })()
+
+    $extraFields = [
+        {
+            items: countries,
+            label: 'country',
+            value: ''
+        },
+        {
+            items: states,
+            label: 'state',
+            value: ''
+        },
+        {
+            items: cities,
+            label: 'city',
+            value: ''
+        },
+        {
+            items: markets,
+            label: 'market',
+            value: ''
+        }
+    ]
 
     $: if (got) get(page)
 
@@ -39,9 +108,11 @@
     }
 
     const get = async()=>{
-        let tagString = JSON.stringify($itemTags)
-        let fieldString = JSON.stringify($itemFields)
-        let url = `items?fields=${fieldString}&$tags=${tagString}&page=${page+1}`
+        let tagArg = JSON.stringify($itemTags)
+        let fieldArg = JSON.stringify($itemFields)
+        let extraFieldsArg = JSON.stringify($extraFields)
+        let url = `items?extraFields=${extraFieldsArg}&fields=${fieldArg}&tags=${tagArg}&page=${page+1}`
+        url.concat(`&country=country`)
         let res = await api.get(url)
         if(Array.isArray(res.items)){
             items = res.items
@@ -57,10 +128,23 @@
 </svelte:head>
 
 <Filters
+    bind:extraFields={$extraFields}
     bind:fields={$itemFields}
     bind:open={filtersOpen}
     on:search={get}
-/>
+>
+    <svelte:fragment slot='customFields'>
+        {#each $extraFields as e}
+            <Field 
+                autoAccept
+                combobox
+                bind:valueItems={e.items}
+                deletable={false}
+                bind:field={e}
+            />
+        {/each}
+    </svelte:fragment>
+</Filters>
 
 <Tag 
     on:iconClick={()=>{filtersOpen=!filtersOpen}} 

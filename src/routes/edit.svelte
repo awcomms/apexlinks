@@ -5,7 +5,7 @@
     if (!user) {
       return {
         status: 302,
-        redirect: "/login",
+        redirect: "/index",
       };
     }
     let {schema} = await send({method: 'GET', path: 'users/schema'})
