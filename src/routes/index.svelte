@@ -116,7 +116,7 @@
         }
         usernameInvalid=false
         passwordInvalid=false
-        let r = await post('auth/index', { username, password }).finally(
+        let r = await post('auth/login', { username, password }).finally(
             (res)=>{
                 loginLoading=false
                 return res

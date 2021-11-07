@@ -70,7 +70,7 @@
         )
         if(res.r) {
             $notify = 'resetSuccess'
-            await post('auth/index', {username, password})
+            await post('auth/login', {username, password})
             goto('/')
         } else {
             $notify = 'invalidLink'
