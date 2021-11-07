@@ -17,6 +17,7 @@
     import {
         Row,
         Column,
+        Button,
         PaginationNav,
     } from 'carbon-components-svelte'
     import { api } from '$lib/api'
@@ -127,6 +128,12 @@
     <title>Apexlinks</title>
 </svelte:head>
 
+<Button
+    on:click={()=>{filtersOpen=!filtersOpen}}
+>
+    Edit filters
+</Button>
+
 <Filters
     bind:extraFields={$extraFields}
     bind:fields={$itemFields}
@@ -144,16 +151,16 @@
             />
         {/each}
     </svelte:fragment>
+    <svelte:fragment slot='after'>
+        <Tag 
+            bind:tags={$itemTags}
+            placeholder='Search'
+            on:change={get}
+        />
+    </svelte:fragment>
 </Filters>
 
-<Tag 
-    on:iconClick={()=>{filtersOpen=!filtersOpen}} 
-    bind:tags={$itemTags}
-    placeholder='Search'
-    icon={Filter16}
-    on:change={get}
-    button
-/>    
+    
 
 {#each items as item}
     <br />

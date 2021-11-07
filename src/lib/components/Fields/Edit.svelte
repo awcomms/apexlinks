@@ -27,7 +27,7 @@
     ComboBox,
     Button,
   } from "carbon-components-svelte";
-  import { ratio } from "fuzzball";
+  import {ratio} from "fuzzball";
   import Input from "$lib/components/Input/Input.svelte";
   import Close16 from "carbon-icons-svelte/lib/Close16";
   import Checkmark16 from "carbon-icons-svelte/lib/Checkmark16";

@@ -61,16 +61,15 @@
     bind:fields={$userFields}
     bind:open={filtersOpen}
     on:search={get}
-/>
-
-<Tag 
-    on:iconClick={()=>{filtersOpen=!filtersOpen}} 
-    bind:tags={$userTags}
-    placeholder='Search'
-    icon={Filter16}
-    on:change={get}
-    button
-/>  
+>
+    <svelte:fragment slot='after'>
+        <Tag 
+            bind:tags={$userTags}
+            placeholder='Search'
+            on:change={get}
+        />
+    </svelte:fragment>
+</Filters>
 
 {#each $users as user}
     <br />

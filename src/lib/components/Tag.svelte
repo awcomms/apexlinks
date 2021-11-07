@@ -1,14 +1,13 @@
 <script>
     export let helperText
-    export let button = false
     export let tags = []
     export let is_focused = false
     import { createEventDispatcher } from 'svelte'
-    import IconInput from './IconInput.svelte'
     import {
         Tag,
         Row,
         Column,
+TextInput,
     } from 'carbon-components-svelte'
 
     $: if(ref && is_focused) ref.focus()
@@ -72,16 +71,14 @@
 
 <Row noGutter>
     <Column xlg={4} lg={4} md={4} sm={4}>
-        <IconInput
+        <TextInput
             bind:ref 
             on:focus={focus}
-            on:iconClick
             on:blur={blur}
             bind:value
             bind:helperText
             placeholder={tags.length > 0 ? `${tags.length} ${tags.length > 1 ? 'tags' : 'tag'}` : 'Add tag'}
             {...$$restProps}
-            {button}
         />
         <slot />
     </Column>

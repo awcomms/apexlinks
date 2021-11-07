@@ -42,5 +42,6 @@
         bind:fields
     >
         <slot slot='customFields' name='customFields' />
+        <slot name='after' />
     </Fields>
 </Modal>

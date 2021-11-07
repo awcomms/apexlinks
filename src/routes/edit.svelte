@@ -148,6 +148,14 @@
 
 <Paystack {config} />
 
+<Row noGutter>
+  <Column>
+<h1>Edit your profile</h1>  
+  </Column>
+</Row>
+
+<br />
+
 <Image bind:image>
   {#if user.paid}
     <Button
