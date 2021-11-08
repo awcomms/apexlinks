@@ -6,8 +6,6 @@ let live = import.meta.env.VITE_API
 export let base = dev ? local : live
 
 export function send({ method, path, data, auth }) {
-	console.log('ye')
-	console.log('path: ', path, '|', 'method: ', method)
 	const opts = { method, headers: {} }
 
 	if (auth) {
@@ -37,10 +35,8 @@ export function send({ method, path, data, auth }) {
 				if(json.error && !json.status){
 					json.status = res.status
 				}
-				// console.log('json: ', json)
 				return json
 			} catch (err) {
-				// console.log('res.text: ', res.text)
 				return res.text
 			}
 		}).catch((err)=>{

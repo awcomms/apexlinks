@@ -1,4 +1,5 @@
 <script>
+  export let editable
   export let valueItems
     export let ref = null
     export let field = {}
@@ -14,6 +15,8 @@
         createEventDispatcher,
         onMount
     } from 'svelte'
+
+    console.log('i', valueItems)
 
   const editClick = () => {
     field.dirty = {'label': field.label, 'value': field.value}
@@ -35,6 +38,7 @@ const valueKeydown = (e) => {
 </script>
 
 {#if valueItems}
+  valueItems
   <ComboBox
     bind:ref
     on:keydown
@@ -52,11 +56,14 @@ const valueKeydown = (e) => {
       on:keydown={valueKeydown}
   />
 {/if}
-<Button
-    iconDescription='Edit'
-    hasIconOnly
-    kind='ghost'
-    size='small'
-    icon={Edit16}
-    on:click={editClick}
-/>
+
+{#if editable}
+  <Button
+      iconDescription='Edit'
+      hasIconOnly
+      kind='ghost'
+      size='small'
+      icon={Edit16}
+      on:click={editClick}
+  />
+{/if}

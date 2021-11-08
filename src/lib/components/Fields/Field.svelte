@@ -18,6 +18,7 @@
     import Edit from '$lib/components/Fields/Edit.svelte'
     import { createEventDispatcher } from 'svelte'
 
+    console.log('f', valueItems)
     let current
 
     $: if (field.edit && editable) {
@@ -44,6 +45,7 @@
 <svelte:component
     bind:acceptKey
     {label}
+    bind:editable
     bind:combobox
     bind:items
     bind:valueItems

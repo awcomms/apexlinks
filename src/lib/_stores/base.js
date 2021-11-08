@@ -14,7 +14,6 @@ export function store(name) {
     let storeValue
     if (browser) {
         storeValue = window.localStorage.getItem(name)
-        console.log(storeValue)
         try {
             storeValue = JSON.parse(storeValue)
         } catch {

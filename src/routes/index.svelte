@@ -116,22 +116,21 @@
         }
         usernameInvalid=false
         passwordInvalid=false
-        let r = await post('auth/login', { username, password }).finally(
+        let r = await post('auth/login', { username, password }).then(
             (res)=>{
                 loginLoading=false
                 return res
             })
+        console.log(r)
         usernameError = r.usernameError
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
         passwordInvalid = r.passwordInvalid
         if (r.user) {
             $session.user = r.user
-            goto('/')
+            goto('/edit')
         }
     }
-
-    let a = 'C:/code/mine/task/package.json'
 
     const join  = async function() {
         joinLoading = true

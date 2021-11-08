@@ -1,6 +1,4 @@
 export function respond(body) {
-	console.log('running respond; body: ', body)
-
 	if (body.error) {
 		return { 
 			status: 401, 

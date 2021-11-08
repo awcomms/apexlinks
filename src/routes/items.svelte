@@ -1,19 +1,24 @@
 <script context='module'>
     export const load = async () => {
-        let countries = await api.get('countries').then(r => r.res)
-        let markets = await api.get('markets').then(r => r.res)
-        let states = await api.get('states').then(r => r.res)
-        let cities = await api.get('cities').then(r => r.res)
+        let countries = await api.get('countries').then(r => r.items)
+        // let markets = await api.get('markets').then(r => r.items)
+        let states = await api.get('states').then(r => r.items)
+        let cities = await api.get('cities').then(r => r.items)
         return {
             props: {
-                countries, markets, states, cities
+                countries,
+                // markets,
+                states,
+                cities
             }
         }
     }
 </script>
 
 <script>
-    export let countries, markets, states, cities
+    export let countries, /* markets, */ states, cities
+
+    console.log('.z', countries)
     import {
         Row,
         Column,
@@ -29,7 +34,6 @@
     import {
         extraFields
     } from '$lib/_stores/items'
-    import Filter16 from 'carbon-icons-svelte/lib/Filter16'
     import Tag from '$lib/components/Tag.svelte'
     import {goto} from '$app/navigation'
     import Field from '$lib/components/Fields/Field.svelte';
@@ -40,27 +44,35 @@
         return $extraFields.find(e => e.label===label).value
     }
 
-    console.log('countries', countries)
-
     $extraFields = []
 
+    /*
     $: (async ($extraFields) => {
         if (!Array.isArray(extraFields)) return
-        let marketsUrl = 'markets?'
-        marketsUrl.concat(`&country=${g('country')}`)
-        marketsUrl.concat(`&state=${g('state')}`)
-        marketsUrl.concat(`&city=${g('city')}`)
-        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+        let country = g('country')
+        let state = g('state')
+        console.log('.q', country, state)
+        // let marketsUrl = 'markets?'
+        // marketsUrl.concat(`&country=${g('country')}`)
+        // marketsUrl.concat(`&state=${g('state')}`)
+        // marketsUrl.concat(`&city=${g('city')}`)
+        // $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
         
-        let statesUrl = 'states?'
-        statesUrl.concat(`&country=${g('country')}`)
-        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+        if (country) {
+            let statesUrl = 'states?'
+            statesUrl.concat(`&country=${value}`)
+            $extraFields.find(e => e.label===statesUrl).items = await api.get(url).then(r => r.res)
+        }
         
-        let citiesUrl = 'cities?'
-        citiesUrl.concat(`&country=${g('country')}`)
-        citiesUrl.concat(`&state=${g('state')}`)
-        $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
+        if (state) {
+        console.log('a', country, state)
+            let citiesUrl = 'cities?'
+            citiesUrl.concat(`&country=${g('country')}`)
+            citiesUrl.concat(`&state=${g('state')}`)
+            $extraFields.find(e => e.label===citiesUrl).items = await api.get(url).then(r => r.res)
+        }
     })()
+    */
 
     $extraFields = [
         {
@@ -78,11 +90,11 @@
             label: 'city',
             value: ''
         },
-        {
-            items: markets,
-            label: 'market',
-            value: ''
-        }
+        // {
+        //     items: markets,
+        //     label: 'market',
+        //     value: ''
+        // }
     ]
 
     $: if (got) get(page)
@@ -142,10 +154,10 @@
 >
     <svelte:fragment slot='customFields'>
         {#each $extraFields as e}
-            <Field 
+            <Field
                 autoAccept
-                combobox
                 bind:valueItems={e.items}
+                editable={false}
                 deletable={false}
                 bind:field={e}
             />

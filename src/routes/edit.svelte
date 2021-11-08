@@ -45,10 +45,6 @@
   // import { checkEmail } from "$lib/utils/checkEmail";
   // import { abslink } from "$lib/utils/abslink";
 
-  // console.log('PAYSTACK_TEST', PAYSTACK_TEST, typeof(PAYSTACK_TEST))
-  // console.log('PAYSTACK_TEST_KEY', PAYSTACK_TEST, typeof(PAYSTACK_TEST_KEY))
-  // console.log('PAYSTACK_LIVE_KEY', PAYSTACK_LIVE_KEY, typeof(PAYSTACK_LIVE_KEY))
-
   let config = {
     key: PAYSTACK_TEST === "true" ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
     email: user.email, // TODO
@@ -88,7 +84,6 @@
   };
 
   const edit = async () => {
-    console.log(fields)
     let req_fields = fields.map((f) => {
       return { label: f.label, value: f.value };
     });
