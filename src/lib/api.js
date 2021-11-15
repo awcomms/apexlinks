@@ -13,11 +13,14 @@ export const api = {
     },
     put: async (endpoint, data) => {
         let method = 'PUT'
+        let res
         if (browser) {
-            return await post('/send', {endpoint, method, data})
+            res = await post('/send', {endpoint, method, data})
         } else {
-            return await send({method, path: endpoint, data})
+            res = await send({method, path: endpoint, data})
         }
+        console.log('api', res)
+        return res
     },
     post: async (endpoint, data) => {
         let method = 'POST'

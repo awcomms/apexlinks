@@ -1,6 +1,6 @@
 import { link_renderer } from '@sveltejs/site-kit/utils/markdown';
 import { highlight } from '$lib/utils/highlight';
-import {marked} from 'marked'
+import { marked } from 'marked'
 
 const renderer = new marked.Renderer()
 renderer.link = link_renderer                                                                                                                           

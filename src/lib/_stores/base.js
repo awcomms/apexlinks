@@ -12,20 +12,20 @@ const setStorageIfBrowser = (value, name) => {
 
 export function store(name) {
     let storeValue
-    if (browser) {
-        storeValue = window.localStorage.getItem(name)
-        try {
-            storeValue = JSON.parse(storeValue)
-        } catch {
-            storeValue = storeValue
-        }
-    }
+    // if (browser) {
+    //     storeValue = window.localStorage.getItem(name)
+    //     try {
+    //         storeValue = JSON.parse(storeValue)
+    //     } catch {
+    //         storeValue = storeValue
+    //     }
+    // }
     const { subscribe, set } = writable(storeValue || [])
 
     return {
         subscribe, //: subscribe(value => setStorageIfBrowser(value, name)),
         set: (value) => {
-            setStorageIfBrowser(value, name)
+            // setStorageIfBrowser(value, name)
             set(value)
         }
     }

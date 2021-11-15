@@ -109,8 +109,8 @@
       {/if}
       <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/index'/>
     {/if}
-    <SideNavLink isSelected={$page.path.split('/')[1] == 'users' ? true : false}  href='/users' text='Search Users'/>
     <SideNavLink isSelected={$page.path.split('/')[1] == 'items' ? true : false}  href='/items' text='Search Items'/>
+    <SideNavLink isSelected={$page.path.split('/')[1] == 'users' ? true : false}  href='/users' text='Search Users'/>
     {#if $session.user}
       <!-- <SideNavMenu text='Rooms'>
         <SideNavLink isSelected={$page.path.split('/')[1] == 'rooms' ? true : false} href='/rooms' text='All rooms'/>

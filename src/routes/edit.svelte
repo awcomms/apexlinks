@@ -129,6 +129,7 @@
       tags,
     };
     let res = await api.put("users", dt).finally((r) => {
+      console.log('r', r)
       loading = false;
       return r;
     });

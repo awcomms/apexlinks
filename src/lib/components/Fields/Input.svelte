@@ -38,7 +38,6 @@ const valueKeydown = (e) => {
 </script>
 
 {#if valueItems}
-  valueItems
   <ComboBox
     bind:ref
     on:keydown
