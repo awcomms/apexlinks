@@ -2,13 +2,10 @@
     export let open = false
     export let fields = []
 
-    export let extraFields = []
-
     import {
         Modal
     } from 'carbon-components-svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
-    import Field from '$lib/components/Fields/Field.svelte'
     import { createEventDispatcher } from 'svelte'
 
     const dispatch = createEventDispatcher()

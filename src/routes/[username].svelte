@@ -86,12 +86,3 @@ Tag
 {#each user.fields as field}
     <DisplayField {field} />
 {/each}
-
-<style>
-    .heading {
-        font-weight: 600;
-    }
-    .username-slash {
-        color: blue;
-    }   
-</style>
