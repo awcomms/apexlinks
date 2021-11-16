@@ -74,7 +74,7 @@
             goto('/')
         } else {
             $notify = 'invalidLink'
-            goto('/index')
+            goto('/')
         }
     }
 </script>

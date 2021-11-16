@@ -30,6 +30,7 @@
     Button,
     Column,
     Row,
+TextInput,
   } from "carbon-components-svelte";
   import Fields from "$lib/components/Fields/Fields.svelte";
   import Paystack from "$lib/components/Paystack.svelte";
@@ -152,7 +153,7 @@
 
 <br />
 
-<Image bind:image>
+<!-- <Image bind:image>
   {#if user.paid}
     <Button
       on:click={() => {
@@ -182,7 +183,7 @@
       Subscribe
     </Button>
   {/if}
-</Image>
+</Image> -->
 
 <Row noGutter>
   <Column>
@@ -190,7 +191,7 @@
   </Column>
 </Row>
 
-<Tag helperText="Users can use tags to find you" bind:tags />
+<Tag bind:tags />
 
 <br />
 <Row noGutter>

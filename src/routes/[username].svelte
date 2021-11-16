@@ -42,7 +42,8 @@
     export let user
     import {
         Column,
-        Row
+        Row,
+Tag
     } from 'carbon-components-svelte'
     import DisplayField from '$lib/components/DisplayField.svelte'
     import {parseMarkdown} from '$lib/utils/parseMarkdown'
@@ -77,6 +78,10 @@
 <DisplayField field={{label: 'id', value: user.id}} />
 
 <br />
+
+{#each user.tags as tag}
+    <Tag>{tag}</Tag>
+{/each}
 
 {#each user.fields as field}
     <DisplayField {field} />

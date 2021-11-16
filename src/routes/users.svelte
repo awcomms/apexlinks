@@ -56,20 +56,11 @@
     }
 </script>
 
-<Filters
-    bind:extraFields={$extraFields}
-    bind:fields={$userFields}
-    bind:open={filtersOpen}
-    on:search={get}
->
-    <svelte:fragment slot='after'>
-        <Tag 
-            bind:tags={$userTags}
-            placeholder='Search'
-            on:change={get}
-        />
-    </svelte:fragment>
-</Filters>
+<Tag 
+    bind:tags={$userTags}
+    placeholder='Search'
+    on:change={get}
+/>
 
 {#each $users as user}
     <br />

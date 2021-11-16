@@ -5,7 +5,7 @@
         if (!user){
             return {
                 status: 302,
-                redirect: '/index'
+                redirect: '/'
             }
         }
         let {id} = page.params

@@ -97,8 +97,11 @@
       field.edit = !field.edit
   }
 
-  const del = (field) => {
-    $storeFields = $storeFields.filter(f => f.id !== field.id);
+  const del = async(field) => {
+    await new Promise((res)=>{
+      $storeFields = $storeFields.filter(f => f !== field);
+      res()
+    })
   };
 
   const add = () => {
@@ -111,7 +114,7 @@
       invalid: false,
       error: false,
     };
-    $storeFields = [...$storeFields, field];
+    $storeFields = [field, ...$storeFields];
     id++
   };
 </script>
