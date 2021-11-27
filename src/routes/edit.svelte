@@ -187,7 +187,7 @@ TextInput,
 
 <Row noGutter>
   <Column>
-    <Checkbox bind:checked={hidden} labelText="Hide profile from public" />
+    <Checkbox on:change={edit} bind:checked={hidden} labelText="Hide profile from public" />
   </Column>
 </Row>
 
