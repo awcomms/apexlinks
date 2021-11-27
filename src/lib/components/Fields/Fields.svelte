@@ -51,17 +51,12 @@
   $: fields = $storeFields
 
   const getDuplicateLabel = (field) => {
-    let duplicate
-    if (typeof field.id === 'number') {
-      duplicate = $storeFields.find(f => f.id !== field.id && f.label === field.label)
-    } else {
-      duplicate = $storeFields.find(f => f.label === field.label)
-    }
-    return duplicate
+    return $storeFields.find(f => f.id !== field.id && f.label === field.label)
   }
 
   const resolveDuplicateLabel = (field) => {
     let duplicate = getDuplicateLabel(field)
+    console.log(duplicate)
     if (duplicate) {
       duplicate.ref.focus()
       return true
@@ -107,6 +102,7 @@
   const add = () => {
     let field = {
       id,
+      ref: null,
       hidden: false,
       type: "text",
       label: currentField.label,

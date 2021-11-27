@@ -89,7 +89,7 @@
 
 <Header 
   persistentHamburgerMenu={true}
-  company='Contact'
+  company='Apexlinks'
   bind:isSideNavOpen={$isSideNavOpen}
   href='/users'
 >
