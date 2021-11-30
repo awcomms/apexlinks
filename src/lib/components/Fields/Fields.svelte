@@ -45,7 +45,7 @@
     new: true
   }
 
-  let id = Math.max(fields.map(f => f.id))
+  let id = Math.max(fields.map(f => f.id)) + 1
 
   $storeFields = fields
   $: fields = $storeFields

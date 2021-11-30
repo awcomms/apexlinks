@@ -8,7 +8,7 @@
     export let valueItems
     export let deletable = true
     export let field = {}
-    export let ref = null
+    export let ref
 
     import {
         Button
@@ -16,7 +16,11 @@
     import Delete16 from 'carbon-icons-svelte/lib/Delete16'
     import Input from '$lib/components/Fields/Input.svelte'
     import Edit from '$lib/components/Fields/Edit.svelte'
-    import { createEventDispatcher } from 'svelte'
+    import { createEventDispatcher, onMount } from 'svelte'
+
+    onMount(()=>{
+        ref = field.ref
+    })
 
     console.log('f', valueItems)
     let current

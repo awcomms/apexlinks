@@ -52,7 +52,9 @@
     let noPasswordModal
 
     const checkNoPassword = async() => {
-        noPassword = await api.get(`users/check-no-password/${username}`).then(r => r.res)
+        let noUserPassword = await api.get(`users/check-no-password/${username}`).then(r => r.res)
+        console.log(noUserPassword)
+        return noUserPassword
     }
 
     const keydown=(e)=>{
@@ -108,7 +110,7 @@
             loginLoading = false
             return
         }
-        if (!password){
+        if (!password && !await checkNoPassword()){
             passwordInvalid = true
             passwordError = 'Empty'
             loginLoading = false
@@ -225,7 +227,7 @@
                 bind:value={username}
                 bind:ref={usernameRef}
                 labelText='Username'
-                on:blure={checkNoPassword}
+                on:blur={checkNoPassword}
             />
             {#if !noPassword}
             <Input
