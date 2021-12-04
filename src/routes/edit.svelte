@@ -155,7 +155,7 @@
 
 <br />
 
-<!-- <Image bind:image>
+<Image bind:image>
   {#if user.paid}
     <Button
       on:click={() => {
@@ -185,7 +185,7 @@
       Subscribe
     </Button>
   {/if}
-</Image> -->
+</Image>
 
 <Row noGutter>
   <Column>
