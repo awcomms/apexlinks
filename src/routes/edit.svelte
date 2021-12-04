@@ -1,4 +1,4 @@
-<!-- <script context="module">
+<script context="module">
   import { send } from '$lib/send'
   export async function load({ session }) {
     let user = session.user;
@@ -16,7 +16,7 @@
       },
     };
   }
-</script> -->
+</script>
 
 <script>
   export let user
@@ -155,7 +155,7 @@
 
 <br />
 
-<Image bind:image>
+<!-- <Image bind:image>
   {#if user.paid}
     <Button
       on:click={() => {
@@ -185,7 +185,7 @@
       Subscribe
     </Button>
   {/if}
-</Image>
+</Image> -->
 
 <Row noGutter>
   <Column>
