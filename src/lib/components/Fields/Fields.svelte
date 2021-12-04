@@ -22,7 +22,7 @@
   } from 'svelte'
 
   onMount(()=>{
-    currentFieldRef.focus()
+    if (currentFieldRef) currentFieldRef.focus()
   })
 
   let offText='Make this field visible'

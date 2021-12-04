@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
   import { send } from '$lib/send'
   export async function load({ session }) {
     let user = session.user;
@@ -16,7 +16,7 @@
       },
     };
   }
-</script>
+</script> -->
 
 <script>
   export let user
