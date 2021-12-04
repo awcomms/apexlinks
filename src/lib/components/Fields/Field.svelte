@@ -22,7 +22,6 @@
         ref = field.ref
     })
 
-    console.log('f', valueItems)
     let current
 
     $: if (field.edit && editable) {

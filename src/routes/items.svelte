@@ -18,7 +18,6 @@
 <script>
     export let countries, /* markets, */ states, cities
 
-    console.log('.z', countries)
     import {
         Row,
         Column,

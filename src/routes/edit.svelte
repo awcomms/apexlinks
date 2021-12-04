@@ -19,9 +19,10 @@
 </script>
 
 <script>
-  export let user, items;
+  export let user
 
   import { api } from "$lib/api.js";
+  import currentLocation from "$lib/utils/currentLocation"
   import { goto } from "$app/navigation";
   import {
     InlineLoading,
@@ -30,7 +31,6 @@
     Button,
     Column,
     Row,
-TextInput,
   } from "carbon-components-svelte";
   import Fields from "$lib/components/Fields/Fields.svelte";
   import Paystack from "$lib/components/Paystack.svelte";
@@ -85,10 +85,10 @@ TextInput,
   };
 
   const edit = async () => {
+    loading = true;
     let req_fields = fields.map((f) => {
       return { label: f.label, value: f.value };
     });
-    loading = true;
     // if (!email) {
     //   emailInvalid = true;
     //   emailError = "Empty";
@@ -121,16 +121,18 @@ TextInput,
     //   loading = false;
     //   return;
     // }
+    loading = true;
+
     let dt = {
       // show_email,
       username,
       hidden,
       fields: req_fields,
       image,
+      location: currentLocation(),
       tags,
     };
     let res = await api.put("users", dt).finally((r) => {
-      console.log('r', r)
       loading = false;
       return r;
     });
@@ -196,7 +198,7 @@ TextInput,
 <br />
 <Row noGutter>
   <Column>
-    <Fields combobox={true} {items} bind:fields />
+    <Fields combobox={true} bind:fields />
   </Column>
 </Row>
 <br />

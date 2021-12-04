@@ -16,8 +16,6 @@
         onMount
     } from 'svelte'
 
-    console.log('i', valueItems)
-
   const editClick = () => {
     field.dirty = {'label': field.label, 'value': field.value}
     field.edit=true

@@ -123,7 +123,6 @@
                 loginLoading=false
                 return res
             })
-        console.log(r)
         usernameError = r.usernameError
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
