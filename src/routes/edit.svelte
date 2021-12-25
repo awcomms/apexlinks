@@ -1,5 +1,5 @@
 <script context="module">
-  import { send } from '$lib/send'
+  import { send } from "$lib/send";
   export async function load({ session }) {
     let user = session.user;
     if (!user) {
@@ -8,21 +8,21 @@
         redirect: "/index",
       };
     }
-    let {schema} = await send({method: 'GET', path: 'users/schema'})
+    let { schema } = await send({ method: "GET", path: "users/schema" });
     return {
       props: {
         user,
-        items:schema
+        items: schema,
       },
     };
   }
 </script>
 
 <script>
-  export let user
+  export let user;
 
   import { api } from "$lib/api.js";
-  import currentLocation from "$lib/utils/currentLocation"
+  import currentLocation from "$lib/utils/currentLocation";
   import { goto } from "$app/navigation";
   import {
     InlineLoading,
@@ -38,6 +38,8 @@
   import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag.svelte";
   import { session } from "$app/stores";
+  import { onMount } from "svelte";
+  import {browser} from '$app/env'
   import {
     PAYSTACK_TEST,
     PAYSTACK_TEST_KEY,
@@ -45,6 +47,13 @@
   } from "$lib/env";
   // import { checkEmail } from "$lib/utils/checkEmail";
   // import { abslink } from "$lib/utils/abslink";
+
+  onMount(async() => {
+    location = await currentLocation.then(l => l).catch(e => console.log(e))
+  });
+
+  let editLocation = true
+  let location = {}
 
   let config = {
     key: PAYSTACK_TEST === "true" ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
@@ -121,17 +130,16 @@
     //   loading = false;
     //   return;
     // }
-    loading = true;
 
     let dt = {
-      // show_email,
       username,
+      location: editLocation ? location: null,
       hidden,
       fields: req_fields,
       image,
-      location: currentLocation(),
       tags,
     };
+    console.log('dt', dt.location)
     let res = await api.put("users", dt).finally((r) => {
       loading = false;
       return r;
@@ -149,7 +157,7 @@
 
 <Row noGutter>
   <Column>
-<h1>Edit your profile</h1>  
+    <h1>Edit your profile</h1>
   </Column>
 </Row>
 
@@ -189,7 +197,15 @@
 
 <Row noGutter>
   <Column>
-    <Checkbox on:change={edit} bind:checked={hidden} labelText="Hide profile from public" />
+    <Checkbox
+      on:change={edit}
+      bind:checked={hidden}
+      labelText="Hide profile from public"
+    />
+    <Checkbox
+      bind:checked={editLocation}
+      labelText="Edit Location"
+    />
   </Column>
 </Row>
 

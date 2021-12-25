@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "svelte-kit dev --port 3700",
+    "dev": "svelte-kit dev -H --port 3700",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
     "start": "node build"
@@ -29,22 +29,22 @@
     "fuzzball": "^2.1.2",
     "html-minifier": "^4.0.0",
     "inflection": "^1.13.1",
-    "marked": "4.0.6",
+    "marked": "4.0.8",
     "socket.io-client": "^4.4.0",
     "svelte-paystack": "^0.2.2",
-    "svelte-preprocess": "^4.9.8"
+    "svelte-preprocess": "^4.10.1"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "@testing-library/jest-dom": "^5.16.0",
-    "babel-jest": "^27.4.2",
+    "@testing-library/jest-dom": "^5.16.1",
+    "babel-jest": "^27.4.5",
     "carbon-components-svelte": "^0.50.2",
-    "carbon-icons-svelte": "^10.44.0",
-    "eslint": "^8.3.0",
+    "carbon-icons-svelte": "^10.44.3",
+    "eslint": "^8.5.0",
     "eslint-plugin-svelte3": "^3.2.1",
-    "jest": "^27.4.3",
-    "prettier": "^2.5.0",
-    "svelte": "^3.44.2",
+    "jest": "^27.4.5",
+    "prettier": "^2.5.1",
+    "svelte": "^3.44.3",
     "svelte-jester": "^2.1.5"
   }
 }
