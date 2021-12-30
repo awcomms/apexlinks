@@ -25,6 +25,8 @@
   let page = 0;
   let total = 0;
   let pages = 0;
+  let min = 0;
+  let max = 0;
 
   let got;
 
@@ -45,6 +47,8 @@
     let res = await api.get(url);
     res.error ? console.log(res.error) : {}
     if (Array.isArray(res.items)) {
+      min = res.min
+      max = res.max
       $users = res.items;
       total = res.total;
       pages = res.pages;
@@ -59,7 +63,13 @@
             <RadioButton labelText='Tags' value='tag'/>
             <RadioButton labelText='Distance' value='distance'/>
         </RadioButtonGroup>
-        <Slider />
+        <Slider
+          labelText={`${sort === 'tag' ? 'Tag score' : sort === 'distance' ? 'Distance': ''} cutoff`}
+          bind:min
+          bind:max
+          maxLabel={`${max}km`}
+          minLabel={`${min}km`}
+        />
     </Column>
 </Row>
 

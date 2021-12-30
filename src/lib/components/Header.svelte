@@ -107,10 +107,11 @@
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
-      <SideNavLink isSelected={$page.path.split('/')[1] == 'login' ? true : false}  text='Login' href='/'/>
+      <SideNavLink text='Login' href='/'/>
     {/if}
     <SideNavMenu text='Rooms'>
-      <SideNavLink text='Add Room' />
+      <SideNavLink text='Add room' />
+      <SideNavLink text='All rooms' href='rooms' />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink text='Me' />

@@ -38,7 +38,7 @@
     "@sveltejs/kit": "next",
     "@testing-library/jest-dom": "^5.16.1",
     "babel-jest": "^27.4.5",
-    "carbon-components-svelte": "^0.50.3",
+    "carbon-components-svelte": "^0.50.4",
     "carbon-icons-svelte": "^10.44.3",
     "eslint": "^8.5.0",
     "eslint-plugin-svelte3": "^3.2.1",
