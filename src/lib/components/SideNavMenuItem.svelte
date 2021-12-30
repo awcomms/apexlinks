@@ -3,7 +3,7 @@
   export let href = ''
   import { page } from "$app/stores";
   import { isSideNavOpen } from "$lib/stores";
-  import { SideNavLink } from "carbon-components-svelte";
+  import { SideNavMenuItem } from "carbon-components-svelte";
 
   $: href = href || `/${text.toLowerCase().replace(" ", "-")}`;
 
@@ -12,7 +12,7 @@
   };
 </script>
 
-<SideNavLink
+<SideNavMenuItem
   isSelected={$page.path == href ? true : false}
   {...$$restProps}
   on:click

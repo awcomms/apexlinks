@@ -1,6 +1,6 @@
 import { browser } from '$app/env'
 
-export default new Promise((resolve, reject) => {
+export default new Promise((resolve) => {
   let location = {};
   if (browser) {
     window.navigator.geolocation.getCurrentPosition(
@@ -11,14 +11,14 @@ export default new Promise((resolve, reject) => {
       },
       (err) => {
         console.log();
-        reject(err);
+        resolve(err);
       },
       {
         enableHighAccuracy: true,
       }
     );
   } else {
-    reject("current context not browser");
+    resolve("current context not browser");
   }
   resolve(location);
 });

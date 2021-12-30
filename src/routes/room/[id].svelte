@@ -2,13 +2,13 @@
     import { api } from '$lib/api'
     export async function load({page, session}){
         let user = session.user
-        const {id} = page.params
         if(!user){
             return {
                 status: 302,
-                redirect: 'login'
+                redirect: '/'
             }
         }
+        const {id} = page.params
         const room = await api.get(`rooms/${id}`)
         // if(!room.open && !room.users.includes(user.username)){
         //     this.error('Unauthorized')

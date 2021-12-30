@@ -27,6 +27,9 @@
         InlineLoading
     } from 'carbon-components-svelte'
     import {
+        browser
+    } from '$app/env'
+    import {
         open,
         context,
         username
@@ -42,7 +45,7 @@
     let name
     let tags
 
-    $: if(process.browser && $username) {
+    $: if(browser && $username) {
         setTimeout(checkUser, 123)
     }
 
