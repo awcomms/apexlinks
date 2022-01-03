@@ -2,6 +2,7 @@
 
 <script>
   import SideNavLink from './SideNavLink.svelte'
+  import SideNavMenuItem from './SideNavMenuItem.svelte'
   import { api } from '$lib/api'
   import url8 from '$lib/url8'
   import {
@@ -13,7 +14,6 @@
   import {
     navigating,
     session,
-    page
   } from '$app/stores'
   import {
     isSideNavOpen
@@ -110,8 +110,8 @@
       <SideNavLink text='Login' href='/'/>
     {/if}
     <SideNavMenu text='Rooms'>
-      <SideNavLink text='Add room' />
-      <SideNavLink text='All rooms' href='rooms' />
+      <SideNavMenuItem text='Add room' />
+      <SideNavMenuItem text='All rooms' href='rooms' />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink text='Me' />

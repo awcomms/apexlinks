@@ -1,5 +1,12 @@
 <script>
-  import { Row, Column, PaginationNav, RadioButtonGroup, RadioButton, Slider } from "carbon-components-svelte";
+  import {
+    Row,
+    Column,
+    PaginationNav,
+    RadioButtonGroup,
+    RadioButton,
+    Slider,
+  } from "carbon-components-svelte";
   import currentLocation from "$lib/utils/currentLocation";
   import { api } from "$lib/api";
   import { extraFields } from "$lib/_stores/users";
@@ -7,6 +14,7 @@
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
 
+  $: get(sort)
   $: if (got) get(page);
 
   $extraFields = [
@@ -20,15 +28,18 @@
     },
   ];
 
-  let sort = 'tag'
+  let sort = "tag";
   $users = [];
   let page = 0;
+  let limit;
   let total = 0;
   let pages = 0;
   let min = 0;
   let max = 0;
 
   let got;
+
+  $: sliderLabelUnit  = sort == 'tag' ? 'points' : 'km'
 
   const get = async () => {
     let tagString = JSON.stringify($userTags);
@@ -38,17 +49,17 @@
     }));
     let fieldString = JSON.stringify(fields);
     let extraString = JSON.stringify($extraFields);
-    let loc = await currentLocation.then(l => l).catch(e => console.log(e))
-    console.log('loc', loc)
+    let loc = await currentLocation.then((l) => l).catch((e) => console.log(e));
+    console.log("loc", loc);
     loc = JSON.stringify(loc);
-    let url = `users?sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
+    let url = `users?limit=${limit}&sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
       page + 1
     }`;
     let res = await api.get(url);
-    res.error ? console.log(res.error) : {}
+    console.log(res.error)
     if (Array.isArray(res.items)) {
-      min = res.min
-      max = res.max
+      min = res.min;
+      max = res.max;
       $users = res.items;
       total = res.total;
       pages = res.pages;
@@ -58,22 +69,31 @@
 </script>
 
 <Row noGutter>
-    <Column>
-        <RadioButtonGroup legendText='Sort by' bind:selected={sort}>
-            <RadioButton labelText='Tags' value='tag'/>
-            <RadioButton labelText='Distance' value='distance'/>
-        </RadioButtonGroup>
-        <Slider
-          labelText={`${sort === 'tag' ? 'Tag score' : sort === 'distance' ? 'Distance': ''} cutoff`}
-          bind:min
-          bind:max
-          maxLabel={`${max}km`}
-          minLabel={`${min}km`}
-        />
-    </Column>
+  <Column>
+    <RadioButtonGroup legendText="Sort by" bind:selected={sort}>
+      <RadioButton labelText="Tags" value="tag" />
+      <RadioButton labelText="Distance" value="distance" />
+    </RadioButtonGroup>
+    <Slider
+      labelText={`${
+        sort === "tag" ? "Tag score" : sort === "distance" ? "Distance" : ""
+      } cutoff`}
+      bind:min
+      bind:max
+      bind:value={limit}
+      on:change={get}
+      maxLabel={`${max}${sliderLabelUnit}`}
+      minLabel={`${min}${sliderLabelUnit}`}
+    />
+  </Column>
 </Row>
 
 <Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
+
+{#if total}
+  <br />
+  <p>{total} results</p>
+{/if}
 
 {#each $users as user}
   <br />
