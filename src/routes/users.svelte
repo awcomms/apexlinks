@@ -11,10 +11,11 @@
   import { api } from "$lib/api";
   import { extraFields } from "$lib/_stores/users";
   import { users, userTags, userFields } from "$lib/stores";
+  import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
 
-  $: get(sort)
+  $: get(sort);
   $: if (got) get(page);
 
   $extraFields = [
@@ -28,9 +29,11 @@
     },
   ];
 
+  let changeLimitInterval;
   let sort = "tag";
   $users = [];
   let page = 0;
+  let step = 1;
   let limit;
   let total = 0;
   let pages = 0;
@@ -39,9 +42,26 @@
 
   let got;
 
-  $: sliderLabelUnit  = sort == 'tag' ? 'points' : 'km'
+  $: sliderLabelUnit = sort == "tag" ? "km" : "points";
+
+  const startChangeLimit = (detail) => {
+    console.log('scl', changeLimitInterval)
+    // if (changeLimitInterval) return
+    changeLimitInterval = setInterval(() => {
+      console.log(limit)
+      detail ? (limit += step) : (limit -= step);
+      console.log(limit)
+    }, 1000);
+  };
+
+  const stopChangeLimit = () => {
+    console.log('stcl', changeLimitInterval)
+    clearInterval(changeLimitInterval);
+    changeLimitInterval = null
+  };
 
   const get = async () => {
+    console.log("sort", sort);
     let tagString = JSON.stringify($userTags);
     let fields = $userFields.map((uf) => ({
       label: uf.label,
@@ -56,10 +76,11 @@
       page + 1
     }`;
     let res = await api.get(url);
-    console.log(res.error)
+    console.log(res.error);
     if (Array.isArray(res.items)) {
       min = res.min;
       max = res.max;
+      // limit = sorted == 'tag' ? min : max TODO-settings
       $users = res.items;
       total = res.total;
       pages = res.pages;
@@ -68,7 +89,20 @@
   };
 </script>
 
-<Row noGutter>
+<!-- <Row noGutter>
+  <Column>
+    <div class="updown">
+      <span>{limit}</span>
+      <UpDown
+        on:mouseup={(e) => stopChangeLimit(e.detail)}
+        on:mousedown={(e) => startChangeLimit(e.detail)}
+        bind:step
+      />
+    </div>
+  </Column>
+</Row> -->
+
+<!-- <Row noGutter>
   <Column>
     <RadioButtonGroup legendText="Sort by" bind:selected={sort}>
       <RadioButton labelText="Tags" value="tag" />
@@ -76,17 +110,16 @@
     </RadioButtonGroup>
     <Slider
       labelText={`${
-        sort === "tag" ? "Tag score" : sort === "distance" ? "Distance" : ""
+        sort === "tag" ? "Distance score" : sort === "tag" ? "Distance" : ""
       } cutoff`}
       bind:min
       bind:max
       bind:value={limit}
-      on:change={get}
       maxLabel={`${max}${sliderLabelUnit}`}
       minLabel={`${min}${sliderLabelUnit}`}
     />
   </Column>
-</Row>
+</Row> -->
 
 <Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
 
@@ -118,6 +151,7 @@
           />
         {/if}
         <div class="label">
+          <p>{user.score}</p>
           <h4>{user.username}</h4>
           {#if user.username}
             <p class="bx--link--sm">{user.username}</p>
@@ -145,6 +179,10 @@
 {/if}
 
 <style>
+  .updown {
+    display: flex;
+    align-items: center;
+  }
   .label {
     padding-left: 0.5rem;
   }

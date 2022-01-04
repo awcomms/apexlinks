@@ -3,7 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "svelte-kit dev -H --port 3700",
+    "dev": "svelte-kit dev --port 3100",
+    "sdev": "svelte-kit dev -H --port 3700",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
     "start": "node build"
