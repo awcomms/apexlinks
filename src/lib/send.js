@@ -1,7 +1,7 @@
 import { dev } from '$app/env'
 
 let local = 'http://127.0.0.1:5000'
-let live = import.meta.env.VITE_API
+import {live} from './vars'
 
 export let base = dev ? local : live
 
