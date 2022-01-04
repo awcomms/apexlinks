@@ -3,11 +3,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "svelte-kit dev --port 3100",
-    "sdev": "svelte-kit dev -H --port 3700",
+    "dev": "svelte-kit dev -h --port 3100",
+    "sdev": "svelte-kit dev -h -H --port 3700",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
-    "start": "node build"
+    "start": "svelte-kit preview -H --port 3200"
   },
   "jest": {
     "setupFilesAfterEnv": [
