@@ -11,7 +11,7 @@
   import { api } from "$lib/api";
   import { extraFields } from "$lib/_stores/users";
   import { users, userTags, userFields } from "$lib/stores";
-  import UpDown from "$lib/components/UpDown.svelte";
+  // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
 
@@ -179,10 +179,6 @@
 {/if}
 
 <style>
-  .updown {
-    display: flex;
-    align-items: center;
-  }
   .label {
     padding-left: 0.5rem;
   }
