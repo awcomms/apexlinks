@@ -1,7 +1,9 @@
 import { dev } from '$app/env'
 
 let local = 'http://127.0.0.1:5000'
-import {live} from './vars'
+import {
+	API as live
+} from '$lib/env'
 
 export let base = dev ? local : live
 
