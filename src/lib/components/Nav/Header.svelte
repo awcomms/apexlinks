@@ -105,19 +105,19 @@
   <SideNavItems>
     {#if !$session.user}
       {#if show}
-        <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
+        <SideNavLink bind:ref={installRef} on:click={install} href={null} text='Add To Homescreen'/>
       {/if}
-      <SideNavLink custom text='Login' href='/'/>
+      <SideNavLink text='Login' href='/'/>
     {/if}
     <!-- <SideNavMenu text='Rooms'>
       <SideNavMenuItem text='Add room' />
       <SideNavMenuItem text='All rooms' href='rooms' />
     </SideNavMenu> -->
     {#if $session.user}
-      <SideNavLink text='Me' />
-      <SideNavLink text='Items' />
+      <SideNavLink text='Me' href='/u/{$session.user.username}' />
+      <!-- <SideNavLink text='Items' /> -->
       <SideNavLink href='/edit' text='Edit Profile'/>
-      <SideNavLink text='Exit' custom on:click={exit} />
+      <SideNavLink text='Exit' href={null} on:click={exit} />
     {/if}
   </SideNavItems>
 </SideNav>

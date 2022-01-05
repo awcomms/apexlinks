@@ -8,11 +8,11 @@
         redirect: "/",
       };
     }
-    let { schema } = await send({ method: "GET", path: "users/schema" });
+    // let { schema } = await send({ method: "GET", path: "users/schema" });
     return {
       props: {
         user,
-        items: schema,
+        // items: schema,
       },
     };
   }
@@ -35,7 +35,7 @@
   import Fields from "$lib/components/Fields/Fields.svelte";
   import Paystack from "$lib/components/Paystack.svelte";
   import Input from "$lib/components/Input/Input.svelte";
-  import Image from "$lib/components/Image.svelte";
+  // import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag.svelte";
   import { session } from "$app/stores";
   import { onMount } from "svelte";
@@ -146,7 +146,7 @@
     });
     if (res.id) {
       $session.user = res;
-      goto(`/${res.username}`);
+      goto(`/u/${res.username}`);
     }
   };
 </script>

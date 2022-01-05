@@ -137,7 +137,7 @@
   <br />
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
-      <div on:click={goto(`/${user.username}`)} class="pointer user">
+      <div on:click={goto(`/u/${user.username}`)} class="pointer user">
         <!-- {#if user.image}
           <img
             style="vertical-align: top;"
