@@ -6,7 +6,8 @@
         redirect: "/",
         status: 302,
       };
-    let { username } = session.user.username;
+    let { username } = session.user;
+    console.log(session, session.user, session.user.username)
     let user = await send({ method: "GET", path: `users/${username}` });
     if (!user) {
       return {
@@ -15,7 +16,8 @@
       };
     } else if (user && user.error) {
       return {
-        status: user.status,
+        status: 404,
+        // status: user.status,
         error: user.error,
       };
     }
@@ -72,7 +74,7 @@
   </Column>
 {/if}
 
-<Link href="/items/user.id">/items</Link>
+<Link href="/items/{user.id}">/items</Link>
 {#if user.username}
   <DisplayField field={{ label: "username", value: user.username }} />
 {/if}
