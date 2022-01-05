@@ -5,7 +5,7 @@
     if (!user) {
       return {
         status: 302,
-        redirect: "/index",
+        redirect: "/",
       };
     }
     let { schema } = await send({ method: "GET", path: "users/schema" });
@@ -214,7 +214,8 @@
 <br />
 <Row noGutter>
   <Column>
-    <Fields combobox={true} bind:fields />
+    <Fields bind:fields />
+    <!-- <Fields combobox={true} bind:fields /> -->
   </Column>
 </Row>
 <br />

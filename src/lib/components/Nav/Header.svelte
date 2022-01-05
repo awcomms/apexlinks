@@ -109,10 +109,10 @@
       {/if}
       <SideNavLink custom text='Login' href='/'/>
     {/if}
-    <SideNavMenu text='Rooms'>
+    <!-- <SideNavMenu text='Rooms'>
       <SideNavMenuItem text='Add room' />
       <SideNavMenuItem text='All rooms' href='rooms' />
-    </SideNavMenu>
+    </SideNavMenu> -->
     {#if $session.user}
       <SideNavLink text='Me' />
       <SideNavLink text='Items' />

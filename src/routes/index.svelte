@@ -1,5 +1,20 @@
 <svelte:window on:keydown={keydown} />
 
+<script context='module'>
+    export const load = ({session}) => {
+        console.log('tehe')
+        if (session.user) {
+            return {
+                redirect: '/users',
+                status: 302
+            }
+        }
+        return {
+            props: {}
+        }
+    }
+</script>
+
 <script>
     import {
         Row,

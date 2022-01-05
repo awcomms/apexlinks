@@ -1,6 +1,6 @@
 <script>
   $: (() => {
-    if (combobox) {
+    if (combobox && items) {
       if (field.label) {
         items.forEach((i) => {
           i.score = ratio(i.label, field.label);
@@ -17,7 +17,7 @@
   })();
 
   export let label = 'Label'
-  export let acceptKey
+  export let acceptKey = 'Enter'
   export let combobox;
   export let items;
   export let ref = null;

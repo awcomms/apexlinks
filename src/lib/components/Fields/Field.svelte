@@ -1,6 +1,6 @@
 <script>
     export let editable = true
-    export let autoAccept = false
+    export let autoAccept = true
     export let acceptKey = 'Enter'
     export let label
     export let combobox
@@ -47,7 +47,7 @@
 
 <svelte:component
     bind:acceptKey
-    {label}
+    bind:label
     bind:editable
     bind:combobox
     bind:items
