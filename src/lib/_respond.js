@@ -1,4 +1,10 @@
 export function respond(body) {
+	if (!body) return {
+		status: 500,
+		body: {
+			error: 'errcon'
+		}
+	}
 	if (body.error) {
 		return { 
 			status: 401, 

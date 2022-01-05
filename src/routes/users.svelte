@@ -34,7 +34,7 @@
   $users = [];
   let page = 0;
   let step = 1;
-  let limit;
+  // let limit;
   let total = 0;
   let pages = 0;
   let min = 0;
@@ -45,19 +45,19 @@
   $: sliderLabelUnit = sort == "tag" ? "km" : "points";
 
   const startChangeLimit = (detail) => {
-    console.log('scl', changeLimitInterval)
+    console.log("scl", changeLimitInterval);
     // if (changeLimitInterval) return
     changeLimitInterval = setInterval(() => {
-      console.log(limit)
+      console.log(limit);
       detail ? (limit += step) : (limit -= step);
-      console.log(limit)
+      console.log(limit);
     }, 1000);
   };
 
   const stopChangeLimit = () => {
-    console.log('stcl', changeLimitInterval)
+    console.log("stcl", changeLimitInterval);
     clearInterval(changeLimitInterval);
-    changeLimitInterval = null
+    changeLimitInterval = null;
   };
 
   const get = async () => {
@@ -72,9 +72,10 @@
     let loc = await currentLocation.then((l) => l).catch((e) => console.log(e));
     console.log("loc", loc);
     loc = JSON.stringify(loc);
-    let url = `users?limit=${limit}&sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
+    let url = `users?sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
       page + 1
     }`;
+    // if (limit) url.concat(`&limit=${limit}`)
     let res = await api.get(url);
     console.log(res.error);
     if (Array.isArray(res.items)) {
@@ -124,8 +125,12 @@
 <Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
 
 {#if total}
-  <br />
-  <p>{total} results</p>
+  <Row noGutter>
+    <Column>
+      <br />
+      <p>{total} {total > 1 ? "results" : "result"}</p>
+    </Column>
+  </Row>
 {/if}
 
 {#each $users as user}
@@ -133,7 +138,7 @@
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
       <div on:click={goto(`/${user.username}`)} class="pointer user">
-        {#if user.image}
+        <!-- {#if user.image}
           <img
             style="vertical-align: top;"
             height="52px"
@@ -149,12 +154,11 @@
             alt="profile pic"
             src="/placeholder.png"
           />
-        {/if}
+        {/if} -->
         <div class="label">
-          <p>{user.score}</p>
-          <h4>{user.username}</h4>
           {#if user.username}
-            <p class="bx--link--sm">{user.username}</p>
+            <h4>{user.username}</h4>
+            <!-- <p class="bx--link--sm">{user.username}</p> -->
           {/if}
         </div>
       </div>
@@ -187,6 +191,7 @@
     flex-direction: row;
   }
   .pointer:hover {
+    color: rgb(52, 59, 204);
     cursor: pointer;
   }
 </style>

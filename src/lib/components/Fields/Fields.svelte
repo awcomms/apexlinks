@@ -58,6 +58,7 @@
     let duplicate = getDuplicateLabel(field)
     console.log(duplicate)
     if (duplicate) {
+      console.log('i.d')
       // duplicate.ref.focus()
       return true
     }
