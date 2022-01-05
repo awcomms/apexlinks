@@ -1,4 +1,5 @@
 export function post(endpoint, data) {
+    console.log('post')
     return fetch(endpoint, {
         method: 'POST',
         credentials: 'include',

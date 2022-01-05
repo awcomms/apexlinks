@@ -107,7 +107,7 @@
       {#if show}
         <SideNavLink bind:ref={installRef} on:click={install} href='' text='Add To Homescreen'/>
       {/if}
-      <SideNavLink text='Login' href='/'/>
+      <SideNavLink custom text='Login' href='/'/>
     {/if}
     <SideNavMenu text='Rooms'>
       <SideNavMenuItem text='Add room' />
@@ -117,7 +117,7 @@
       <SideNavLink text='Me' />
       <SideNavLink text='Items' />
       <SideNavLink href='/edit' text='Edit Profile'/>
-      <SideNavLink text='Exit' href='' on:click={exit} />
+      <SideNavLink text='Exit' custom on:click={exit} />
     {/if}
   </SideNavItems>
 </SideNav>
