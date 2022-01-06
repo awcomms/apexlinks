@@ -2,6 +2,7 @@
   export let text = ''
   export let href = ''
   import { page } from "$app/stores";
+  export let isSelected = $page.path == href ? true : false
   import { isSideNavOpen } from "$lib/stores";
   import { SideNavLink } from "carbon-components-svelte";
 
@@ -13,7 +14,7 @@
 </script>
 
 <SideNavLink
-  isSelected={$page.path == href ? true : false}
+  {isSelected}
   {...$$restProps}
   on:click
   on:click={click}

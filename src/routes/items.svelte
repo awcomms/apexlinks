@@ -1,19 +1,29 @@
 <script context="module">
   export const load = async ({ page }) => {
-    let { username } = page.params;
-    const user = api.get(`users/${username}`);
+    let username = page.query.get("username");
+    const user = await api.get(`users/${username}`);
     let countries = await api.get("countries").then((r) => r.items);
     // let markets = await api.get('markets').then(r => r.items)
     let states = await api.get("states").then((r) => r.items);
     let cities = await api.get("cities").then((r) => r.items);
-    const res = { props: { countries, states, cities /*markets*/ } };
-    if (user.username) res.user = user;
-    return res;
+    console.log("aa", user);
+    return {
+      props: {
+        test: true,
+        countries,
+        states,
+        cities,
+        user,
+      },
+    };
   };
 </script>
 
 <script>
+  export let test
   export let user, countries, /* markets, */ states, cities;
+  console.log("test", test);
+  console.log("ze", user);
 
   import { Row, Column, Button, PaginationNav } from "carbon-components-svelte";
   import { api } from "$lib/api";
@@ -113,7 +123,9 @@
     let fieldArg = JSON.stringify($itemFields);
     let extraFieldsArg = JSON.stringify($extraFields);
     let url = `items?tags=${tagArg}&page=${page + 1}`;
-    if (user) url.concat(`&id=${user.id}`);
+    console.log("teehee", user);
+    if (user) url = url.concat(`&id=${user.id}`);
+    console.log(url)
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {

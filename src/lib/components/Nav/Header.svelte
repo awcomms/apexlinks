@@ -116,9 +116,15 @@
         <SideNavMenuItem
           text="My items"
           href="/items?username={$session.user.username}"
+          isSelected={$page.query.get('username') ===
+            $session.user.username}
         />
       {/if}
-      <SideNavMenuItem text="Search all items" href="/items" />
+      <SideNavMenuItem
+        isSelected={!$page.query.get('username')}
+        text="Search all items"
+        href="/items"
+      />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink text="Me" href="/u/{$session.user.username}" />
