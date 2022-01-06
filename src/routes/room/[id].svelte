@@ -63,7 +63,7 @@
     })
 
     socket.on('connect', ()=>{
-        socket.emit('join', id)
+        socket.emit('join', {user: user.id, room: room.id})
     })
 
     socket.on('msg', async(obj)=>{
@@ -87,7 +87,7 @@
     }
 
     const exit=async()=>{
-        socket.emit('leave', room.id)
+        socket.emit('leave', {user: user.id, room: room.id})
         await api.put('leave', {id:room.id})
         goto('/')
     }
@@ -105,7 +105,7 @@
     const send=async()=>{
         if(!value) return
         value=value.trim()
-        let obj = {user: user.username, id, value}
+        let obj = {user: user.id, id, value}
         items = [...items, obj]
         socket.emit('msg', obj)
         await api.post('messages', {id, value})

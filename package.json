@@ -3,11 +3,14 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "a": "concurrently \"npm:server\" \"npm:dev\"",
+    "server": "node src/socket",
     "dev": "svelte-kit dev --port 3100",
     "sdev": "svelte-kit dev -h -H --port 3700",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
-    "start": "svelte-kit preview -H --port 3200"
+    "start": "node build",
+    "preview": "svelte-kit preview -H --port 3200"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -25,13 +28,16 @@
   "dependencies": {
     "@sveltejs/adapter-node": "next",
     "@sveltejs/site-kit": "^1.4.1",
+    "concurrently": "^7.0.0",
     "cookie": "^0.4.1",
     "dotenv": "^10.0.0",
+    "express": "^4.17.2",
     "fuzzball": "^2.1.2",
     "html-minifier": "^4.0.0",
     "inflection": "^1.13.1",
     "marked": "4.0.8",
-    "socket.io-client": "^4.4.0",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
     "svelte-paystack": "^0.2.2",
     "svelte-preprocess": "^4.10.1"
   },
@@ -43,6 +49,7 @@
     "carbon-icons-svelte": "^10.44.3",
     "eslint": "^8.6.0",
     "eslint-plugin-svelte3": "^3.3.0",
+    "gulp": "^4.0.2",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",
     "svelte": "^3.44.3",

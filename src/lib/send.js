@@ -50,18 +50,4 @@ export function send({ method, path, data, auth }) {
 	}
 }
 
-export function get(path, auth) {
-	return send({ method: 'GET', path, auth });
-}
-
-export function del(path, auth) {
-	return send({ method: 'DELETE', path, auth });
-}
-
-export function post(path, data, auth) {
-	return send({ method: 'POST', path, data, auth });
-}
-
-export function put(path, data, auth) {
-	return send({ method: 'PUT', path, data, auth });
-}
+module.exports = {send}
