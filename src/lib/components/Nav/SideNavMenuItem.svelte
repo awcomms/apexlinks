@@ -13,7 +13,7 @@
 </script>
 
 <SideNavMenuItem
-  isSelected={$page.path == href ? true : false}
+  isSelected={$page.url.pathname == href ? true : false}
   {...$$restProps}
   on:click
   on:click={click}

@@ -49,5 +49,3 @@ export function send({ method, path, data, auth }) {
 		return {}
 	}
 }
-
-module.exports = {send}

@@ -106,22 +106,30 @@
       {/if}
       <SideNavLink text="Login" href="/" />
     {/if}
-    <!-- <SideNavMenu text='Rooms'>
-      <SideNavMenuItem text='Add room' />
+    <SideNavMenu text='Rooms'>
+      {#if $session.user}
+        <SideNavMenuItem text="Add room" />
+        <SideNavMenuItem
+          text="My rooms"
+          href="/rooms?username={$session.user.username}"
+          isSelected={$page.url.searchParams.get('username') ===
+            $session.user.username}
+        />
+      {/if}
       <SideNavMenuItem text='All rooms' href='rooms' />
-    </SideNavMenu> -->
+    </SideNavMenu>
     <SideNavMenu text="Items">
       {#if $session.user}
         <SideNavMenuItem text="Add item" />
         <SideNavMenuItem
           text="My items"
           href="/items?username={$session.user.username}"
-          isSelected={$page.query.get('username') ===
+          isSelected={$page.url.searchParams.get('username') ===
             $session.user.username}
         />
       {/if}
       <SideNavMenuItem
-        isSelected={!$page.query.get('username')}
+        isSelected={!$page.url.searchParams.get('username')}
         text="Search all items"
         href="/items"
       />

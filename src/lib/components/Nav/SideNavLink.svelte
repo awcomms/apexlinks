@@ -2,7 +2,7 @@
   export let text = ''
   export let href = ''
   import { page } from "$app/stores";
-  export let isSelected = $page.path == href ? true : false
+  export let isSelected = $page.url.pathname == href ? true : false
   import { isSideNavOpen } from "$lib/stores";
   import { SideNavLink } from "carbon-components-svelte";
 
