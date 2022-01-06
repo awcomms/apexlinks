@@ -13,7 +13,7 @@
         if (item.user !== user.username){
             return {
                 status: 302,
-                redirect: `/u/${user.username}/items`
+                redirect: `/items/?username=${user.username}`
             }
         }
         return {
@@ -88,7 +88,7 @@
             }
         )
         if (res.yes){
-            goto(`/items/${user.id}`)
+            goto(`/items?username=${user.username}`)
         } //TODO else reload the page
     }
 

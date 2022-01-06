@@ -2,6 +2,7 @@
   import SideNavLink from "./SideNavLink.svelte";
   import SideNavMenuItem from "./SideNavMenuItem.svelte";
   import { api } from "$lib/api";
+  import { page } from "$app/stores";
   import url8 from "$lib/url8";
   import { post } from "$lib/utils/fetch/post";
   import { goto } from "$app/navigation";
@@ -114,7 +115,7 @@
         <SideNavMenuItem text="Add item" />
         <SideNavMenuItem
           text="My items"
-          href="/u/{$session.user.username}/items"
+          href="/items?username={$session.user.username}"
         />
       {/if}
       <SideNavMenuItem text="Search all items" href="/items" />
