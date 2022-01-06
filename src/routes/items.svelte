@@ -97,6 +97,7 @@
   let got;
 
   const go = async (item) => {
+    console.log(item)
     item = await api.get(`items/${item.id}`);
     if (!item || item.error) {
       $notify = {
@@ -104,7 +105,7 @@
       };
       return;
     } else {
-      goto(`/item/${item.id}`);
+      goto(`/i/${item.id}`);
     }
   };
 
@@ -112,10 +113,10 @@
     let tagArg = JSON.stringify($itemTags);
     let fieldArg = JSON.stringify($itemFields);
     let extraFieldsArg = JSON.stringify($extraFields);
-    let url = `items?extraFields=${extraFieldsArg}&fields=${fieldArg}&tags=${tagArg}&page=${
+    let url = `items?tags=${tagArg}&page=${
       page + 1
     }`;
-    url.concat(`&country=country`);
+    // url.concat(`&country=country`);
     let res = await api.get(url);
     if (Array.isArray(res.items)) {
       items = res.items;
@@ -136,7 +137,7 @@
   <br />
   <Row noGutter>
     <Column lg={1} sm={1} md={1} xlg={1}>
-      <div on:click={go} class="pointer item">
+      <div on:click={()=>(go(item))} class="pointer item">
         {#if item.image}
           <img
             style="vertical-align: top;"

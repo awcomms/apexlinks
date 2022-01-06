@@ -1,10 +1,10 @@
-import { abslink } from "./utils/abslink"
-import { emailRegex } from './u'
+import { abslinkRegex } from "./utils/regex"
+import { emailRegex } from './utils/regex'
 
 export const resolveRegex = (word) => {
     if (emailRegex.test(word)) {
         return 'email'
-    } else if (abslink.test(word)) {
+    } else if (abslinkRegex.test(word)) {
         return 'link'
     }
 }

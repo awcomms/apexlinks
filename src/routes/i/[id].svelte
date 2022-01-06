@@ -54,7 +54,7 @@
         <!-- {#if item.itype}
             <p>{item.itype}</p>
         {/if} -->
-        <Link href='/{item.user}'>User</Link>
+        <Link href='/u/{item.user}'>User</Link>
         {#if user && user.username == item.user}
             <Link href='/edit/{item.id}'>Edit</Link>
         {/if}

@@ -2,8 +2,9 @@
     export let field
 
     import {
-        abslink
-    } from '$lib/utils/abslink'
+        emailRegex,
+        abslinkRegex
+    } from '$lib/utils/regex'
     import {
         Link
     } from 'carbon-components-svelte'
@@ -11,8 +12,10 @@
 
 {#if field.value}
     <p class="heading">{field.label}</p>
-    {#if abslink.test(field.value)}
+    {#if abslinkRegex.test(field.value)}
         <Link href={field.value}>{field.value}</Link>
+    {:else if emailRegex.test(field.value)}
+        <Link type='email' href={field.value}>{field.value}</Link>
     {:else}
         <p>{field.value}</p>
     {/if}

@@ -13,7 +13,7 @@
         if (item.user !== user.username){
             return {
                 status: 302,
-                redirect: `/items/{user.id}`
+                redirect: `/u/${user.username}/items`
             }
         }
         return {
@@ -45,9 +45,9 @@
     import Image from '$lib/components/Image.svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
     import Input from '$lib/components/Input/Input.svelte'
-    import { abslink } from '$lib/utils/abslink'
+    import { abslinkRegex } from '$lib/utils/regex'
 
-    $: itype = initialCaps(itype)
+    // $: itype = initialCaps(itype)
 
     let nameInvalid
 
@@ -56,7 +56,7 @@
     let redirect = item.redirect
     let price = item.price
     let link = item.link
-    let itype = item.itype
+    // let itype = item.itype
     let image = item.image
     let fields = item.fields || []
     let name = item.name
@@ -94,7 +94,7 @@
 
     const edit=async()=>{
         editLoading = true
-        if(redirect && !abslink.test(link)){
+        if(redirect && !abslinkRegex.test(link)){
             linkInvalid = true
             editLoading = false
             return
@@ -107,7 +107,7 @@
             hidden,
             fields,
             price,
-            itype,
+            // itype,
             name,
             tags,
         }
@@ -122,7 +122,7 @@
             nameError = res.nameError
         }
         if (res.id){
-            goto(`/item/${res.id}`)
+            goto(`/i/${res.id}`)
         }
     }
 </script>
@@ -171,7 +171,7 @@
             />
         </FluidForm>
         <FluidForm>
-            <TextInput labelText="Item type" bind:value={itype} />
+            <!-- <TextInput labelText="Item type" bind:value={itype} /> -->
             <Checkbox bind:checked={redirect} 
                 labelText="Let the item's listing redirect to a link" />
             {#if redirect}

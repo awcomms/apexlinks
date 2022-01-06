@@ -46,7 +46,7 @@
     PAYSTACK_LIVE_KEY,
   } from "$lib/env";
   // import { checkEmail } from "$lib/utils/checkEmail";
-  // import { abslink } from "$lib/utils/abslink";
+  // import { abslinkRegex } from "$lib/utils/regex";
 
   onMount(async() => {
     location = await currentLocation.then(l => l).catch(e => console.log(e))

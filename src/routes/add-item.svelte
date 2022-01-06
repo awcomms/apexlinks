@@ -1,16 +1,16 @@
 <svelte:window on:keydown={keydown} />
-
+<!-- 
 <script context="module">
     export async function load({ session }) {
         const user = session.user
         if (!user) {
             return {
                 status: 302,
-                redirect: 'login'
+                redirect: '/'
             }
         }
     }
-</script>
+</script> -->
 
 <script>
     import {initialCaps} from '$lib/utils/initialCaps'
@@ -30,7 +30,7 @@
     import { goto } from '$app/navigation'
     import { api } from '$lib/api'
 
-    $: itype = initialCaps(itype)
+    // $: itype = initialCaps(itype)
 
     let nameInvalid
 
@@ -38,7 +38,7 @@
     let name
     let price
     let itext
-    let itype
+    // let itype
     let redirect
 
     let tags = []
@@ -61,7 +61,7 @@
             name,
             image,
             price,
-            itype,
+            // itype,
             itext
         }
         let res = await api.post('items', data).finally(
@@ -74,7 +74,7 @@
             nameInvalid = true
         }
         if (res.id) {
-            goto(`/item/${res.id}`)
+            goto(`/i/${res.id}`)
         }
     }
 </script>

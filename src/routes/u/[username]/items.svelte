@@ -1,11 +1,11 @@
 <script context='module'>
     export async function load({ page }){
+        let username = page.path.split('/u/')[1].split('/items')[0]
         let items = []
         let total = 0
         let pages = 0
-        let {id} = page.params
-        let user = await api.get(`users/${id}`)
-        let res = await api.get(`items?id=${id}`)
+        let user = await api.get(`users/${username}?username`)
+        let res = await api.get(`items?id=${user.id}`)
         if (res.error){
             return {
                 status: res.status,
@@ -23,7 +23,6 @@
                 total,
                 pages,
                 user,
-                id
             }
         }
     }
@@ -34,7 +33,6 @@
     export let total = 0
     export let pages = 0
     export let user
-    export let id
 
     import {
         PaginationNav,
@@ -56,7 +54,7 @@
 
     const get = async function(){
         let tagString = JSON.stringify(tags)
-        let url = `items?hidden=${hidden}&id=${id}&tags=${tagString}&page=${page+1}`
+        let url = `items?hidden=${hidden}&id=${user.id}&tags=${tagString}&page=${page+1}`
         let res = await api.get(url)
         if(Array.isArray(res.items)){
             items = res.items
@@ -83,7 +81,7 @@
     <br/>
     <Row noGutter>
         <Column lg={1} sm={1} md={1} xlg={1}>
-            <div on:click={goto(`/item/${item.id}`)} class='pointer item'>
+            <div on:click={goto(`/i/${item.id}`)} class='pointer item'>
                 {#if item.image}
                     <img style='vertical-align: top;' width='100%' alt='item display _image' src={item.image}>
                 {:else}

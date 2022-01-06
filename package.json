@@ -38,12 +38,12 @@
   "devDependencies": {
     "@sveltejs/kit": "next",
     "@testing-library/jest-dom": "^5.16.1",
-    "babel-jest": "^27.4.5",
-    "carbon-components-svelte": "^0.50.4",
+    "babel-jest": "^27.4.6",
+    "carbon-components-svelte": "^0.51.1",
     "carbon-icons-svelte": "^10.44.3",
-    "eslint": "^8.5.0",
-    "eslint-plugin-svelte3": "^3.2.1",
-    "jest": "^27.4.5",
+    "eslint": "^8.6.0",
+    "eslint-plugin-svelte3": "^3.3.0",
+    "jest": "^27.4.7",
     "prettier": "^2.5.1",
     "svelte": "^3.44.3",
     "svelte-jester": "^2.1.5"

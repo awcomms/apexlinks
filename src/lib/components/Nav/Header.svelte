@@ -1,23 +1,12 @@
-<svelte:window on:appinstalled={installed} on:beforeinstallprompt={before} />
-
 <script>
-  import SideNavLink from './SideNavLink.svelte'
-  import SideNavMenuItem from './SideNavMenuItem.svelte'
-  import { api } from '$lib/api'
-  import url8 from '$lib/url8'
-  import {
-    post
-  } from '$lib/utils/fetch/post'
-  import {
-    goto
-  } from '$app/navigation'
-  import {
-    navigating,
-    session,
-  } from '$app/stores'
-  import {
-    isSideNavOpen
-  } from '$lib/stores'
+  import SideNavLink from "./SideNavLink.svelte";
+  import SideNavMenuItem from "./SideNavMenuItem.svelte";
+  import { api } from "$lib/api";
+  import url8 from "$lib/url8";
+  import { post } from "$lib/utils/fetch/post";
+  import { goto } from "$app/navigation";
+  import { navigating, session } from "$app/stores";
+  import { isSideNavOpen } from "$lib/stores";
   import {
     InlineLoading,
     SkipToContent,
@@ -25,73 +14,75 @@
     SideNavItems,
     SideNav,
     Header,
-  } from "carbon-components-svelte"
+  } from "carbon-components-svelte";
 
-  let show
-  let installRef
-  let installPrompt
-  $isSideNavOpen = false
+  let show;
+  let installRef;
+  let installPrompt;
+  $isSideNavOpen = false;
 
-  const installed=()=>{
-    show=false
-  }
+  const installed = () => {
+    show = false;
+  };
 
-  const before=(e)=>{
-    show=true
-    e.preventDefault()
-    installPrompt = e
-  }
+  const before = (e) => {
+    show = true;
+    e.preventDefault();
+    installPrompt = e;
+  };
 
-  const install=()=>{
-        installPrompt.prompt()
-        installPrompt.userChoice.then((choice)=>{
-          if(choice.outcome === 'accepted'){
-            show = false
-          }
-        })
-  }
+  const install = () => {
+    installPrompt.prompt();
+    installPrompt.userChoice.then((choice) => {
+      if (choice.outcome === "accepted") {
+        show = false;
+      }
+    });
+  };
 
-  const getSub=()=>{
+  const getSub = () => {
     navigator.serviceWorker.ready
-    .then((registration)=>{
-      return registration.pushManager.getSubscription()
-      .then(async(sub)=>{
-        if (sub){
-          return sub
-        }
+      .then((registration) => {
+        return registration.pushManager.getSubscription().then(async (sub) => {
+          if (sub) {
+            return sub;
+          }
 
-        const response = await fetch(`get`)
-        const vapidKey = await response.text()
-        let int8VapidKey = url8(vapidKey)
-        const options = {
-          userVisibleOnly: true,
-          applicationServerKey: int8VapidKey
-        }
-        return registration.pushManager.subscribe(options)
+          const response = await fetch(`get`);
+          const vapidKey = await response.text();
+          let int8VapidKey = url8(vapidKey);
+          const options = {
+            userVisibleOnly: true,
+            applicationServerKey: int8VapidKey,
+          };
+          return registration.pushManager.subscribe(options);
+        });
       })
-    }).then((sub)=>{
-      api.post('subs', {id: $session.user.id, sub: sub})
-    })
-  }
+      .then((sub) => {
+        api.post("subs", { id: $session.user.id, sub: sub });
+      });
+  };
 
-  if(typeof window != 'undefined'){
-    if(navigator && navigator.serviceWorker && $session.user){
-      getSub()  
+  if (typeof window != "undefined") {
+    if (navigator && navigator.serviceWorker && $session.user) {
+      getSub();
     }
   }
 
-  const exit=()=>{
-    $session.user = null
-    post('/auth/exit')
-    goto('/')
-  }
+  const exit = () => {
+    $session.user = null;
+    post("/auth/exit");
+    goto("/");
+  };
 </script>
 
-<Header 
+<svelte:window on:appinstalled={installed} on:beforeinstallprompt={before} />
+
+<Header
   persistentHamburgerMenu={true}
-  company='Apexlinks'
+  company="Apexlinks"
   bind:isSideNavOpen={$isSideNavOpen}
-  href='/users'
+  href="/users"
 >
   {#if $navigating}
     <InlineLoading />
@@ -105,19 +96,34 @@
   <SideNavItems>
     {#if !$session.user}
       {#if show}
-        <SideNavLink bind:ref={installRef} on:click={install} href={null} text='Add To Homescreen'/>
+        <SideNavLink
+          bind:ref={installRef}
+          on:click={install}
+          href={null}
+          text="Add To Homescreen"
+        />
       {/if}
-      <SideNavLink text='Login' href='/'/>
+      <SideNavLink text="Login" href="/" />
     {/if}
     <!-- <SideNavMenu text='Rooms'>
       <SideNavMenuItem text='Add room' />
       <SideNavMenuItem text='All rooms' href='rooms' />
     </SideNavMenu> -->
+    <SideNavMenu text="Items">
+      {#if $session.user}
+        <SideNavMenuItem text="Add item" />
+        <SideNavMenuItem
+          text="My items"
+          href="/u/{$session.user.username}/items"
+        />
+      {/if}
+      <SideNavMenuItem text="Search all items" href="/items" />
+    </SideNavMenu>
     {#if $session.user}
-      <SideNavLink text='Me' href='/u/{$session.user.username}' />
+      <SideNavLink text="Me" href="/u/{$session.user.username}" />
       <!-- <SideNavLink text='Items' /> -->
-      <SideNavLink href='/edit' text='Edit Profile'/>
-      <SideNavLink text='Exit' href={null} on:click={exit} />
+      <SideNavLink href="/edit" text="Edit Profile" />
+      <SideNavLink text="Exit" href={null} on:click={exit} />
     {/if}
   </SideNavItems>
 </SideNav>
