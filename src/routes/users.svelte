@@ -3,6 +3,7 @@
     Row,
     Column,
     PaginationNav,
+    Loading,
     RadioButtonGroup,
     RadioButton,
     Slider,
@@ -29,6 +30,7 @@
     },
   ];
 
+  let loading
   let changeLimitInterval;
   let sort = "tag";
   $users = [];
@@ -61,7 +63,7 @@
   };
 
   const get = async () => {
-    console.log("sort", sort);
+    loading = true
     let tagString = JSON.stringify($userTags);
     let fields = $userFields.map((uf) => ({
       label: uf.label,
@@ -76,7 +78,7 @@
       page + 1
     }`;
     // if (limit) url.concat(`&limit=${limit}`)
-    let res = await api.get(url);
+    let res = await api.get(url).finally(()=>loading=false);
     console.log(res.error);
     if (Array.isArray(res.items)) {
       min = res.min;
@@ -89,6 +91,10 @@
     }
   };
 </script>
+
+{#if loading}
+  <Loading />
+  {/if}
 
 <!-- <Row noGutter>
   <Column>
