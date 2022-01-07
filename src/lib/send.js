@@ -8,7 +8,6 @@ import {
 export let base = dev ? local : live
 
 export function send({ method, path, data, auth }) {
-	console.log('live', live)
 	const opts = { method, headers: {} }
 
 	if (auth) {

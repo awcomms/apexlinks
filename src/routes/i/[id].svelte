@@ -1,8 +1,8 @@
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({session, page}){
+    export  const load = async({session, params}) =>{
         let user = session.user
-        let {id} = page.params
+        let {id} = params
         let item = await api.get(`items/${id}`)
         if(item.error){
             return {

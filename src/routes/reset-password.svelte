@@ -2,7 +2,7 @@
 
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load(){
+    export  const load = async() =>{
         let res = await api.get('check_reset_password_token')
         if(!res.r){
             return {

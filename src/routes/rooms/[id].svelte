@@ -1,5 +1,5 @@
 <script context='module'>
-    export async function load({page, session}){
+    export  const load = async({params, session}) =>{
         let user = session.user
         if(!user){
             return {
@@ -7,7 +7,7 @@
                 redirect: '/',
             }
         }
-        let {id} = page.params
+        let {id} = params
         let tagString = JSON.stringify([])
         let url = `xrooms?id=${id}&tags=${tagString}&page=1`
         let res = await api.get(url)
@@ -27,7 +27,7 @@
         let pages = res.pages
         return {
             props: {
-                room,
+                rooms,
                 total,
                 pages,
                 id

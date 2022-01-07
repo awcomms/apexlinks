@@ -1,6 +1,6 @@
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({session}){
+    export  const load = async({session}) =>{
         let user = session.user
         if(!user){
             return {

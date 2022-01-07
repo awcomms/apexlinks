@@ -1,5 +1,5 @@
 <script context="module">
-    export async function load({ session }) {
+    export  const load = async({ session }) => {
         let user = session.user
         console.log(user)
         if (!user) {
@@ -42,7 +42,7 @@
     let userInvalid
     let nameError
     let userError
-    let adding
+    let loading
     let name
     let tags
 
@@ -62,17 +62,17 @@
     }
 
     const add = async function() {
-        adding = true
+        loading = true
         if (!name){
             nameInvalid = true
             nameError = 'Empty'
-            adding = false
+            loading = false
             return
         }
         if (!$username){
             userInvalid = true
             userError = 'Empty'
-            adding = false
+            loading = false
             return
         }
         let data = {
@@ -81,18 +81,21 @@
             name,
             tags,
         }
-        let res = await api.post('rooms', data)
+        let res = await api.post('rooms', data).finally((r)=>{
+            loading = false
+            console.log(r)
+        })
         if (res.nameError) {
             nameError = res.nameError
             nameInvalid = true
-            adding = false
+            loading = false
         } else if (res.userError) {
             userError = res.userError
             userInvalid = true
-            adding = false
+            loading = false
         } else if (res.id) {
             $context=name
-            adding=false
+            loading=false
             goto(`/room/${res.id}`)
         }
     }
@@ -139,7 +142,7 @@
             <Button as let:props>
                 <div on:click={add} {...props}>
                     <p>Add</p>
-                    {#if adding}
+                    {#if loading}
                         <InlineLoading />
                     {/if}
                 </div>

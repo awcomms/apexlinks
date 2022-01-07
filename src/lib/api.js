@@ -19,7 +19,6 @@ export const api = {
         } else {
             res = await send({method, path: endpoint, data})
         }
-        console.log('api', res)
         return res
     },
     post: async (endpoint, data) => {

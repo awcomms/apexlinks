@@ -1,7 +1,7 @@
 <svelte:window on:keydown={keydown} />
 <!-- 
 <script context="module">
-    export async function load({ session }) {
+    export  const load = async({ session }) => {
         const user = session.user
         if (!user) {
             return {

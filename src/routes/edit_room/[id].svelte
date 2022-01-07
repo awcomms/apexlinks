@@ -1,8 +1,8 @@
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({ page, session }){
+    export  const load = async({ params, session }) =>{
         let user = session.user
-        let {id} = page.params
+        let {id} = params
         let room = await api.get(`rooms/${id}`)
         if (!user){
             return {

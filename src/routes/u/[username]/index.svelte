@@ -1,7 +1,7 @@
 <script context="module">
   import { send } from "$lib/send";
-  export async function load({ page }) {
-    let { username } = page.params;
+  export  const load = async({ params }) => {
+    let { username } = params;
     let user = await send({ method: "GET", path: `users/${username}` });
     if (!user) {
       return {

@@ -1,6 +1,6 @@
 <script context="module">
-  export const load = async ({ page }) => {
-    let username = page.query.get("username");
+  export const load = async ({ url }) => {
+    let username = url.searchParams.get("username");
     const user = await api.get(`users/${username}`);
     let countries = await api.get("countries").then((r) => r.items);
     // let markets = await api.get('markets').then(r => r.items)
@@ -31,6 +31,7 @@
   import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
+  import Saved from "$lib/components/Fields/Saved.svelte";
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
 
@@ -168,12 +169,13 @@
         <div class="label">
           <h4>{item.name}</h4>
           {#if item.user}
-            <p class="bx--link--sm">{item.user}</p>
+            <p class="bx--link--sm">{item.user.username}</p>
           {/if}
           {#if item.itype}
             <p class="bx--link--sm">{item.itype}</p>
           {/if}
         </div>
+        <Saved bind:item  />
       </div>
     </Column>
   </Row>

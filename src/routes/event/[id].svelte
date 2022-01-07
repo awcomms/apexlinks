@@ -1,7 +1,7 @@
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({session, page}){
-        let {id} = page.params
+    export  const load = async({session, params}) =>{
+        let {id} = params
         let event = await api.get(`events/${id}`)
         if (event == '404')(
             this.error(404, 'event not Found')

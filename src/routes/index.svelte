@@ -2,7 +2,6 @@
 
 <script context='module'>
     export const load = ({session}) => {
-        console.log('tehe')
         if (session.user) {
             return {
                 redirect: '/users',

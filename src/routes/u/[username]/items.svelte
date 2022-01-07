@@ -1,6 +1,6 @@
 <script context='module'>
-    export async function load({ page }){
-        let username = page.path.split('/u/')[1].split('/items')[0]
+    export  const load = async({ url }) =>{
+        let username = url.pathname.split('/u/')[1].split('/items')[0]
         let items = []
         let total = 0
         let pages = 0

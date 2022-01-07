@@ -1,6 +1,6 @@
 <script context='module'>
     import { api } from '$lib/api'
-    export async function load({ page, session}){
+    export  const load = async({ params, session}) =>{
         let user = session.user
         if (!user){
             return {
@@ -8,7 +8,7 @@
                 redirect: '/'
             }
         }
-        let {id} = page.params
+        let {id} = params
         let item = await api.get(`items/${id}`)
         if (item.user !== user.username){
             return {

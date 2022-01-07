@@ -35,7 +35,7 @@
     "fuzzball": "^2.1.2",
     "html-minifier": "^4.0.0",
     "inflection": "^1.13.1",
-    "marked": "4.0.8",
+    "marked": "4.0.9",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "svelte-paystack": "^0.2.2",
@@ -52,7 +52,7 @@
     "gulp": "^4.0.2",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",
-    "svelte": "^3.44.3",
+    "svelte": "^3.45.0",
     "svelte-jester": "^2.1.5"
   }
 }
