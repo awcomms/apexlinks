@@ -1,7 +1,7 @@
 import * as cookie from 'cookie'
 import { send } from '$lib/send'
 import {minify} from 'html-minifier'
-import { dev, prerendering } from '$app/env'
+import { prerendering } from '$app/env'
 
 const min_opts = {
     collapseBooleanAttributes: true,
@@ -36,17 +36,6 @@ export async function handle({ request, resolve}) {
     if (res && res.id) {
         request.locals.user = res
         request.locals.token = token
-    }
-
-    if(!dev){
-        if (request.headers['x-forwarded-proto'] !== 'https') {
-            return {
-                headers: {
-                    Location: `https://${request.host}${request.path}`
-                },  
-                status: 301
-            }
-        }
     }
 
     const response = await resolve(request)

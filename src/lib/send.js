@@ -5,7 +5,8 @@ import {
 	API as live
 } from '$lib/env'
 
-export let base = dev ? local : live
+export let base = live
+// export let base = dev ? local : live
 
 export function send({ method, path, data, auth }) {
 	const opts = { method, headers: {} }

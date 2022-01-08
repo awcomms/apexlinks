@@ -31,7 +31,7 @@
   import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
-  import Saved from "$lib/components/Fields/Saved.svelte";
+  import Save from "$lib/components/Save.svelte";
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
 
@@ -175,7 +175,7 @@
             <p class="bx--link--sm">{item.itype}</p>
           {/if}
         </div>
-        <Saved bind:item  />
+        <Save bind:item  />
       </div>
     </Column>
   </Row>
