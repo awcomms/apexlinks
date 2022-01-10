@@ -9,6 +9,7 @@
     Slider,
   } from "carbon-components-svelte";
   import currentLocation from "$lib/utils/currentLocation";
+  import Save from "$lib/components/Save.svelte";
   import { api } from "$lib/api";
   import { extraFields } from "$lib/_stores/users";
   import { users, userTags, userFields } from "$lib/stores";
@@ -168,6 +169,9 @@
           {/if}
         </div>
       </div>
+       <div class="actions">
+        <Save bind:item={user} />
+      </div>
     </Column>
   </Row>
 {/each}
@@ -189,6 +193,9 @@
 {/if}
 
 <style>
+  .actions {
+    margin-right: 1rem;
+  }
   .label {
     padding-left: 0.5rem;
   }

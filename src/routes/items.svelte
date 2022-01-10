@@ -1,28 +1,26 @@
 <script context="module">
   export const load = async ({ url }) => {
+    let props = {};
     let username = url.searchParams.get("username");
     const user = await api.get(`users/${username}`);
-    let countries = await api.get("countries").then((r) => r.items);
+    if (user.error) {
+      console.log("items get user", user);
+    } else {
+      props.user = user;
+    }
+    props.countries = await api.get("countries").then((r) => r.items);
     // let markets = await api.get('markets').then(r => r.items)
-    let states = await api.get("states").then((r) => r.items);
-    let cities = await api.get("cities").then((r) => r.items);
+    props.states = await api.get("states").then((r) => r.items);
+    props.cities = await api.get("cities").then((r) => r.items);
     console.log("aa", user);
     return {
-      props: {
-        test: true,
-        countries,
-        states,
-        cities,
-        user,
-      },
+      props,
     };
   };
 </script>
 
 <script>
-  export let test
   export let user, countries, /* markets, */ states, cities;
-  console.log("test", test);
   console.log("ze", user);
 
   import { Row, Column, Button, PaginationNav } from "carbon-components-svelte";
@@ -31,7 +29,7 @@
   import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag.svelte";
   import { goto } from "$app/navigation";
-  import Saved from "$lib/components/Fields/Saved.svelte";
+  import Save from "$lib/components/Save.svelte";
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
 
@@ -126,7 +124,7 @@
     let url = `items?tags=${tagArg}&page=${page + 1}`;
     console.log("teehee", user);
     if (user) url = url.concat(`&id=${user.id}`);
-    console.log(url)
+    console.log(url);
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
@@ -175,7 +173,9 @@
             <p class="bx--link--sm">{item.itype}</p>
           {/if}
         </div>
-        <Saved bind:item  />
+      </div>
+      <div class="actions">
+        <Save bind:item />
       </div>
     </Column>
   </Row>
@@ -198,6 +198,9 @@
 {/if}
 
 <style>
+  .actions {
+    margin-right: 1rem;
+  }
   .label {
     padding-left: 0.5rem;
   }
