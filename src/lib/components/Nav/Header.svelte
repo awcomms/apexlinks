@@ -101,15 +101,15 @@
         <SideNavLink
           bind:ref={installRef}
           on:click={install}
-          href={null}
+          href=''
           text="Add To Homescreen"
         />
       {/if}
-      <SideNavLink text="Login" href="/" />
+      <SideNavLink isSelected={$page.url.pathname === '/login'} text="Login" href="/login" />
     {/if}
-    <SideNavMenu text='Rooms'>
+    <!-- <SideNavMenu text='Rooms'>
       {#if $session.user}
-        <SideNavMenuItem text="Add room" />
+        <SideNavMenuItem isSelected={$page.url.pathname === '/add-room'} href='add-room' text="Add room" />
         <SideNavMenuItem
           text="My rooms"
           href="/rooms?username={$session.user.username}"
@@ -117,29 +117,28 @@
             $session.user.username}
         />
       {/if}
-      <SideNavMenuItem text='All rooms' href='rooms' />
-    </SideNavMenu>
+      <SideNavMenuItem text='All rooms' href='/rooms' isSelected={$page.url.pathname === '/rooms'} />
+    </SideNavMenu> -->
     <SideNavMenu text="Items">
       {#if $session.user}
-        <SideNavMenuItem text="Add item" />
+        <SideNavMenuItem isSelected={$page.url.pathname === '/add-item'} href='/add-item' text="Add item" />
         <SideNavMenuItem
           text="My items"
           href="/items?username={$session.user.username}"
-          isSelected={$page.url.searchParams.get('username') ===
+          isSelected={$page.url.pathname === '/items' && $page.url.searchParams.get('username') ===
             $session.user.username}
         />
       {/if}
       <SideNavMenuItem
-        isSelected={!$page.url.searchParams.get('username') && $page.url.pathname==='/items'}
+        isSelected={$page.url.pathname === '/items' && !$page.url.searchParams.get('username')}
         text="Search all items"
         href="/items"
       />
     </SideNavMenu>
     {#if $session.user}
-      <SideNavLink text="Me" href="/u/{$session.user.username}" />
-      <!-- <SideNavLink text='Items' /> -->
-      <SideNavLink href="/edit" text="Edit Profile" />
-      <SideNavLink text="Exit" href={null} on:click={exit} />
+      <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.username}" />
+      <SideNavLink isSelected={$page.url.pathname === '/edit'} href="/edit" text="Edit Profile" />
+      <SideNavLink text="Exit" href='' on:click={exit} />
     {/if}
   </SideNavItems>
 </SideNav>
