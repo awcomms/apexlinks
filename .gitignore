@@ -4,8 +4,6 @@ build
 .DS_Store
 node_modules
 dist
-package-lock.json
 yarn.lock
 yarn-error.log
 .env
-custom.gitignore

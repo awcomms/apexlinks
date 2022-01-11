@@ -1,7 +1,6 @@
 <script context="module">
     export  const load = async({ session }) => {
         let user = session.user
-        console.log(user)
         if (!user) {
             return {
                 status: 302,

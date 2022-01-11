@@ -70,6 +70,7 @@
     }
   }
 
+
   const exit = () => {
     $session.user = null;
     post("/auth/exit");
@@ -129,7 +130,7 @@
         />
       {/if}
       <SideNavMenuItem
-        isSelected={!$page.url.searchParams.get('username')}
+        isSelected={!$page.url.searchParams.get('username') && $page.url.pathname==='/items'}
         text="Search all items"
         href="/items"
       />
