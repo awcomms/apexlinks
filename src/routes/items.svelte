@@ -23,7 +23,7 @@
   export let user, countries, /* markets, */ states, cities;
   console.log("ze", user);
 
-  import { Row, Column, Button, PaginationNav } from "carbon-components-svelte";
+  import { Row, Column, Button, PaginationNav, Checkbox } from "carbon-components-svelte";
   import { api } from "$lib/api";
   import { itemFields, itemTags, notify } from "$lib/stores";
   import { extraFields } from "$lib/_stores/items";
@@ -101,6 +101,8 @@
   let total = 0;
   let pages = 0;
 
+  let saved
+
   let got;
 
   const go = async (item) => {
@@ -124,6 +126,7 @@
     let url = `items?tags=${tagArg}&page=${page + 1}`;
     console.log("teehee", user);
     if (user) url = url.concat(`&id=${user.id}`);
+    if (saved) url = url.concat(`&saved`)
     console.log(url);
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
@@ -141,6 +144,12 @@
 </svelte:head>
 
 <Tag bind:tags={$itemTags} placeholder="Search" on:change={get} />
+
+<Row noGutter>
+  <Column>
+    <Checkbox bind:checked={saved} />
+  </Column>
+</Row>
 
 {#each items as item}
   <br />

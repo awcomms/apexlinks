@@ -11,6 +11,7 @@
     const data = {}
     data[param] = [item.id]
     const res = await api.put(`${model}s`, data);
+    console.log(res)
     if (res.error) {
       console.log('saved error', res.error);
     } else {

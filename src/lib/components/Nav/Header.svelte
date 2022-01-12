@@ -105,7 +105,7 @@
           text="Add To Homescreen"
         />
       {/if}
-      <SideNavLink isSelected={$page.url.pathname === '/login'} text="Login" href="/login" />
+      <SideNavLink isSelected={$page.url.pathname === '/login'} text="Login" href="/" />
     {/if}
     <!-- <SideNavMenu text='Rooms'>
       {#if $session.user}
