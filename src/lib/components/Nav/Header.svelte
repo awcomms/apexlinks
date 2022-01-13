@@ -101,7 +101,7 @@
         <SideNavLink
           bind:ref={installRef}
           on:click={install}
-          href=''
+          href={null}
           text="Add To Homescreen"
         />
       {/if}
@@ -138,7 +138,7 @@
     {#if $session.user}
       <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.username}" />
       <SideNavLink isSelected={$page.url.pathname === '/edit'} href="/edit" text="Edit Profile" />
-      <SideNavLink text="Exit" href='' on:click={exit} />
+      <SideNavLink text="Exit" href={null} on:click={exit} />
     {/if}
   </SideNavItems>
 </SideNav>

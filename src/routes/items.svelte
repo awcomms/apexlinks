@@ -1,18 +1,18 @@
 <script context="module">
-  export const load = async ({ url }) => {
+  export const load = async ({ url, session }) => {
     let props = {};
+    if (session.user) props.user = session.user
     let username = url.searchParams.get("username");
-    const user = await api.get(`users/${username}`);
-    if (user.error) {
-      console.log("items get user", user);
+    const _user = await api.get(`users/${username}`);
+    if (_user.error) {
+      console.log("items get user error", _user);
     } else {
-      props.user = user;
+      props._user = _user;
     }
     props.countries = await api.get("countries").then((r) => r.items);
     // let markets = await api.get('markets').then(r => r.items)
     props.states = await api.get("states").then((r) => r.items);
     props.cities = await api.get("cities").then((r) => r.items);
-    console.log("aa", user);
     return {
       props,
     };
@@ -20,8 +20,7 @@
 </script>
 
 <script>
-  export let user, countries, /* markets, */ states, cities;
-  console.log("ze", user);
+  export let user, _user, countries, /* markets, */ states, cities;
 
   import { Row, Column, Button, PaginationNav, Checkbox } from "carbon-components-svelte";
   import { api } from "$lib/api";
@@ -143,13 +142,15 @@
   <title>Apexlinks</title>
 </svelte:head>
 
-<Tag bind:tags={$itemTags} placeholder="Search" on:change={get} />
+<Tag bind:tags={$itemTags} on:change={get} />
 
+{#if user && user.username === _user.username}
 <Row noGutter>
   <Column>
-    <Checkbox bind:checked={saved} />
+    <Checkbox on:change={get} labelText='Only saved items' bind:checked={saved} />
   </Column>
 </Row>
+{/if}
 
 {#each items as item}
   <br />
