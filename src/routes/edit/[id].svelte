@@ -10,7 +10,7 @@
         }
         let {id} = params
         let item = await api.get(`items/${id}`)
-        console.log(item.user, item.user.username, user.username)
+        console.log(item.user, item.user.username, user.usernamegi)
         if (item.user.username !== user.username){
             return {
                 status: 302,
