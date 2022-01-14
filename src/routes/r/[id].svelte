@@ -15,7 +15,6 @@
     // }
     let items, total;
     let res = await api.get(`messages?id=${id}`);
-    console.log(res);
     items = res.items;
     // page = res.page
     total = res.total;

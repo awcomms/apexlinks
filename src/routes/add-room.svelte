@@ -82,7 +82,6 @@
         }
         let res = await api.post('rooms', data).finally((r)=>{
             loading = false
-            console.log(r)
         })
         if (res.nameError) {
             nameError = res.nameError

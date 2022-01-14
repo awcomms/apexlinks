@@ -6,14 +6,11 @@
   import { Button } from "carbon-components-svelte";
 
   const toggle = async () => {
-    console.log('save item', item.id, item)
     const param = `save_toggle_${item.type}s`;
     const data = {}
     data[param] = [item.id]
     const res = await api.put(`${model}s`, data);
-    console.log(res)
     if (res.error) {
-      console.log('saved error', res.error);
     } else {
       item.saved = res[`${item.type}s_save_toggled`].find(i => i.id === item.id).saved
     }

@@ -4,8 +4,8 @@
   export let is_focused = false;
   import { createEventDispatcher } from "svelte";
   import {
-    Tag,
     Row,
+    Tag,
     Column,
     TextInput,
     ContextMenu,
@@ -106,12 +106,15 @@
       {#each tags as tag}
         <ContextMenu target={tag.target}>
           <ContextMenuOption
-            indented
             labelText="Exact"
-            selected={tag.exact}
-            on:click={() => (tag.exact = !tag.exact)}
+            bind:selected={tag.exact}
+            on:click={() => {
+              tag.exact = !tag.exact;
+              console.log(tag.exact);
+            }}
           />
         </ContextMenu>
+
         <Tag bind:ref={tag.target} filter on:click={del(tag)}>{tag.value}</Tag>
       {/each}
     </Column>

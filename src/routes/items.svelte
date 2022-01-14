@@ -4,9 +4,7 @@
     if (session.user) props.user = session.user
     let username = url.searchParams.get("username");
     const _user = await api.get(`users/${username}`);
-    if (_user.error) {
-      console.log("items get user error", _user);
-    } else {
+    if (!_user.error) {
       props._user = _user;
     }
     props.countries = await api.get("countries").then((r) => r.items);
@@ -32,6 +30,8 @@
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
 
+  $: sameUser = user && _user && user.username === _user.username
+
   // get value via label from extra fields
   const g = (label) => {
     return $extraFields.find((e) => e.label === label).value;
@@ -44,7 +44,6 @@
         if (!Array.isArray(extraFields)) return
         let country = g('country')
         let state = g('state')
-        console.log('.q', country, state)
         // let marketsUrl = 'markets?'
         // marketsUrl.concat(`&country=${g('country')}`)
         // marketsUrl.concat(`&state=${g('state')}`)
@@ -58,7 +57,6 @@
         }
         
         if (state) {
-        console.log('a', country, state)
             let citiesUrl = 'cities?'
             citiesUrl.concat(`&country=${g('country')}`)
             citiesUrl.concat(`&state=${g('state')}`)
@@ -105,7 +103,6 @@
   let got;
 
   const go = async (item) => {
-    console.log(item);
     item = await api.get(`items/${item.id}`);
     if (!item || item.error) {
       $notify = {
@@ -123,10 +120,8 @@
     let fieldArg = JSON.stringify($itemFields);
     let extraFieldsArg = JSON.stringify($extraFields);
     let url = `items?tags=${tagArg}&page=${page + 1}`;
-    console.log("teehee", user);
     if (user) url = url.concat(`&id=${user.id}`);
     if (saved) url = url.concat(`&saved`)
-    console.log(url);
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
@@ -144,7 +139,7 @@
 
 <Tag bind:tags={$itemTags} on:change={get} />
 
-{#if user && user.username === _user.username}
+{#if sameUser}
 <Row noGutter>
   <Column>
     <Checkbox on:change={get} labelText='Only saved items' bind:checked={saved} />
@@ -175,17 +170,14 @@
           />
         {/if}
         <div class="label">
-          <h4>{item.name}</h4>
-          {#if item.user}
+          <h4>{item.fields?.find(f => f.label === 'name')?.value || item.id}</h4>
+          {#if !sameUser && item.user}
             <p class="bx--link--sm">{item.user.username}</p>
-          {/if}
-          {#if item.itype}
-            <p class="bx--link--sm">{item.itype}</p>
           {/if}
         </div>
       </div>
       <div class="actions">
-        <Save bind:item />
+        <!-- <Save bind:item /> -->
       </div>
     </Column>
   </Row>

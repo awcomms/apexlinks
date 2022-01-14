@@ -10,7 +10,8 @@
         }
         let {id} = params
         let item = await api.get(`items/${id}`)
-        if (item.user !== user.username){
+        console.log(item.user, item.user.username, user.username)
+        if (item.user.username !== user.username){
             return {
                 status: 302,
                 redirect: `/items/?username=${user.username}`

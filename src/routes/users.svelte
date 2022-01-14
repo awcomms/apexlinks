@@ -48,17 +48,13 @@
   $: sliderLabelUnit = sort == "tag" ? "km" : "points";
 
   const startChangeLimit = (detail) => {
-    console.log("scl", changeLimitInterval);
     // if (changeLimitInterval) return
     changeLimitInterval = setInterval(() => {
-      console.log(limit);
       detail ? (limit += step) : (limit -= step);
-      console.log(limit);
     }, 1000);
   };
 
   const stopChangeLimit = () => {
-    console.log("stcl", changeLimitInterval);
     clearInterval(changeLimitInterval);
     changeLimitInterval = null;
   };
@@ -72,15 +68,13 @@
     }));
     let fieldString = JSON.stringify(fields);
     let extraString = JSON.stringify($extraFields);
-    let loc = await currentLocation.then((l) => l).catch((e) => console.log(e));
-    console.log("loc", loc);
+    let loc = await currentLocation.then((l) => l);
     loc = JSON.stringify(loc);
     let url = `users?sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
       page + 1
     }`;
     // if (limit) url.concat(`&limit=${limit}`)
     let res = await api.get(url).finally(()=>loading=false);
-    console.log(res.error);
     if (Array.isArray(res.items)) {
       min = res.min;
       max = res.max;
@@ -170,7 +164,7 @@
         </div>
       </div>
        <div class="actions">
-        <Save bind:item={user} />
+        <!-- <Save bind:item={user} /> -->
       </div>
     </Column>
   </Row>

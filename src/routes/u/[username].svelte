@@ -24,7 +24,7 @@
 
 <script>
   export let user;
-  import { Column, Tag } from "carbon-components-svelte";
+  import { Column, Link, Tag } from "carbon-components-svelte";
   import DisplayField from "$lib/components/DisplayField.svelte";
   import { parseMarkdown } from "$lib/utils/parseMarkdown";
   import { onMount } from "svelte";
@@ -60,6 +60,8 @@
   <title>/{user.username} - Apexlinks</title>
   <script id="ld" type="application/ld+json"></script>
 </svelte:head>
+
+<Link href='/items?username={user.username}'>User's items</Link>
 
 {#if user.image}
   <Column lg={2} sm={2} md={2} xlg={2}>

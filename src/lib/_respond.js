@@ -11,7 +11,6 @@ export function respond(body) {
 			body 
 		}
 	} else if (body.token) {
-		console.log('body.token', body.token)
 		return {
 			headers: {
 				'set-cookie': `token=${body.token}; SameSite=Strict; HttpOnly; Max-Age=67376900; Path=/; Secure; HttpOnly;`
