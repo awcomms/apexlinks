@@ -43,9 +43,9 @@ export function send({ method, path, data, auth }) {
 				return res.text
 			}
 		}).catch((err)=>{
-			return
+			return { status: 500, error: "internal error" };
 		})
 	} catch {
-		return {}
+		return { 'status': 500, 'error': 'internal error'}
 	}
 }

@@ -1,7 +1,6 @@
 <script context="module">
     export  const load = async({ session }) => {
         let user = session.user
-        console.log(user)
         if (!user) {
             return {
                 status: 302,
@@ -83,7 +82,6 @@
         }
         let res = await api.post('rooms', data).finally((r)=>{
             loading = false
-            console.log(r)
         })
         if (res.nameError) {
             nameError = res.nameError

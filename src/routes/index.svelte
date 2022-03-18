@@ -67,7 +67,6 @@
 
     const checkNoPassword = async() => {
         let noUserPassword = await api.get(`users/check-no-password/${username}`).then(r => r.res)
-        console.log(noUserPassword)
         return noUserPassword
     }
 
@@ -143,7 +142,7 @@
         passwordInvalid = r.passwordInvalid
         if (r.user) {
             $session.user = r.user
-            goto('/edit')
+            goto('/users')
         }
     }
 

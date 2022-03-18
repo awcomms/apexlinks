@@ -139,7 +139,6 @@
       image,
       tags,
     };
-    console.log('dt', dt.location)
     let res = await api.put("users", dt).finally((r) => {
       loading = false;
       return r;
@@ -211,15 +210,6 @@
 
 <Tag bind:tags />
 
-<br />
-<Row noGutter>
-  <Column>
-    <Fields bind:fields />
-    <!-- <Fields combobox={true} bind:fields /> -->
-  </Column>
-</Row>
-<br />
-
 <Row noGutter>
   <Column>
     <FluidForm>
@@ -232,6 +222,14 @@
     </FluidForm>
   </Column>
 </Row>
+
+<br />
+<Row noGutter>
+  <Column>
+    <Fields bind:fields />
+  </Column>
+</Row>
+<br />
 
 <Row noGutter>
   <Column>

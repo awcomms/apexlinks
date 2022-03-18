@@ -38,6 +38,17 @@ export async function handle({ request, resolve}) {
         request.locals.token = token
     }
 
+    if(!dev){
+        if (request.headers['x-forwarded-proto'] !== 'https') {
+            return {
+                headers: {
+                    Location: `https://${request.host}${request.url.pathname}`
+                },  
+                status: 301
+            }
+        }
+    }
+
     const response = await resolve(request)
 
     if(prerendering && response.headers['content-type'] === 'text/html') {

@@ -1,31 +1,26 @@
 <script context="module">
-  export const load = async ({ url }) => {
+  export const load = async ({ url, session }) => {
+    let props = {};
+    if (session.user) props.user = session.user
     let username = url.searchParams.get("username");
-    const user = await api.get(`users/${username}`);
-    let countries = await api.get("countries").then((r) => r.items);
+    const _user = await api.get(`users/${username}`);
+    if (!_user.error) {
+      props._user = _user;
+    }
+    props.countries = await api.get("countries").then((r) => r.items);
     // let markets = await api.get('markets').then(r => r.items)
-    let states = await api.get("states").then((r) => r.items);
-    let cities = await api.get("cities").then((r) => r.items);
-    console.log("aa", user);
+    props.states = await api.get("states").then((r) => r.items);
+    props.cities = await api.get("cities").then((r) => r.items);
     return {
-      props: {
-        test: true,
-        countries,
-        states,
-        cities,
-        user,
-      },
+      props,
     };
   };
 </script>
 
 <script>
-  export let test
-  export let user, countries, /* markets, */ states, cities;
-  console.log("test", test);
-  console.log("ze", user);
+  export let user, _user, countries, /* markets, */ states, cities;
 
-  import { Row, Column, Button, PaginationNav } from "carbon-components-svelte";
+  import { Row, Column, Button, PaginationNav, Checkbox } from "carbon-components-svelte";
   import { api } from "$lib/api";
   import { itemFields, itemTags, notify } from "$lib/stores";
   import { extraFields } from "$lib/_stores/items";
@@ -34,6 +29,8 @@
   import Save from "$lib/components/Save.svelte";
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
+
+  $: sameUser = user && _user && user.username === _user.username
 
   // get value via label from extra fields
   const g = (label) => {
@@ -47,7 +44,6 @@
         if (!Array.isArray(extraFields)) return
         let country = g('country')
         let state = g('state')
-        console.log('.q', country, state)
         // let marketsUrl = 'markets?'
         // marketsUrl.concat(`&country=${g('country')}`)
         // marketsUrl.concat(`&state=${g('state')}`)
@@ -61,7 +57,6 @@
         }
         
         if (state) {
-        console.log('a', country, state)
             let citiesUrl = 'cities?'
             citiesUrl.concat(`&country=${g('country')}`)
             citiesUrl.concat(`&state=${g('state')}`)
@@ -103,10 +98,11 @@
   let total = 0;
   let pages = 0;
 
+  let saved
+
   let got;
 
   const go = async (item) => {
-    console.log(item);
     item = await api.get(`items/${item.id}`);
     if (!item || item.error) {
       $notify = {
@@ -124,9 +120,8 @@
     let fieldArg = JSON.stringify($itemFields);
     let extraFieldsArg = JSON.stringify($extraFields);
     let url = `items?tags=${tagArg}&page=${page + 1}`;
-    console.log("teehee", user);
     if (user) url = url.concat(`&id=${user.id}`);
-    console.log(url)
+    if (saved) url = url.concat(`&saved`)
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
@@ -142,7 +137,15 @@
   <title>Apexlinks</title>
 </svelte:head>
 
-<Tag bind:tags={$itemTags} placeholder="Search" on:change={get} />
+<Tag bind:tags={$itemTags} on:change={get} />
+
+{#if sameUser}
+<Row noGutter>
+  <Column>
+    <Checkbox on:change={get} labelText='Only saved items' bind:checked={saved} />
+  </Column>
+</Row>
+{/if}
 
 {#each items as item}
   <br />
@@ -167,15 +170,14 @@
           />
         {/if}
         <div class="label">
-          <h4>{item.name}</h4>
-          {#if item.user}
+          <h4>{item.fields?.find(f => f.label === 'name')?.value || item.id}</h4>
+          {#if !sameUser && item.user}
             <p class="bx--link--sm">{item.user.username}</p>
           {/if}
-          {#if item.itype}
-            <p class="bx--link--sm">{item.itype}</p>
-          {/if}
         </div>
-        <Save bind:item  />
+      </div>
+      <div class="actions">
+        <!-- <Save bind:item /> -->
       </div>
     </Column>
   </Row>
@@ -198,6 +200,9 @@
 {/if}
 
 <style>
+  .actions {
+    margin-right: 1rem;
+  }
   .label {
     padding-left: 0.5rem;
   }

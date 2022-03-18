@@ -21,7 +21,7 @@
     currency: "NGN",
     embed: false,
     value: "Pay",
-    callback: () => console.log('paid')
+    callback: () => {}
     }
 </script>
 

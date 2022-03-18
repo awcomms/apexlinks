@@ -51,12 +51,9 @@
                 <p class='bold'>{item.name}</p>
             {/if}
         {/if}
-        <!-- {#if item.itype}
-            <p>{item.itype}</p>
-        {/if} -->
-        <Link href='/u/{item.user}'>User</Link>
-        {#if user && user.username == item.user}
-            <Link href='/edit/{item.id}'>Edit</Link>
+        <Link href='/u/{item.user.username}'>Item's user</Link>
+        {#if user && user.username == item.user.username}
+            <Link href='/edit/{item.id}'>Edit item</Link>
         {/if}
     </Column>
 </Row>

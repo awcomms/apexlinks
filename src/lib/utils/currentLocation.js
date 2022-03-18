@@ -7,10 +7,8 @@ export default new Promise((resolve) => {
       (pos) => {
         location.lat = pos.coords.latitude;
         location.lon = pos.coords.longitude;
-        console.log(location);
       },
       (err) => {
-        console.log();
         resolve(err);
       },
       {

@@ -16,7 +16,6 @@
     let mode = 'replies'
     let items, total;
     let res = await api.get(`messages?model=message&id=${id}&mode=${mode}`);
-    console.log(res);
     if (!Array.isArray(items)) items = [];
     items = res.items || [];
     // page = res.page

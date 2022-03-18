@@ -12,8 +12,6 @@
   import ArrowUp16 from "carbon-icons-svelte/lib/ArrowUp16";
   import Field from "./Field.svelte";
 
-$: console.log(currentField)
-
   import { storeFields } from "./store";
   import { onMount } from "svelte";
 
@@ -45,7 +43,6 @@ $: console.log(currentField)
   let id = fields
     .map((f) => (typeof f.id === 'number' ? f.id : 0))
     .reduce((a, b) => Math.max(a, b), 0);
-  console.log("f-id", id);
 
   $storeFields = fields;
   $: fields = $storeFields;
@@ -54,19 +51,12 @@ $: console.log(currentField)
     let duplicate = $storeFields.find(
       (f) => f.id !== field.id && f.label === field.label
     );
-    console.log("duplicate", duplicate);
     return duplicate;
   };
 
   const resolveDuplicateLabel = (field) => {
     let duplicate = getDuplicateLabel(field);
     if (duplicate) {
-      console.log(
-        duplicate.id,
-        duplicate.value,
-        duplicate.ref,
-        duplicate.ref.focus
-      );
       duplicate.ref.focus();
       return true;
     }
@@ -89,7 +79,6 @@ $: console.log(currentField)
 
   const fieldLabelAccept = (field) => {
     if (resolveDuplicateLabel(field)) {
-      console.log("rdl");
       return;
     }
     if (field.new) {
@@ -120,7 +109,6 @@ $: console.log(currentField)
       invalid: false,
       error: false,
     };
-    console.log(field.id);
     $storeFields = [field, ...$storeFields];
     id++;
   };

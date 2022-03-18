@@ -1,31 +1,3 @@
-<script context='module'>
-    import { api } from '$lib/api'
-    export  const load = async({ params, session}) =>{
-        let user = session.user
-        if (!user){
-            return {
-                status: 302,
-                redirect: '/'
-            }
-        }
-        let {id} = params
-        let item = await api.get(`items/${id}`)
-        console.log(item.user, item.user.username, user.usernamegi)
-        if (item.user.username !== user.username){
-            return {
-                status: 302,
-                redirect: `/items/?username=${user.username}`
-            }
-        }
-        return {
-            props: {
-                item,
-                user
-            }
-        }
-    }
-</script>
-
 <script>
     export let item
     export let user
@@ -35,20 +7,15 @@
         ButtonSet,
         Checkbox,
         TextArea,
-        TextInput,
         Column,
         Button,
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import {initialCaps} from '$lib/utils/initialCaps'
     import Tag from '$lib/components/Tag.svelte'
     import Image from '$lib/components/Image.svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
     import Input from '$lib/components/Input/Input.svelte'
-    import { abslinkRegex } from '$lib/utils/regex'
-
-    // $: itype = initialCaps(itype)
 
     let nameInvalid
 
@@ -57,7 +24,6 @@
     let redirect = item.redirect
     let price = item.price
     let link = item.link
-    // let itype = item.itype
     let image = item.image
     let fields = item.fields || []
     let name = item.name
