@@ -1,7 +1,7 @@
 import * as cookie from 'cookie'
 import { send } from '$lib/send'
 import {minify} from 'html-minifier'
-import { prerendering } from '$app/env'
+import { dev, prerendering } from '$app/env'
 
 const min_opts = {
     collapseBooleanAttributes: true,
@@ -28,7 +28,8 @@ export function getSession(request) {
     }
 }
 
-export async function handle({ request, resolve}) {
+export async function handle({ event, resolve}) {
+    const {request} = event
     const { token } = cookie.parse(request.headers.cookie || '')
 
     let res = await send({method: 'GET', path: 'tokens', auth: token })
@@ -49,7 +50,7 @@ export async function handle({ request, resolve}) {
         }
     }
 
-    const response = await resolve(request)
+    const response = await resolve(event)
 
     if(prerendering && response.headers['content-type'] === 'text/html') {
         response.body = minify(response.body, min_opts)

@@ -1,10 +1,6 @@
 <script>
   export let text = ''
-<<<<<<< HEAD
-  export let href = ''
-=======
   export let href = null
->>>>>>> 3ff98b0ab9c6934a76a11777efad186bed52aeda
   export let isSelected
   import { page } from "$app/stores";
   import { isSideNavOpen } from "$lib/stores";

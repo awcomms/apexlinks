@@ -3,10 +3,11 @@ import sveltePreprocess from 'svelte-preprocess'
 
 export default {
 	kit: {
-		headers: {
-			host: 'X-Forwarded-Host',
-			protocol: 'X-Forwarded-Proto'
-		},
+		vite: () => ({
+			optimizeDeps: {
+				exclude: ['totalist', 'sirv', 'local-access']
+			}
+		}),
 		adapter: adapter({
 			out: 'build'
 		}),
