@@ -1,58 +1,55 @@
-import * as cookie from 'cookie'
-import { send } from '$lib/send'
-import {minify} from 'html-minifier'
-import { prerendering } from '$app/env'
+import { parse } from "cookie";
+import { send } from "$lib/send";
+import { minify } from "html-minifier";
+import { dev, prerendering } from "$app/env";
 
 const min_opts = {
-    collapseBooleanAttributes: true,
-    collapseWhitespace: true,
-    conservativeCollapse: true,
-    decodeEntities: true,
-    html5: true,
-    ignoreCustomComments: [/^#/],
-    minifyCSS: true,
-    minifyJS: true,
-    removeAttributeQuotes: true,
-    removeComments: true,
-    removeOptionalTags: true,
-    removeRedundantAttributes: true,
-    removeScriptTypeAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    sortAttributes: true,
-    sortClassName: true
-}
+  collapseBooleanAttributes: true,
+  collapseWhitespace: true,
+  conservativeCollapse: true,
+  decodeEntities: true,
+  html5: true,
+  ignoreCustomComments: [/^#/],
+  minifyCSS: true,
+  minifyJS: true,
+  removeAttributeQuotes: true,
+  removeComments: true,
+  removeOptionalTags: true,
+  removeRedundantAttributes: true,
+  removeScriptTypeAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  sortAttributes: true,
+  sortClassName: true,
+};
 
-export function getSession(request) {
-    return {
-        user: request.locals.user
-    }
-}
+export const getSession = async ({ locals }) => {
+  let { token: auth } = locals;
+  console.log('getSession auth', auth)
+  let user = await send({ method: "GET", path: "user", auth });
+  console.log('getSession user', user)
+  if (!user) return {}
+  return {
+    user
+  };
+};
 
-export async function handle({ request, resolve}) {
-    const { token } = cookie.parse(request.headers.cookie || '')
+export async function handle({ event, resolve }) {
+  const { request } = event;
+  const cookie = request.headers.get("cookie");
 
-    let res = await send({method: 'GET', path: 'tokens', auth: token })
+  if (cookie) {
+    const { token } = parse(request.headers.get('cookie') || "");
 
-    if (res && res.id) {
-        request.locals.user = res
-        request.locals.token = token
-    }
+    event.locals.token = token;
+  }
 
-    if(!dev){
-        if (request.headers['x-forwarded-proto'] !== 'https') {
-            return {
-                headers: {
-                    Location: `https://${request.host}${request.url.pathname}`
-                },  
-                status: 301
-            }
-        }
-    }
+  const response = await resolve(event);
 
-    const response = await resolve(request)
-
-    if(prerendering && response.headers['content-type'] === 'text/html') {
-        response.body = minify(response.body, min_opts)
-    }
-    return response
+  if (
+    prerendering &&
+    response.headers.get("content-type").startsWith("text/html")
+  ) {
+    response.body = minify(response.body, min_opts);
+  }
+  return response;
 }

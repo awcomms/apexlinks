@@ -29,8 +29,8 @@
   } from "carbon-components-svelte";
   import {ratio} from "fuzzball";
   import Input from "$lib/components/Input/Input.svelte";
-  import Close16 from "carbon-icons-svelte/lib/Close16";
-  import Checkmark16 from "carbon-icons-svelte/lib/Checkmark16";
+  import Close from "carbon-icons-svelte/lib/Close.svelte";
+  import Checkmark from "carbon-icons-svelte/lib/Checkmark.svelte";
   import { onMount, createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher()
@@ -83,7 +83,7 @@
     hasIconOnly
     kind="ghost"
     size="field"
-    icon={Close16}
+    icon={Close}
     on:click={() => {
       field = field.dirty;
       field.edit = false;
@@ -96,6 +96,6 @@
   hasIconOnly
   kind="ghost"
   size="field"
-  icon={Checkmark16}
+  icon={Checkmark}
   on:click={()=>{dispatch('labelAccept')}}
 />

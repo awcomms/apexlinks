@@ -1,16 +1,34 @@
 <script>
+  export let editableOptions = false
+  export let useOptions = false;
+  export let options = [];
   export let helperText = "";
   export let tags = [];
   export let is_focused = false;
+  import Options from "$lib/components/Options/Options.svelte";
   import { createEventDispatcher } from "svelte";
   import {
     Row,
     Tag,
     Column,
     TextInput,
+    Checkbox,
     ContextMenu,
     ContextMenuOption,
   } from "carbon-components-svelte";
+
+  $: if (options) {
+    options.forEach((option) => {
+      option.options.forEach((opt) => {
+        if (opt.selected) {
+          tags.push({
+            value: opt.name,
+            exact: true,
+          });
+        }
+      });
+    });
+  }
 
   $: if (ref && is_focused) ref.focus();
 
@@ -86,6 +104,7 @@
       {...$$restProps}
     />
     <slot />
+    <Checkbox bind:checked={useOptions} labelText="Use options" />
   </Column>
 </Row>
 
@@ -110,7 +129,6 @@
             bind:selected={tag.exact}
             on:click={() => {
               tag.exact = !tag.exact;
-              console.log(tag.exact);
             }}
           />
         </ContextMenu>
@@ -119,4 +137,8 @@
       {/each}
     </Column>
   </Row>
+
+  {#if useOptions}
+    <Options bind:options bind:editable={editableOptions} />
+  {/if}
 {/if}

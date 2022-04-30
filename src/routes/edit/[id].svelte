@@ -10,13 +10,12 @@
         }
         let {id} = params
         let item = await api.get(`items/${id}`)
-        console.log(item.user, item.user.username, user.usernamegi)
-        if (item.user.username !== user.username){
-            return {
-                status: 302,
-                redirect: `/items/?username=${user.username}`
-            }
-        }
+        // if (item.user.username !== user.username){
+        //     return {
+        //         status: 302,
+        //         redirect: `/items/?username=${user.username}`
+        //     }
+        // }
         return {
             props: {
                 item,
@@ -61,7 +60,7 @@
     let image = item.image
     let fields = item.fields || []
     let name = item.name
-    let tags = item.tags
+    let tags = item.tags || []
 
     let linkRef
     let linkInvalid

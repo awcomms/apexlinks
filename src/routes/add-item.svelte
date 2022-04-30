@@ -1,25 +1,25 @@
-<!-- 
 <script context="module">
-    export  const load = async({ session }) => {
-        const user = session.user
-        if (!user) {
-            return {
-                status: 302,
-                redirect: '/'
-            }
-        }
+  export const load = async ({ session }) => {
+    const { user } = session;
+    if (!user) {
+      return {
+        status: 302,
+        redirect: "/",
+      };
     }
-</script> -->
+    return {};
+  };
+</script>
+
 <script>
   import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag.svelte";
-  import Input from "$lib/components/Input/Input.svelte";
+  import Fields from "$lib/components/Fields/Fields.svelte";
   import {
     Row,
     Button,
     Column,
     Checkbox,
-    TextArea,
     TextInput,
     ButtonSet,
     FluidForm,
@@ -27,16 +27,27 @@
   import { goto } from "$app/navigation";
   import { api } from "$lib/api";
 
+  $: link && link.contains("youtube.com") ? yt() : {};
+
   let nameInvalid;
 
   let link;
-  let name;
-  let fields;
+  let fields = [
+    {
+      name: "",
+    },
+  ];
   let redirect;
 
   let tags = [];
   let loading;
   let image;
+  let embed;
+  let options = [];
+
+  const yt = () => {
+    embed = link.split("watch?v=")[1];
+  };
 
   const keydown = (e) => {
     switch (e.keyCode) {
@@ -53,6 +64,7 @@
       tags,
       fields,
       image,
+      embed,
     };
     let res = await api.post("items", data).finally((r) => {
       loading = false;
@@ -69,38 +81,31 @@
 
 <svelte:window on:keydown={keydown} />
 
-
 <svelte:head>
   <title>Add Item</title>
 </svelte:head>
 
-<Image bind:image />
+<Image bind:image setPrompt="Set thumbnail" />
 
-<Tag bind:tags />
+<Tag bind:tags bind:options useOptions={true} editableOptions={true} />
 
 <Row noGutter>
   <Column>
     <FluidForm>
-      <Input
-        bind:invalid={nameInvalid}
-        invalidText="Name taken"
-        labelText="Name"
-        bind:value={name}
-      />
+      <TextInput labelText="Link" bind:value={link} />
       <Checkbox
         bind:checked={redirect}
-        labelText="Let the item's listing redirect to a link"
+        labelText="Let the item's listing redirect to the link"
       />
-      {#if redirect}
-        <TextInput labelText="Link" bind:value={link} />
-      {/if}
-      {#if !redirect}
-        <Row noGutter>
-          <Column>
-            <Fields bind:fields />
-          </Column>
-        </Row>
-      {/if}
+      <!-- {#if yt}
+        <Checkbox
+          bind:checked={embed}
+          labelText="Embed the video in this item's page"
+        />
+      {/if} -->
+
+      <br />
+      <Fields bind:fields />
     </FluidForm>
   </Column>
 </Row>

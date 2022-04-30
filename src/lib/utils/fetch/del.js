@@ -1,5 +1,5 @@
-export function del(endpoint) {
-    return fetch(endpoint, {
+export function del(path) {
+    return fetch(path, {
         headers: {
             'Content-Type': 'application/json'
         }

@@ -1,7 +1,6 @@
-export function put(endpoint, data) {
-    return fetch(endpoint, {
+export function put(path, data) {
+    return fetch(path, {
         method: 'PUT',
-        credentials: 'include',
         body: JSON.stringify(data || {}),
         headers: {
             'Content-Type': 'application/json'

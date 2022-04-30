@@ -13,7 +13,7 @@
     import {
         Button
     } from 'carbon-components-svelte'
-    import Delete16 from 'carbon-icons-svelte/lib/Delete16'
+    import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte'
     import Input from '$lib/components/Fields/Input.svelte'
     import Edit from '$lib/components/Fields/Edit.svelte'
     import { createEventDispatcher, onMount } from 'svelte'
@@ -71,7 +71,7 @@
         hasIconOnly
         kind='ghost'
         size='small'
-        icon={Delete16}
+        icon={TrashCan}
         on:click={()=>{dispatch('del')}}
     />
 {/if}

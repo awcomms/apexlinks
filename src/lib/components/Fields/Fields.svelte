@@ -1,4 +1,5 @@
 <script>
+  export let title
   export let prompt = "Add new field";
   export let pin = false;
   export let fields = [];
@@ -7,9 +8,9 @@
 
   import { Button } from "carbon-components-svelte";
   // import BButton from "$lib/components/BButton/B.svelte";
-  import View16 from "carbon-icons-svelte/lib/View16";
-  import ViewOff16 from "carbon-icons-svelte/lib/ViewOff16";
-  import ArrowUp16 from "carbon-icons-svelte/lib/ArrowUp16";
+  import View from "carbon-icons-svelte/lib/View.svelte";
+  import ViewOff from "carbon-icons-svelte/lib/ViewOff.svelte";
+  import ArrowUp from "carbon-icons-svelte/lib/ArrowUp.svelte";
   import Field from "./Field.svelte";
 
   import { storeFields } from "./store";
@@ -21,14 +22,14 @@
 
   let offText = "Make this field visible";
   let hiddenFirst = {
-    icon: ViewOff16,
+    icon: ViewOff,
     text: offText,
   };
 
   let onText =
     "Hide this field. Field will still be used to rank you in search and SEO";
   let hiddenSecond = {
-    icon: View16,
+    icon: View,
     text: onText,
   };
 
@@ -41,7 +42,7 @@
   };
 
   let id = fields
-    .map((f) => (typeof f.id === 'number' ? f.id : 0))
+    .map((f) => (typeof f.id === "number" ? f.id : 0))
     .reduce((a, b) => Math.max(a, b), 0);
 
   $storeFields = fields;
@@ -114,6 +115,9 @@
   };
 </script>
 
+{#if title}
+  <p>Fields</p>
+{/if}
 <Field
   bind:ref={currentFieldRef}
   on:labelAccept={currentLabelAccept}
@@ -154,7 +158,7 @@
         hasIconOnly
         kind="ghost"
         size="small"
-        icon={ArrowUp16}
+        icon={ArrowUp}
         on:click={() => {
           currentFieldRef.focus();
         }}

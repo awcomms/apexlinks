@@ -1,25 +1,19 @@
 export function respond(body) {
 	if (!body) return {
-		status: 500,
-		body: {
-			error: 'errcon'
-		}
+		status: 500
 	}
-	if (body.error) {
-		return { 
-			status: 401,
-			body 
-		}
-	} else if (body.token) {
+	if (body.token) {
 		return {
 			headers: {
 				'set-cookie': `token=${body.token}; SameSite=Strict; HttpOnly; Max-Age=67376900; Path=/; Secure; HttpOnly;`
 			},
-			body
+			body,
+			status: body.STATUS
 		}
 	} else {
 		return {
-			body 
+			status: body.STATUS,
+			body
 		}
 	}
 }

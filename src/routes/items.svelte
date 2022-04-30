@@ -186,7 +186,7 @@
 {#if got && total < 1}
   <Row noGutter>
     <Column>
-      <p>There doesn't seem to be any results</p>
+      <p>There don't seem to be any results</p>
     </Column>
   </Row>
 {/if}

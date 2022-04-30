@@ -1,4 +1,6 @@
 <script>
+    export let setPrompt = 'Set image'
+    export let changePrompt = 'Change image'
     export let image = ''
 
     import {
@@ -8,13 +10,15 @@
         FileUploaderButton
     } from 'carbon-components-svelte'
 
+    let labelText = setPrompt
     let isImgErr
     let imageRef
     let imgRef
-    let labelText
+
+    $: image ? labelText = setPrompt : changePrompt
 
     $: if(!image){
-        labelText = 'Set Image'
+        labelText = labelText
     } else {
         labelText = 'Change Image'
     }
