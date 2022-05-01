@@ -1,30 +1,39 @@
 <script>
-  export let editable;
+  export let controls = {
+    editable: false,
+    selectable: false
+  };
   export let option = {
-    value: "",
+    name: "",
     options: [],
   };
 
   import { Button } from "carbon-components-svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import ETag from "$lib/components/_Tag.svelte";
+  import { onMount} from 'svelte'
+
+  onMount(()=>{
+    inputRef.focus()
+  })
+
+  let inputRef
 
   let id = 0;
 
   const input = (opt) => {
-    console.log(1)
-    // if (option.options.find(o => o.value === opt.value && o.id !== opt.id)) {
-    //   console.log('found', opt)
-    //   opt.warning = true
-    // } else {
-    //   opt.warning = false
-    // }
+    if (option.options.find(o => o.value === opt.value && o.id !== opt.id)) {
+      console.log('found', opt)
+      opt.warning = true
+    } else {
+      opt.warning = false
+    }
   }
 
   const del = (opt) => {
     console.log("del", opt);
     option.options = option.options.filter((o) => {
-      o.value !== opt.value;
+      return o.value !== opt.value;
     });
     console.log(option.options);
   };
@@ -46,11 +55,11 @@
 </script>
 
 <div>
-  <p>{option.value}:</p>
+  <input bind:this={inputRef} bind:value={option.name} />
   <!-- <div class="options"> -->
-  {#if editable}
+  {#if controls.editable}
     <Button
-      iconDescription="Add an option"
+      iconDescription="Add an option to this option set"
       kind="ghost"
       size="small"
       hasIconOnly
@@ -65,7 +74,7 @@
       on:del={() => del(opt)}
       bind:warning={opt.warning}
       bind:text={opt.value}
-      editable
+      editable={controls.editable}
       focused={opt.focused}
       type={opt.selected ? "cyan" : "gray"}
       on:edit={(e) => {
@@ -77,9 +86,22 @@
         opt.editing = false;
       }}
       on:click={() => {
+        if (!controls.selectable) return
         opt.selected = !opt.selected;
       }}
     />
   {/each}
   <!-- </div> -->
 </div>
+
+<style>
+  input {
+    size: 0;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  input:focus {
+    border: none;
+  }
+</style>

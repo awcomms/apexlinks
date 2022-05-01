@@ -10,6 +10,7 @@
         error: item.error,
       };
     }
+    console.log('if', item, item.fields)
     return {
       props: {
         user,
@@ -22,8 +23,9 @@
 <script>
   export let user;
   export let item;
-  import { Row, Link, Column } from "carbon-components-svelte";
+  import { Tabs, Tab, TabContent, Tag, Row, Link, Column } from "carbon-components-svelte";
   import { parseMarkdown } from "$lib/utils/parseMarkdown";
+import Items from "$lib/components/Items.svelte";
 
   item.fields = item.fields || [];
 
@@ -49,8 +51,8 @@
         <p class="bold">{item.name}</p>
       {/if}
     {/if}
-    <Link href="/u/{item.user.username}">Item's user</Link>
-    {#if user && user.username == item.user.username}
+    <Link href="/u/{item.user?.username}">Item's user</Link>
+    {#if user && user.username == item.user?.username}
       <Link href="/edit/{item.id}">Edit item</Link>
     {/if}
   </Column>
@@ -79,10 +81,10 @@
   </Row>
 {/if}
 
-{item.id}
-tags
+id: {item.id}
+<p>Tags</p>
 {#each item.tags as tag}
-{tag.value}
+  <Tag>{tag.value}</Tag>
 {/each}
 
 {#if item.embed}
@@ -99,6 +101,15 @@ tags
   </div>
 {/if}
 
+<Tabs>
+  <Tab label="Parent items" />
+  <Tab label="Sub items" />
+  <svelte:fragment slot="content">
+    <TabContent><Items children={[item.id]} /></TabContent>
+    <TabContent><Items parents={[item.id]} /></TabContent>
+  </svelte:fragment>
+</Tabs>
+
 <style>
   .bold {
     font-weight: 600;
@@ -106,7 +117,6 @@ tags
   .blank-link {
     text-decoration: none;
   }
-
   .blank-link:hover {
     cursor: pointer;
     color: rgb(50, 50, 211);

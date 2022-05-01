@@ -7,15 +7,20 @@
         redirect: "/",
       };
     }
-    return {};
+    return { props: { user } };
   };
 </script>
 
 <script>
+  export let user;
+
   import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag.svelte";
   import Fields from "$lib/components/Fields/Fields.svelte";
   import {
+    Tabs,
+    Tab,
+    TabContent,
     Row,
     Button,
     Column,
@@ -26,24 +31,44 @@
   } from "carbon-components-svelte";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api";
+  import Items from "$lib/components/Items.svelte";
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    defaultTabsRefDisplayStyle = tabsRef.style.display;
+  });
 
   $: link && link.contains("youtube.com") ? yt() : {};
 
   let nameInvalid;
 
+  const tabsHeight = 210;
+
   let link;
   let fields = [
     {
-      name: "",
+      label: "Name",
+      value: ''
     },
   ];
   let redirect;
+
+  let tabsVisible;
+  let defaultTabsRefDisplayStyle;
 
   let tags = [];
   let loading;
   let image;
   let embed;
   let options = [];
+
+  let tabsRef;
+
+  let parents = [];
+  let children = [];
+
+  let childrenVisible = false;
+  let parentsVisible = false;
 
   const yt = () => {
     embed = link.split("watch?v=")[1];
@@ -58,9 +83,39 @@
     }
   };
 
+  const toggleChildrenVisible = () => {
+    childrenVisible = !childrenVisible;
+  };
+
+  const toggleParentsVisible = () => {
+    parentsVisible = !parentsVisible;
+  };
+
+  const toggleTabsVisible = () => {
+    tabsRef.style.display === defaultTabsRefDisplayStyle
+      ? (tabsRef.style.display = "none")
+      : (tabsRef.style.display = defaultTabsRefDisplayStyle);
+  };
+
+  const toggleParent = (item) => {
+    parents.find((i) => i.id === item.id)
+      ? (parents = parents.filter((c) => c !== item))
+      : (parents = [...parents, item]);
+    console.log(parents.length);
+  };
+
+  const toggleChild = (item) => {
+    children.includes(item.id)
+      ? (children = children.filter((c) => c !== item))
+      : (children = [...children, item]);
+  };
+
   const add = async () => {
     loading = true;
+    console.log(tags)
+
     let data = {
+      options,
       tags,
       fields,
       image,
@@ -85,12 +140,70 @@
   <title>Add Item</title>
 </svelte:head>
 
-<Image bind:image setPrompt="Set thumbnail" />
+<Image bind:image setPrompt="Set this item's thumbnail image" />
 
-<Tag bind:tags bind:options useOptions={true} editableOptions={true} />
+<br />
 
 <Row noGutter>
   <Column>
+    {#if parents.length > 0}
+      <p>Parents</p>
+      {#each parents as parent}
+        <p>
+          id: {parent.id}; {parent.fields.find((f) => f.label === "name").value}
+        </p>
+      {/each}
+    {/if}
+
+    <br />
+
+    {#if children.length > 0}
+      <p>Children</p>
+      {#each children as child}
+        <p>
+          id: {child.id}; {child.fields.find((f) => f.label === "name").value}
+        </p>
+      {/each}
+    {/if}
+    <Tabs>
+      <Tab on:click={toggleTabsVisible} label="Add parent item" />
+      <Tab on:click={toggleTabsVisible} label="Add child item" />
+      <svelte:fragment slot="content">
+        <div bind:this={tabsRef}>
+          <TabContent
+            ><Items
+              on:click={(e) => toggleParent(e.detail)}
+              {user}
+              height={tabsHeight}
+              sameUser={true}
+            /></TabContent
+          >
+          <TabContent
+            ><Items
+              on:click={(e) => toggleChild(e.detail)}
+              {user}
+              height={tabsHeight}
+              sameUser={true}
+            /></TabContent
+          >
+        </div>
+      </svelte:fragment>
+    </Tabs>
+  </Column>
+</Row>
+
+<br />
+
+
+<Row noGutter>
+  <Column>
+    <Tag
+      bind:tags
+      bind:options
+      useOptions={true}
+      optionControls={{ editable: true, selectable: false }}
+    />
+    <br />
     <FluidForm>
       <TextInput labelText="Link" bind:value={link} />
       <Checkbox

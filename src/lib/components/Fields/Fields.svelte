@@ -36,7 +36,7 @@
   let currentFieldRef;
   let currentField = {
     value: "",
-    label: "",
+    label: `Type in the label of a new field and press 'Enter'`,
     edit: true,
     new: true,
   };
@@ -71,6 +71,7 @@
   };
 
   const currentValueAccept = () => {
+    console.log('cva')
     add();
     currentField.edit = true;
     currentField.label = "";
@@ -105,8 +106,8 @@
       ref: null,
       hidden: false,
       type: "text",
-      label: currentField.label,
-      value: currentField.value,
+      label: currentField.value,
+      value: '',
       invalid: false,
       error: false,
     };
@@ -124,9 +125,10 @@
   on:valueAccept={currentValueAccept}
   bind:field={currentField}
   deletable={false}
-  label={currentField.edit ? prompt : `Adding new field: ${currentField.label}`}
   acceptKey="Enter"
 />
+
+<br />
 
 <slot name="customFields" />
 

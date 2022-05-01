@@ -27,7 +27,7 @@ export const getSession = async ({ locals }) => {
   console.log('getSession auth', auth)
   let user = await send({ method: "GET", path: "user", auth });
   console.log('getSession user', user)
-  if (!user) return {}
+  if (!user || user.error) return {}
   return {
     user
   };

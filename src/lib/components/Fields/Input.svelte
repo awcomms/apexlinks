@@ -5,6 +5,8 @@
     export let field = {}
     export let acceptKey
 
+    console.log(field)
+
     import {
         Button, ComboBox
     } from 'carbon-components-svelte'
@@ -48,7 +50,7 @@ const valueKeydown = (e) => {
   <Input
       bind:ref
       on:keydown
-      labelText={field.label}
+      labelText={field.label || 'howdy'}
       bind:value={field.value}
       on:keydown={valueKeydown}
   />

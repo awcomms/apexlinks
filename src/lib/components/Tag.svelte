@@ -1,7 +1,7 @@
 <script>
-  export let editableOptions = false
   export let useOptions = false;
   export let options = [];
+  export let optionControls = {};
   export let helperText = "";
   export let tags = [];
   export let is_focused = false;
@@ -17,18 +17,18 @@
     ContextMenuOption,
   } from "carbon-components-svelte";
 
-  $: if (options) {
-    options.forEach((option) => {
-      option.options.forEach((opt) => {
-        if (opt.selected) {
-          tags.push({
-            value: opt.name,
-            exact: true,
-          });
-        }
-      });
-    });
-  }
+  // $: if (options) {
+  //   // options.forEach((option) => {
+  //   //   option.options.forEach((opt) => {
+  //   //     if (opt.selected) {
+  //   //       tags.push({
+  //   //         value: opt.value,
+  //   //         exact: true,
+  //   //       });
+  //   //     }
+  //   //   });
+  //   // });
+  // }
 
   $: if (ref && is_focused) ref.focus();
 
@@ -90,31 +90,25 @@
 
 <svelte:window on:keydown={keydown} />
 
-<Row noGutter>
-  <Column xlg={4} lg={4} md={4} sm={4}>
-    <TextInput
-      bind:ref
-      on:focus={focus}
-      on:blur={blur}
-      bind:value
-      bind:helperText
-      placeholder={tags.length > 0
-        ? `${tags.length} ${tags.length > 1 ? "tags" : "tag"}`
-        : "Add tag"}
-      {...$$restProps}
-    />
-    <slot />
-    <Checkbox bind:checked={useOptions} labelText="Use options" />
-  </Column>
-</Row>
+<TextInput
+  bind:ref
+  on:focus={focus}
+  on:blur={blur}
+  bind:value
+  bind:helperText
+  placeholder={tags.length > 0
+    ? `${tags.length} ${tags.length > 1 ? "tags" : "tag"}`
+    : "Add tag"}
+  {...$$restProps}
+/>
+<slot />
+<Checkbox bind:checked={useOptions} labelText="Use options" />
 
 {#if open}
-  <Row noGutter>
-    <Column xlg={4} lg={4} md={4} sm={4}>
-      {#if tags.length > 0}
-        <Tag on:click on:click={clear} type="magenta">Clear</Tag>
-      {/if}
-      <!-- {#if tagGroup}
+  {#if tags.length > 0}
+    <Tag on:click on:click={clear} type="magenta">Clear</Tag>
+  {/if}
+  <!-- {#if tagGroup}
                 <Tag on:click={initCreate} type='magenta'>
                     All tag groups
                 </Tag>
@@ -122,23 +116,21 @@
                     New tag group
                 </Tag>
             {/if} -->
-      {#each tags as tag}
-        <ContextMenu target={tag.target}>
-          <ContextMenuOption
-            labelText="Exact"
-            bind:selected={tag.exact}
-            on:click={() => {
-              tag.exact = !tag.exact;
-            }}
-          />
-        </ContextMenu>
+  {#each tags as tag}
+    <ContextMenu target={tag.target}>
+      <ContextMenuOption
+        labelText="Exact"
+        bind:selected={tag.exact}
+        on:click={() => {
+          tag.exact = !tag.exact;
+        }}
+      />
+    </ContextMenu>
 
-        <Tag bind:ref={tag.target} filter on:click={del(tag)}>{tag.value}</Tag>
-      {/each}
-    </Column>
-  </Row>
+    <Tag bind:ref={tag.target} filter on:click={del(tag)}>{tag.value}</Tag>
+  {/each}
+{/if}
 
-  {#if useOptions}
-    <Options bind:options bind:editable={editableOptions} />
-  {/if}
+{#if useOptions}
+  <Options bind:options bind:controls={optionControls} />
 {/if}

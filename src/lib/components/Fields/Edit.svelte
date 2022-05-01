@@ -18,8 +18,8 @@
 
   export let label = 'Label'
   export let acceptKey = 'Enter'
-  export let combobox;
-  export let items;
+  export let combobox = false;
+  export let items = [];
   export let ref = null;
   export let field = {};
 
