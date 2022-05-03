@@ -9,7 +9,7 @@
         Button, ComboBox
     } from 'carbon-components-svelte'
     import Input from '$lib/components/Input/Input.svelte'    
-    import Edit16 from 'carbon-icons-svelte/lib/Edit16'
+    import Edit from 'carbon-icons-svelte/lib/Edit.svelte'
 
     import {
         createEventDispatcher,
@@ -48,7 +48,7 @@ const valueKeydown = (e) => {
   <Input
       bind:ref
       on:keydown
-      labelText={field.label}
+      labelText={field.label || 'howdy'}
       bind:value={field.value}
       on:keydown={valueKeydown}
   />
@@ -60,7 +60,7 @@ const valueKeydown = (e) => {
       hasIconOnly
       kind='ghost'
       size='small'
-      icon={Edit16}
+      icon={Edit}
       on:click={editClick}
   />
 {/if}

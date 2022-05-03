@@ -140,9 +140,9 @@
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
         passwordInvalid = r.passwordInvalid
-        if (r.user) {
-            $session.user = r.user
-            goto('/users')
+        if (r.OK) {
+            r.user ? $session.user = r.user : {}
+            goto('/u')
         }
     }
 
@@ -191,8 +191,8 @@
             passwordInvalid = true
             passwordError = r.passwordError
         }
-        if (r.user) {
-            $session.user = r.user
+        if (r.OK) {
+            r.user ? $session.user = r.user : {}
             goto('/edit')
         } else {
         }

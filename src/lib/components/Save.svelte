@@ -2,7 +2,7 @@
   export let model = 'user'
   export let item = {};
   import { api } from "$lib/api";
-  import Save16 from "carbon-icons-svelte/lib/Save16";
+  import Save from "carbon-icons-svelte/lib/Save.svelte";
   import { Button } from "carbon-components-svelte";
 
   const toggle = async () => {
@@ -18,7 +18,7 @@
 </script>
 
 <div class:negative={item.saved === false}>
-  <Button kind='ghost' size='small' hasIconOnly icon={Save16} on:click={toggle} />
+  <Button kind='ghost' size='small' hasIconOnly icon={Save} on:click={toggle} />
 </div>
 
 <style>

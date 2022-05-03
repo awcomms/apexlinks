@@ -1,5 +1,5 @@
-export function get(endpoint) {
-    return fetch(endpoint, {
+export function get(path) {
+    return fetch(path, {
         headers: {
             'Content-Type': 'application/json'
         }

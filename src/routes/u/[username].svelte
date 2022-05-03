@@ -1,6 +1,6 @@
 <script context="module">
   import { send } from "$lib/send";
-  export  const load = async({ params }) => {
+  export const load = async ({ params }) => {
     let { username } = params;
     let user = await send({ method: "GET", path: `users/${username}` });
     if (!user) {
@@ -14,12 +14,13 @@
         error: user.error,
       };
     }
+    !user.tags ? user.tags = [] : {}
     return {
       props: {
         user,
       },
     };
-  }
+  };
 </script>
 
 <script>
@@ -30,14 +31,17 @@
   import { onMount } from "svelte";
 
   onMount(() => {
-    let ld = {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-    };
-    user.fields.forEach((field) => {
-      if (!(field.label in ld)) ld[field.label] = field.value;
-    });
-    document.getElementById("ld").innerText = JSON.stringify(ld);
+    (() => {
+      if (!user.fields) return;
+      let ld = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+      };
+      user.fields.forEach((field) => {
+        if (!(field.label in ld)) ld[field.label] = field.value;
+      });
+      document.getElementById("ld").innerText = JSON.stringify(ld);
+    })();
   });
 
   let about;
@@ -61,7 +65,7 @@
   <script id="ld" type="application/ld+json"></script>
 </svelte:head>
 
-<Link href='/items?username={user.username}'>User's items</Link>
+<Link href="/i?username={user.username}">User's items</Link>
 
 {#if user.image}
   <Column lg={2} sm={2} md={2} xlg={2}>

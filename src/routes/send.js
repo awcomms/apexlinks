@@ -1,7 +1,7 @@
-import {send} from '$lib/send'
+import { send } from "$lib/send";
 
-export async function post(request) {
-    const token = request.locals.token
-    const {endpoint, method, data} = request.body
-    return {body: await send({method, path:endpoint, data, auth:token})}
+export async function post({ request, locals }) {
+  const { token: auth } = locals;
+  const { path, method, data } = await request.json();
+  return { body: await send({ method, path, data, auth }) };
 }

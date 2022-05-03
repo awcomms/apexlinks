@@ -12,7 +12,7 @@
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import Tag from '$lib/components/Tag.svelte'
+    import Tag from '$lib/components/Tag/Tags.svelte'
     import Image from '$lib/components/Image.svelte'
     import Fields from '$lib/components/Fields/Fields.svelte'
     import Input from '$lib/components/Input/Input.svelte'

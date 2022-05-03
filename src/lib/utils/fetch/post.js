@@ -1,7 +1,6 @@
-export function post(endpoint, data) {
-    return fetch(endpoint, {
+export function post(path, data) {
+    return fetch(path, {
         method: 'POST',
-        credentials: 'include',
         body: JSON.stringify(data || {}),
         headers: {
             'Content-Type': 'application/json'

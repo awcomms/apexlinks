@@ -1,5 +1,5 @@
 import { send } from '$lib/send'
-import {respond} from '$lib/_respond'
+import {respond} from '$lib/authResponse'
 
 export async function post({request}) {
     const { email, username, password } = await request.json()
