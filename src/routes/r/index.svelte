@@ -1,40 +1,33 @@
 <script context='module'>
-    import { api } from '$lib/api'
-    export  const load = async({session}) =>{
+    import {api} from '$lib/utils/api'
+    export async function load({session}){
         let user = session.user
         if(!user){
             return {
                 status: 302,
-                redirect: '/'
+                redirect: 'enter'
             }
         }
         let rooms
-        let {items, total, page} = await api.get('xrooms') || {}
+        let {items, total, page} = await api.get('xrooms', user.token) || {}
         if (Array.isArray(items)) {
             rooms = items
         } else {
             rooms = []
         }
-        return {
-            props: {
-                rooms,
-                total,
-                page,
-                user
-            }
-        }
+        return {props:{rooms, total, page, user}}
     }
 </script>
 
 <script>
-    export let rooms
-    export let total
-    export let page
+    export let rooms, total, page, user
     import {
         Row,
+        Link,
         Column,
     } from 'carbon-components-svelte'
-    import Tag from '$lib/components/Tag.svelte'
+    import {onMount} from 'svelte'
+    import Tag from '$lib/components/Tag/Tags.svelte'
     import { goto } from '$app/navigation'
 
     let tags
@@ -45,12 +38,12 @@
     }
 
     let go=(room)=>{
-        goto(`/room/${room.id}`)
+        goto(`room/${room.id}`)
     }
 
     let get=async()=>{
         let tagString = JSON.stringify(tags)
-        let res = await api.get(`xrooms?tags=${tagString}&page=${page}`)
+        let res = await api.get(`xrooms?tags=${tagString}&page=${page}`, user.token)
         rooms = res.items
         total = res.total
     }
@@ -69,6 +62,7 @@
 
 <style>
     .item {
+        width: min-content;
         cursor: pointer; 
     }
     .item:hover {

@@ -24,9 +24,7 @@ const min_opts = {
 
 export const getSession = async ({ locals }) => {
   let { token: auth } = locals;
-  console.log('getSession auth', auth)
   let user = await send({ method: "GET", path: "user", auth });
-  console.log('getSession user', user)
   if (!user || user.error) return {}
   return {
     user
@@ -45,11 +43,12 @@ export async function handle({ event, resolve }) {
 
   const response = await resolve(event);
 
-  if (
-    prerendering &&
-    response.headers.get("content-type").startsWith("text/html")
-  ) {
-    response.body = minify(response.body, min_opts);
-  }
+  // if (
+  //   prerendering &&
+  //   response.headers.get("content-type").startsWith("text/html")
+  // ) {
+  //   response.body = minify(response.body, min_opts);
+  // }
+  
   return response;
 }

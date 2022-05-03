@@ -5,8 +5,6 @@
     export let field = {}
     export let acceptKey
 
-    console.log(field)
-
     import {
         Button, ComboBox
     } from 'carbon-components-svelte'

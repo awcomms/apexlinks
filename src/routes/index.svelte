@@ -142,7 +142,7 @@
         passwordInvalid = r.passwordInvalid
         if (r.OK) {
             r.user ? $session.user = r.user : {}
-            goto('/users')
+            goto('/u')
         }
     }
 

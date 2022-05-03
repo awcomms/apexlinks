@@ -36,7 +36,7 @@
   import Paystack from "$lib/components/Paystack.svelte";
   import Input from "$lib/components/Input/Input.svelte";
   // import Image from "$lib/components/Image.svelte";
-  import Tag from "$lib/components/Tag.svelte";
+  import Tag from "$lib/components/Tag/Tags.svelte";
   import { session } from "$app/stores";
   import { onMount } from "svelte";
   import {browser} from '$app/env'
@@ -49,7 +49,7 @@
   // import { abslinkRegex } from "$lib/utils/regex";
 
   onMount(async() => {
-    location = await currentLocation.then(l => l).catch(e => console.log(e))
+    location = await currentLocation.then(l => l).catch(e => console.log('currentLocation error:', e))
   });
 
   let editLocation = true

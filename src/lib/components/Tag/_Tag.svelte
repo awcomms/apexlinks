@@ -1,5 +1,5 @@
 <script>
-  export let inputThrottle;
+  export let inputEventDelay;
   export let warning = false;
   export let text = "";
   export let editable = false;
@@ -14,7 +14,6 @@
   import { onMount, createEventDispatcher } from "svelte";
 
   $: if (warning && input) {
-    console.log(warning);
     input.focus();
   }
 
@@ -34,7 +33,7 @@
     setTimeout(() => {
       dispatch("input");
       throttling = false
-    }, inputThrottle);
+    }, inputEventDelay);
   };
 
   const toggleEditing = () => {

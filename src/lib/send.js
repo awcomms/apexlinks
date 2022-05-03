@@ -19,7 +19,6 @@ export function send({ method, path, data, auth }) {
     }
   } else if (browser) {
     opts.headers["auth"] = (() => {
-      console.log('d.c', document.cookie)
       const { token } = parse(document.cookie || "");
       return token;
     })();
@@ -34,17 +33,17 @@ export function send({ method, path, data, auth }) {
     return fetch(`${base}/${path}`, opts)
       .then(async (r) => {
         const text = await r.text();
+        let json;
         try {
-          const json = JSON.parse(text);
-          json.STATUS = r.status;
-          json.OK = r.statusText === 'OK';
-          return json;
+          json = JSON.parse(text);
         } catch (err) {
-          return text;
+          return {text, STATUS: r.status, OK: r.statusText === OK};
         }
+        json.STATUS = r.status;
+        json.OK = r.statusText === "OK";
+        return json;
       })
       .catch((err) => {
-        console.log("send err", err);
         return { status: 500, error: "internal error" };
       });
   } catch {

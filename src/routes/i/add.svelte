@@ -12,7 +12,35 @@
 </script>
 
 <script>
+  export let user
+  import { Row, Column} from 'carbon-components-svelte'
+  import Edit from '$lib/components/Items/Edit.svelte'
+</script>
+
+<Row>
+  <Column>
+    <Edit method='post' {user} prompt='Add new item' />
+  </Column>
+</Row>
+
+<!-- <script>
+  let choices = []
   export let user;
+  export let item = {
+    link: '',
+    fields: {
+      label: 'name',
+      value: ''
+    },
+    redirect: false,
+    choices: [],
+    options: [],
+    embed: false,
+    image: null,
+    parents: [],
+    children: [],
+    tags: []
+  }
 
   import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag.svelte";
@@ -31,18 +59,25 @@
   } from "carbon-components-svelte";
   import { goto } from "$app/navigation";
   import { api } from "$lib/api";
-  import Items from "$lib/components/Items.svelte";
+  import Items from "$lib/components/Items/Items.svelte";
   import { onMount } from "svelte";
 
   onMount(() => {
     defaultTabsRefDisplayStyle = tabsRef.style.display;
   });
 
+  $: updateChoices(parents)
   $: link && link.contains("youtube.com") ? yt() : {};
 
   let nameInvalid;
 
   const tabsHeight = 210;
+
+  const updateChoices = () => {
+    parents.forEach(p => {
+      choices = [...choices, p.options]
+    })
+  }
 
   let link;
   let fields = [
@@ -52,6 +87,7 @@
     },
   ];
   let redirect;
+
 
   let tabsVisible;
   let defaultTabsRefDisplayStyle;
@@ -101,7 +137,6 @@
     parents.find((i) => i.id === item.id)
       ? (parents = parents.filter((c) => c !== item))
       : (parents = [...parents, item]);
-    console.log(parents.length);
   };
 
   const toggleChild = (item) => {
@@ -112,9 +147,10 @@
 
   const add = async () => {
     loading = true;
-    console.log(tags)
 
     let data = {
+      parents: parents.map(p => p.id),
+      children: children.map(c => c.id),
       options,
       tags,
       fields,
@@ -194,7 +230,6 @@
 
 <br />
 
-
 <Row noGutter>
   <Column>
     <Tag
@@ -210,14 +245,14 @@
         bind:checked={redirect}
         labelText="Let the item's listing redirect to the link"
       />
-      <!-- {#if yt}
+      {#if yt}
         <Checkbox
           bind:checked={embed}
           labelText="Embed the video in this item's page"
         />
       {/if} -->
 
-      <br />
+      <!-- <br />
       <Fields bind:fields />
     </FluidForm>
   </Column>
@@ -229,4 +264,4 @@
       <Button on:click={add}>Add</Button>
     </ButtonSet>
   </Column>
-</Row>
+</Row> --> -->

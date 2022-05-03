@@ -37,7 +37,7 @@
         Modal,
         Row,
     } from 'carbon-components-svelte'
-    import Tag from '$lib/components/Tag.svelte'
+    import Tag from '$lib/components/Tag/Tags.svelte'
     import Input from '$lib/components/Input/Input.svelte'
 
     let nameInvalid

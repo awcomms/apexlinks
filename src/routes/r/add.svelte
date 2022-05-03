@@ -17,7 +17,7 @@
 
 <script>
     import Input from '$lib/components/Input/Input.svelte'
-    import Tag from '$lib/components/Tag.svelte'
+    import Tag from '$lib/components/Tag/Tags.svelte'
     import {
         Row,
         Button,

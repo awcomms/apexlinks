@@ -36,7 +36,7 @@
   let currentFieldRef;
   let currentField = {
     value: "",
-    label: `Type in the label of a new field and press 'Enter'`,
+    label: `Type in the name of a new field and press 'Enter'`,
     edit: true,
     new: true,
   };
@@ -71,7 +71,6 @@
   };
 
   const currentValueAccept = () => {
-    console.log('cva')
     add();
     currentField.edit = true;
     currentField.label = "";
@@ -156,7 +155,7 @@
           second={hiddenSecond}
         /> -->
       <Button
-        iconDescription="Go to 'Add new field'"
+        iconDescription={"Go to 'Add new field'"}
         hasIconOnly
         kind="ghost"
         size="small"

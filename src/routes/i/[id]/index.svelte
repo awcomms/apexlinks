@@ -10,7 +10,6 @@
         error: item.error,
       };
     }
-    console.log('if', item, item.fields)
     return {
       props: {
         user,
@@ -25,7 +24,7 @@
   export let item;
   import { Tabs, Tab, TabContent, Tag, Row, Link, Column } from "carbon-components-svelte";
   import { parseMarkdown } from "$lib/utils/parseMarkdown";
-import Items from "$lib/components/Items.svelte";
+import Items from "$lib/components/Items/Items.svelte";
 
   item.fields = item.fields || [];
 
@@ -33,6 +32,10 @@ import Items from "$lib/components/Items.svelte";
   if (item.itext) {
     itext = parseMarkdown(item.itext);
   }
+
+  const go = async (item) => {
+      goto(`/i/${item.id}`);
+  };
 </script>
 
 <Row>
@@ -53,7 +56,7 @@ import Items from "$lib/components/Items.svelte";
     {/if}
     <Link href="/u/{item.user?.username}">Item's user</Link>
     {#if user && user.username == item.user?.username}
-      <Link href="/edit/{item.id}">Edit item</Link>
+      <Link href="/i/{item.id}/edit">Edit item</Link>
     {/if}
   </Column>
 </Row>
@@ -82,10 +85,10 @@ import Items from "$lib/components/Items.svelte";
 {/if}
 
 id: {item.id}
-<p>Tags</p>
-{#each item.tags as tag}
+<!-- <p>Tags</p>
+{#each (item.tags || []) as tag}
   <Tag>{tag.value}</Tag>
-{/each}
+{/each} -->
 
 {#if item.embed}
   <div class="embed">
@@ -105,8 +108,8 @@ id: {item.id}
   <Tab label="Parent items" />
   <Tab label="Sub items" />
   <svelte:fragment slot="content">
-    <TabContent><Items children={[item.id]} /></TabContent>
-    <TabContent><Items parents={[item.id]} /></TabContent>
+    <TabContent><Items on:click={(e)=>go(e.detail)} children={[item.id]} /></TabContent>
+    <TabContent><Items on:click={(e)=>go(e.detail)} parents={[item.id]} /></TabContent>
   </svelte:fragment>
 </Tabs>
 

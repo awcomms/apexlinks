@@ -1,17 +1,18 @@
 <script>
+  export let vertical = false
   export let useOptions = false;
   export let options = [];
   export let optionControls = {};
-  export let helperText = "";
+  // export let helperText = "";
   export let tags = [];
   export let is_focused = false;
+  import EditTag from "$lib/components/Tag/EditTag.svelte";
+  import Add from "carbon-icons-svelte/lib/Add.svelte";
   import Options from "$lib/components/Options/Options.svelte";
   import { createEventDispatcher } from "svelte";
   import {
-    Row,
     Tag,
-    Column,
-    TextInput,
+    Button,
     Checkbox,
     ContextMenu,
     ContextMenuOption,
@@ -36,7 +37,8 @@
 
   let tagGroup = false;
   let focused;
-  let value;
+  let visible;
+  // let value;
   let open;
   let ref;
 
@@ -59,6 +61,10 @@
     }
   };
 
+  const toggleOpen = () => {
+    open = !open;
+  };
+
   const toggleTagGroup = () => {
     tagGroup = !tagGroup;
   };
@@ -68,13 +74,11 @@
   };
 
   const add = () => {
-    if (value && !tags.find((t) => t.value === value)) {
-      // if (value && !tags.includes(value)){
-      tags = [...tags, { value, target: null, exact: false }];
-      open = true;
-      value = "";
-    }
-    dispatch("change");
+    if (tags.find(t => t.value === '')) return
+    // if (value && !tags.find((t) => t.value === value)) {
+    // if (value && !tags.includes(value)){
+    tags = [...tags, { value: "", inputRef: null, ref: null, exact: false }];
+    // }
   };
 
   const del = (tag) => {
@@ -90,7 +94,7 @@
 
 <svelte:window on:keydown={keydown} />
 
-<TextInput
+<!-- <TextInput
   bind:ref
   on:focus={focus}
   on:blur={blur}
@@ -100,7 +104,18 @@
     ? `${tags.length} ${tags.length > 1 ? "tags" : "tag"}`
     : "Add tag"}
   {...$$restProps}
-/>
+/> -->
+<p on:click={toggleOpen}>{tags.length} tags</p>
+<span
+  ><Button
+    kind="ghost"
+    size="small"
+    hasIconOnly
+    icon={Add}
+    on:click={()=> {add(); if (!open) toggleOpen()}}
+    iconDescription="Add a new tag"
+  /></span
+>
 <slot />
 <Checkbox bind:checked={useOptions} labelText="Use options" />
 
@@ -117,7 +132,7 @@
                 </Tag>
             {/if} -->
   {#each tags as tag}
-    <ContextMenu target={tag.target}>
+    <ContextMenu target={tag.ref}>
       <ContextMenuOption
         labelText="Exact"
         bind:selected={tag.exact}
@@ -127,7 +142,16 @@
       />
     </ContextMenu>
 
-    <Tag bind:ref={tag.target} filter on:click={del(tag)}>{tag.value}</Tag>
+    <EditTag
+      inputEventDelay={2000}
+      on:input={() => dispatch("change")}
+      bind:value={tag.value}
+      bind:inputRef={tag.inputRef}
+      bind:ref={tag.ref}
+      filter
+      bind:focused
+      on:close={del(tag)}
+    />
   {/each}
 {/if}
 

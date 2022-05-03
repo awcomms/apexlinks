@@ -8,10 +8,14 @@
     options: [],
   };
 
+  option.options = option.options || []
+
   import { Button } from "carbon-components-svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
-  import ETag from "$lib/components/_Tag.svelte";
-  import { onMount} from 'svelte'
+  import ETag from "$lib/components/Tag/_Tag.svelte";
+  import { createEventDispatcher, onMount} from 'svelte'
+
+  const dispatch = createEventDispatcher()
 
   onMount(()=>{
     inputRef.focus()
@@ -23,7 +27,6 @@
 
   const input = (opt) => {
     if (option.options.find(o => o.value === opt.value && o.id !== opt.id)) {
-      console.log('found', opt)
       opt.warning = true
     } else {
       opt.warning = false
@@ -31,11 +34,9 @@
   }
 
   const del = (opt) => {
-    console.log("del", opt);
     option.options = option.options.filter((o) => {
       return o.value !== opt.value;
     });
-    console.log(option.options);
   };
 
   const add = () => {
@@ -69,7 +70,7 @@
   {/if}
   {#each option.options as opt}
     <ETag
-      inputThrottle={1500}
+      inputEventDelay={1500}
       on:input={()=>input(opt)}
       on:del={() => del(opt)}
       bind:warning={opt.warning}
@@ -88,6 +89,7 @@
       on:click={() => {
         if (!controls.selectable) return
         opt.selected = !opt.selected;
+        dispatch('action', opt)
       }}
     />
   {/each}

@@ -20,7 +20,7 @@
 
 <script>
   export let user, _user
-  import Items from '$lib/components/Items.svelte'
+  import Tabs from '$lib/components/Items/Tabs.svelte'
   import { goto } from '$app/navigation'
 
   const go = async (item) => {
@@ -28,4 +28,4 @@
   };
 </script>
 
-<Items on:click={({detail})=>go(detail)} {user} sameUser={user.id === _user.id} />
+<Tabs add on:click={({detail})=>go(detail)} {user} sameUser={user && _user && user.id === _user.id} />

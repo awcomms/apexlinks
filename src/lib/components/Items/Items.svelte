@@ -1,4 +1,6 @@
 <script>
+  export let add = false;
+  export let options = []
   export let children = [];
   export let parents = [];
   export let height;
@@ -9,24 +11,27 @@
     Row,
     Column,
     Button,
+    TextInput,
     PaginationNav,
     Checkbox,
   } from "carbon-components-svelte";
   import { api } from "$lib/api";
   import { itemFields, itemTags, notify } from "$lib/stores";
   import { extraFields } from "$lib/_stores/items";
-  import Tag from "$lib/components/Tag.svelte";
+  import Tag from "$lib/components/Tag/Tags.svelte";
   import { goto } from "$app/navigation";
   import Save from "$lib/components/Save.svelte";
   import Field from "$lib/components/Fields/Field.svelte";
   import Filters from "$lib/components/Filters.svelte";
   import { createEventDispatcher, onMount } from "svelte";
+import { send } from "$lib/send";
 
   $: if (container) {
-    container.style.height = `${height ? `${height}px` : "100%"}`;
+    container.style.height = `${height ? `${height}px` : "null"}`;
   }
 
   let container;
+  let value;
 
   onMount(() => {
     container.style.height = `${height ? `${height}px` : "100%"}`;
@@ -116,6 +121,12 @@
     }
   };
 
+  const addInputKeydown = (e) => {
+    if (e.key === 'Enter') {
+      send('post', {fields: {label: 'name', value}, children, parents})
+    }
+  }
+
   const get = async () => {
     loading = true;
     let tagArg = JSON.stringify($itemTags);
@@ -143,10 +154,8 @@
   <title>Apexlinks</title>
 </svelte:head>
 
-<Row noGutter>
-  <Column>
     <div class="container" bind:this={container}>
-      <Tag bind:tags={$itemTags} on:change={get} />
+      <Tag bind:tags={$itemTags} bind:options optionControls={{selectable: true, editable: false}} on:change={get} />
 
       {#if sameUser}
             <Checkbox
@@ -199,6 +208,10 @@
         <!-- </Row> -->
       {/if}
 
+      {#if add}
+        <TextInput on:keydown={addInputKeydown} bind:value labelText='Add a new item' />
+      {/if}
+
       {#if total > 10}
         <!-- <Row noGutter> -->
           <!-- <Column> -->
@@ -207,8 +220,6 @@
         <!-- </Row> -->
       {/if}
     </div>
-  </Column>
-</Row>
 
 <style>
   .container {

@@ -121,18 +121,18 @@
     </SideNavMenu> -->
     <SideNavMenu text="Items">
       {#if $session.user}
-        <SideNavMenuItem isSelected={$page.url.pathname === '/add-item'} href='/add-item' text="Add item" />
+        <SideNavMenuItem isSelected={$page.url.pathname === '/i/add'} href='/i/add' text="Add item" />
         <SideNavMenuItem
           text="My items"
-          href="/items?username={$session.user.username}"
-          isSelected={$page.url.pathname === '/items' && $page.url.searchParams.get('username') ===
+          href="/i?username={$session.user.username}"
+          isSelected={$page.url.pathname === '/i' && $page.url.searchParams.get('username') ===
             $session.user.username}
         />
       {/if}
       <SideNavMenuItem
-        isSelected={$page.url.pathname === '/items' && !$page.url.searchParams.get('username')}
+        isSelected={$page.url.pathname === '/i' && !$page.url.searchParams.get('username')}
         text="Search all items"
-        href="/items"
+        href="/o"
       />
     </SideNavMenu>
     {#if $session.user}
