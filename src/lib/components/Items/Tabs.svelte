@@ -3,10 +3,12 @@
   export let height = "";
   export let sameUser = false;
   export let user = {};
-  export let options = [{
-    name: '',
-    options: []
-  }];
+  export let options = [
+    {
+      name: "",
+      options: [],
+    },
+  ];
   import { Tabs, Tab, TabContent, Button } from "carbon-components-svelte";
   import Items from "$lib/components/Items/Items.svelte";
   let tabsRef;
@@ -58,15 +60,14 @@
             <p>Parents</p>
             {#each parents as parent}
               <p>
-                id: {parent.id}; {parent.fields.find((f) => f.label === "name")
-                  .value}
+                id: {parent.id};
               </p>
             {/each}
           {/if}
         {/if}
 
         <Items
-              bind:add
+          bind:add
           on:click={(e) => toggleParent(e.detail)}
           {user}
           {height}
@@ -82,13 +83,12 @@
             <p>Children</p>
             {#each children as child}
               <p>
-                id: {child.id}; {child.fields.find((f) => f.label === "name")
-                  .value}
+                id: {child.id};
               </p>
             {/each}
           {/if}
         {/if}<Items
-        bind:add
+          bind:add
           on:click={(e) => toggleChild(e.detail)}
           {user}
           {height}

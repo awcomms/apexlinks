@@ -28,4 +28,4 @@
   };
 </script>
 
-<Tabs add on:click={({detail})=>go(detail)} {user} sameUser={user && _user && user.id === _user.id} />
+<Tabs add on:click={({detail})=>go(detail)} user={_user} sameUser={user && _user && user.id === _user.id} />

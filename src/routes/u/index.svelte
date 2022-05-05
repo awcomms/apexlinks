@@ -31,7 +31,7 @@
     },
   ];
 
-  let loading
+  let loading;
   let changeLimitInterval;
   let sort = "tag";
   $users = [];
@@ -60,8 +60,8 @@
   };
 
   const get = async () => {
-    console.log($userTags)
-    loading = true
+    console.log($userTags);
+    loading = true;
     let tagString = JSON.stringify($userTags);
     let fields = $userFields.map((uf) => ({
       label: uf.label,
@@ -75,7 +75,7 @@
       page + 1
     }`;
     // if (limit) url.concat(`&limit=${limit}`)
-    let res = await api.get(url).finally(()=>loading=false);
+    let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
       min = res.min;
       max = res.max;
@@ -90,7 +90,7 @@
 
 {#if loading}
   <Loading />
-  {/if}
+{/if}
 
 <!-- <Row noGutter>
   <Column>
@@ -124,7 +124,11 @@
   </Column>
 </Row> -->
 
-<Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
+<Row noGutter>
+  <Column>
+    <Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
+  </Column>
+</Row>
 
 {#if total}
   <Row noGutter>
@@ -164,7 +168,7 @@
           {/if}
         </div>
       </div>
-       <div class="actions">
+      <div class="actions">
         <!-- <Save bind:item={user} /> -->
       </div>
     </Column>

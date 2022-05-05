@@ -8,8 +8,6 @@
   //   export let countries, /* markets, */ states, cities;
 
   import {
-    Row,
-    Column,
     Button,
     TextInput,
     PaginationNav,
@@ -95,7 +93,7 @@ import { send } from "$lib/send";
   //   // }
   // ];
 
-  $: get(page);
+  $: get(page, children, parents);
 
   let filtersOpen;
 
@@ -135,9 +133,9 @@ import { send } from "$lib/send";
     let url = `items?tags=${tagArg}&page=${page + 1}`;
     if (user) url = url.concat(`&user-id=${user.id}`);
     if (children.length > 0)
-      url = url.concat(`&child-ids=${JSON.stringify(children)}`);
+      url = url.concat(`&child-ids=${JSON.stringify(children.map(c => c.id))}`);
     if (parents.length > 0)
-      url = url.concat(`&parent-ids=${JSON.stringify(parents)}`);
+      url = url.concat(`&parent-ids=${JSON.stringify(parents.map(p => p.id))}`);
     if (saved) url = url.concat(`&saved`);
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));

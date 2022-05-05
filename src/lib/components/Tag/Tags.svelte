@@ -1,5 +1,6 @@
 <script>
   // export let vertical = false
+  export let showUseOptions = false
   export let useOptions = false;
   export let options = [];
   export let editable = false;
@@ -117,22 +118,25 @@
     : "Add tag"}
   {...$$restProps}
 /> -->
-<p on:click={toggleOpen}>{tags.length} tags</p>
-<span
-  ><Button
-    kind="ghost"
-    size="small"
-    hasIconOnly
-    icon={Add}
-    on:click={() => {
-      add();
-      if (!open) toggleOpen();
-    }}
-    iconDescription="Add a new tag"
-  /></span
->
+<div class='head'>
+  <p class='title' on:click={toggleOpen}>{tags.length} tags</p>
+  <Button
+      kind="ghost"
+      size="small"
+      hasIconOnly
+      icon={Add}
+      on:click={() => {
+        add();
+        if (!open) toggleOpen();
+      }}
+      iconDescription="Add a new tag"
+    />
+</div>
 <slot />
+
+{#if showUseOptions}
 <Checkbox bind:checked={useOptions} labelText="Use options" />
+{/if}
 
 {#if open}
   {#if tags.length > 0}
@@ -173,3 +177,14 @@
 {#if useOptions}
   <Options bind:options bind:selectable bind:editable />
 {/if}
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: repeat(2, min-content);
+  }
+
+  .title {
+    width: max-content
+  }
+</style>
