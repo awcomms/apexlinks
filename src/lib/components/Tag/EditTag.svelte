@@ -1,7 +1,7 @@
 <script>
   export let inputEventDelay;
   export let inputRef;
-  export let filter
+  // export let filter
   export let ref;
   export let value;
   import { Tag } from "carbon-components-svelte";
@@ -18,7 +18,7 @@
   };
 </script>
 
-<Tag filter on:close bind:ref on:click><input bind:this={inputRef}>{value}</Tag>
+<Tag filter on:close bind:ref on:click><input bind:value bind:this={inputRef}></Tag>
 
 <style>
   input {

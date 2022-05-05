@@ -60,6 +60,7 @@
   };
 
   const get = async () => {
+    console.log($userTags)
     loading = true
     let tagString = JSON.stringify($userTags);
     let fields = $userFields.map((uf) => ({

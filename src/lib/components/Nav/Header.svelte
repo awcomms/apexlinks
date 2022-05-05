@@ -84,7 +84,7 @@
   persistentHamburgerMenu={true}
   company="Apexlinks"
   bind:isSideNavOpen={$isSideNavOpen}
-  href="/users"
+  href="/u"
 >
   {#if $navigating}
     <InlineLoading />

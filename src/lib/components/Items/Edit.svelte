@@ -48,23 +48,9 @@
 
   // $: console.log("choices", choices);
 
-  $: parents.forEach((p) => updateChoices(p, true));
-  $: link && link.contains("youtube.com") ? yt() : {};
-
   let nameInvalid;
 
   const tabsHeight = 210;
-
-  let choiceOptions;
-  $: choiceOptions = choices.map((c) => c.options);
-
-  const updateChoices = (parent, action) => {
-    if (action) {
-      choices = [...choices, { id: parent.id, options: parent.options }];
-    } else {
-      choices.filter((c) => c.id !== parent.id);
-    }
-  };
 
   let link = item.link;
   let fields = [
@@ -75,23 +61,56 @@
   ];
   let redirect;
 
-  let choices = item.choices || [];
-
   let defaultTabsRefDisplayStyle;
 
   let tags = item.tags || [];
   let loading;
   let image = item.image;
   let embed = item.embed;
-  let options = item.options || [];
+  let optionsValid;
 
   let tabsRef;
 
+  let choices = item.choices || [];
+  console.log("choices", choices);
+
+  let options = item.options || [];
   let parents = item.parents || [];
   let children = item.children || [];
 
   let childrenVisible = false;
   let parentsVisible = false;
+
+  console.log(options);
+  parents.forEach((p) => console.log(p.id, p.options));
+
+  const updateChoice = (parent, option) => {
+    console.log(option)
+    if (!choices.find((c) => c.id === parent.id)) {
+      choices = [...choices, { id: parent.id, choices: {} }];
+    }
+    choices.find((c) => c.id === parent.id).choices[option.name] =
+      option.option;
+    if (
+      tags.find(
+        (t) =>
+          t.exact 
+          && t.value === option.option.value 
+          // && t.parent === parent.id
+      )
+    ) {
+      tags = tags.filter(t => !(t.exact && t.value === option.option.value))
+    }
+      else {tags = [
+        ...tags,
+        {
+          exact: true,
+          parent: parent.id,
+          option: option.name,
+          value: option?.option?.value,
+        },
+      ];}
+  };
 
   const yt = () => {
     embed = link.split("watch?v=")[1];
@@ -149,24 +168,35 @@
   const send = async () => {
     loading = true;
 
+    console.log(item.children);
+    console.log(children);
+
     let data = {
       id: item.id,
       options,
       parents: parents.map((p) => p.id),
       children: children.map((c) => c.id),
-      "remove-parents": item.parents.reduce(
-        (prev, id) => (parents.find((p) => p.id === id) ? prev : [...prev, id]),
-        []
-      ),
-      "remove-children": item.children.reduce(
-        (prev, id) => (children.find((c) => c.id === id) ? prev : [...prev, id]),
-        []
-      ),
+      "remove-parents": item.parents
+        .reduce(
+          (prev, i) =>
+            parents.find((p) => p.id === i.id) ? prev : [...prev, i],
+          []
+        )
+        .map((i) => i.id),
+      "remove-children": item.children
+        .reduce(
+          (prev, i) =>
+            children.find((c) => c.id === i.id) ? prev : [...prev, i],
+          []
+        )
+        .map((i) => i.id),
       tags,
       fields,
       image,
       embed,
     };
+
+    console.log("edit send data: ", data);
 
     let res = await api[method]("items", data).finally((r) => {
       loading = false;
@@ -194,7 +224,7 @@
 
 {#if parents.length > 0}
   <Button on:click={toggleParentsVisible}
-    >{childrenVisible ? "Hide children" : "Show children"}</Button
+    >{childrenVisible ? "Hide parents" : "Show parents"}</Button
   >
   {#if parentsVisible}
     <p>Parents</p>
@@ -202,6 +232,13 @@
       <p>
         id: {parent.id}; {parent.fields?.find((f) => f.label === "name").value}
       </p>
+      opts?
+      <Options
+        on:action={(e) => updateChoice(parent, e.detail)}
+        bind:valid={optionsValid}
+        options={parent.options}
+        selectable
+      />
     {/each}
   {/if}
 {/if}
@@ -217,7 +254,7 @@
     {#each children as child}
       <p>
         id: {child.id};
-        {child.fields.find((f) => f.label === "name").value}
+        {child.fields?.find((f) => f.label === "name").value}
       </p>
     {/each}
   {/if}
@@ -254,23 +291,12 @@
   bind:tags
   bind:options
   useOptions={true}
-  optionControls={{ editable: true, selectable: false }}
+  editable={true}
+  selectable={false}
 />
 
 <br />
 
-{#if choices.length > 1}
-  <p>Choices</p>
-{/if}
-
-<Options
-  title={false}
-  bind:options={choiceOptions}
-  on:action={(e) => toggleChoice(e.detail)}
-  controls={{ selectable: true, editable: false }}
-/>
-
-<br />
 <FluidForm>
   <TextInput labelText="Link" bind:value={link} />
   <Checkbox

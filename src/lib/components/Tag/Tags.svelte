@@ -1,11 +1,14 @@
 <script>
-  export let vertical = false
+  // export let vertical = false
   export let useOptions = false;
   export let options = [];
-  export let optionControls = {};
+  export let editable = false;
+  export let selectable = false;
   // export let helperText = "";
   export let tags = [];
   export let is_focused = false;
+
+  import { notify } from "$lib/stores";
   import EditTag from "$lib/components/Tag/EditTag.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import Options from "$lib/components/Options/Options.svelte";
@@ -74,7 +77,16 @@
   };
 
   const add = () => {
-    if (tags.find(t => t.value === '')) return
+    if (tags.find((t) => t.value === "")) {
+      let timeout = 2000;
+      $notify = {
+        kind: "warning",
+        timeout,
+        title: "Tag not added because of presence of empty tag in tags",
+        subtitle: "Remove or edit the empty tag before trying adding a new one",
+      };
+      // setTimeout(()=> $notify = null)
+    }
     // if (value && !tags.find((t) => t.value === value)) {
     // if (value && !tags.includes(value)){
     tags = [...tags, { value: "", inputRef: null, ref: null, exact: false }];
@@ -112,7 +124,10 @@
     size="small"
     hasIconOnly
     icon={Add}
-    on:click={()=> {add(); if (!open) toggleOpen()}}
+    on:click={() => {
+      add();
+      if (!open) toggleOpen();
+    }}
     iconDescription="Add a new tag"
   /></span
 >
@@ -156,5 +171,5 @@
 {/if}
 
 {#if useOptions}
-  <Options bind:options bind:controls={optionControls} />
+  <Options bind:options bind:selectable bind:editable />
 {/if}

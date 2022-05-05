@@ -1,37 +1,55 @@
 <script>
-  export let controls = {
-    editable: false,
-    selectable: false
-  };
+  export let valid;
+  export let editable = false
+  export let selectable = false
   export let option = {
     name: "",
     options: [],
   };
 
-  option.options = option.options || []
+  $: valid = !option.name === ""
+
+  option.options = option.options || [];
 
   import { Button } from "carbon-components-svelte";
+  import WarningAlt from "carbon-icons-svelte/lib/WarningAlt.svelte";
+  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
+  import Opt from '$lib/components/Options/Opt.svelte'
   import ETag from "$lib/components/Tag/_Tag.svelte";
-  import { createEventDispatcher, onMount} from 'svelte'
+  import { createEventDispatcher, onMount } from "svelte";
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  onMount(()=>{
-    inputRef.focus()
-  })
+  onMount(() => {
+    inputRef ? inputRef.focus() : {}
+  });
 
-  let inputRef
+  let inputRef;
 
   let id = 0;
 
+  let nameInputDelaying;
+  const nameInput = () => {
+    if (nameInputDelaying) return;
+    nameInputDelaying = true;
+    setTimeout(() => {
+      dispatch("nameInput", option.name);
+      nameInputDelaying = false;
+    });
+  };
+
   const input = (opt) => {
-    if (option.options.find(o => o.value === opt.value && o.id !== opt.id)) {
-      opt.warning = true
+    if (
+      option.options.find(
+        ((o) => o.value === opt.value && o.id !== opt.id) || opt.value === ""
+      )
+    ) {
+      opt.invalid = true;
     } else {
-      opt.warning = false
+      opt.invalid = false;
     }
-  }
+  };
 
   const del = (opt) => {
     option.options = option.options.filter((o) => {
@@ -46,19 +64,34 @@
       {
         id,
         value: "",
-        warning: false,
+        invalid: false,
         selected: false,
         editing: false,
       },
     ];
-    id++
+    id++;
   };
 </script>
 
 <div>
-  <input bind:this={inputRef} bind:value={option.name} />
+  {#if editable}
+    <input on:input={nameInput} bind:this={inputRef} bind:value={option.name} />
+    <Button
+      on:click={() => dispatch("del")}
+      hasIconOnly
+      icon={TrashCan}
+      iconDescription="Delete this option"
+      size="small"
+      kind="ghost"
+    />
+    {#if option.invalid}
+      <WarningAlt />
+    {/if}
+  {:else}
+    <p>{option.name}</p>
+  {/if}
   <!-- <div class="options"> -->
-  {#if controls.editable}
+  {#if editable}
     <Button
       iconDescription="Add an option to this option set"
       kind="ghost"
@@ -69,28 +102,15 @@
     />
   {/if}
   {#each option.options as opt}
-    <ETag
-      inputEventDelay={1500}
-      on:input={()=>input(opt)}
+    <Opt
+      on:input={() => input(opt)}
       on:del={() => del(opt)}
-      bind:warning={opt.warning}
-      bind:text={opt.value}
-      editable={controls.editable}
-      focused={opt.focused}
-      type={opt.selected ? "cyan" : "gray"}
-      on:edit={(e) => {
-        opt.editing = true;
-      }}
-      on:accept={(e) => {
-        if (option.options.find((o) => o.value === e.detail && o.id !== opt.id))
-          return;
-        opt.editing = false;
-      }}
-      on:click={() => {
-        if (!controls.selectable) return
-        opt.selected = !opt.selected;
-        dispatch('action', opt)
-      }}
+      bind:opt
+      bind:editable
+      bind:selectable
+      on:action
+      on:click
+      bind:valid
     />
   {/each}
   <!-- </div> -->

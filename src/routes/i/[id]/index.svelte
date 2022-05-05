@@ -22,6 +22,7 @@
 <script>
   export let user;
   export let item;
+  import { goto } from '$app/navigation'
   import { Tabs, Tab, TabContent, Tag, Row, Link, Column } from "carbon-components-svelte";
   import { parseMarkdown } from "$lib/utils/parseMarkdown";
 import Items from "$lib/components/Items/Items.svelte";

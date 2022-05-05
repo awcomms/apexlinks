@@ -1,6 +1,6 @@
 <script>
-  import { Content, Grid } from "carbon-components-svelte";
-  import { newUser } from "$lib/stores";
+  import { ToastNotification, Content, Grid } from "carbon-components-svelte";
+  import { notify, newUser } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
   import Theme from "$lib/components/Theme.svelte";
@@ -27,9 +27,22 @@
   // const analytics = getAnalytics(app);
 
   $newUser = false;
+
+  let notifyOpen;
+  $: if ($notify) notifyOpen = true;
 </script>
 
 <Theme persist theme="g10">
+  <!-- {#if notifyOpen}
+    <div class="notify">
+      <ToastNotification
+        kind={$notify.kind}
+        title={$notify.title}
+        subtitle={$notify.subtitle}
+        caption={$notify.caption}
+      />
+    </div>
+  {/if} -->
   <Header />
   <Content style="background: none; padding: 1rem">
     <Grid>
@@ -37,3 +50,9 @@
     </Grid>
   </Content>
 </Theme>
+
+<style>
+  .notify {
+    position: absolute;
+  }
+</style>

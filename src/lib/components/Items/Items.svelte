@@ -155,7 +155,7 @@ import { send } from "$lib/send";
 </svelte:head>
 
     <div class="container" bind:this={container}>
-      <Tag bind:tags={$itemTags} bind:options optionControls={{selectable: true, editable: false}} on:change={get} />
+      <Tag bind:tags={$itemTags} bind:options selectable={true} editable={false} on:change={get} />
 
       {#if sameUser}
             <Checkbox

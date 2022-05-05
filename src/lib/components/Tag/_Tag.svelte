@@ -2,6 +2,7 @@
   export let inputEventDelay;
   export let warning = false;
   export let text = "";
+  // export let selectable = false
   export let editable = false;
   export let editing = false;
 
@@ -98,7 +99,7 @@
 
 <style>
   input {
-    size: 0;
+    size: 1;
     border: none;
     background-color: rgba(0, 0, 0, 0);
   }

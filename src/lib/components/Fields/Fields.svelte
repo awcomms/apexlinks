@@ -1,6 +1,6 @@
 <script>
   export let title
-  export let prompt = "Add new field";
+  // export let prompt = "Add new field";
   export let pin = false;
   export let fields = [];
   export let combobox;

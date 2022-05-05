@@ -4,7 +4,7 @@
     export const load = ({session}) => {
         if (session.user) {
             return {
-                redirect: '/users',
+                redirect: '/u',
                 status: 302
             }
         }

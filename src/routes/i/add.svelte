@@ -236,7 +236,8 @@
       bind:tags
       bind:options
       useOptions={true}
-      optionControls={{ editable: true, selectable: false }}
+      editable={true}
+      selectable={false}
     />
     <br />
     <FluidForm>
