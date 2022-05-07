@@ -1,100 +1,143 @@
 <script>
   export let add = false;
   export let height = "";
-  export let sameUser = false;
   export let user = {};
-  export let options = [
-    {
-      name: "",
-      options: [],
-    },
-  ];
+  export let selected = 0;
+  export let resultLabelText =
+    "Add a new item having the current parents and children";
+  export let parentLabelText =
+    "Add a new item having the current results as its children";
+  export let childLabelText =
+    "Add a new item having the current results as its parents";
+  export let options = [];
+
+  $: sameUser = $session?.user?.id === user?.id;
+
+  import { session } from "$app/stores";
   import { Tabs, Tab, TabContent, Button } from "carbon-components-svelte";
-  import Items from "$lib/components/Items/Items.svelte";
+  import { Items } from "$lib/components";
+  import { ItemsTab } from "$lib/components";
+  import {
+    children,
+    childItems,
+    parentItems,
+    parents,
+    items,
+    itemTags,
+    childTags,
+    parentTags,
+  } from "$lib/stores";
+  import { createEventDispatcher } from "svelte";
+  import Users from "$lib/components/Users/Users.svelte";
+
+  const dispatch = createEventDispatcher();
+
+  // -events
+  let parentSelectEvent;
+
+  let optEvent = false;
   let tabsRef;
-
-  export let parents = [];
-  export let children = [];
-
+  let searchUser;
   let parentsVisible;
   let childrenVisible;
 
   const tabsHeight = 210;
 
-  const toggleParent = (item) => {
-    parents.find((i) => i.id === item.id)
-      ? (parents = parents.filter((c) => c !== item))
-      : (parents = [...parents, item]);
-  };
+  const optSelected = (opt) => $itemTags.find((i) => i.value === opt.value);
 
-  const toggleChild = (item) => {
-    children.includes(item.id)
-      ? (children = children.filter((c) => c !== item))
-      : (children = [...children, item]);
+  const addTag = ({ detail }) => {
+    const { label, option } = detail;
+    $itemTags.find(
+      (i) =>
+        i.label === label && i.value === option.value && i.exact /*&& i.field*/
+    )
+      ? ($itemTags = $itemTags.filter(
+          (i) => !(i.label === label && i.value === option.value && i.exact)
+        ))
+      : ($itemTags = [
+          ...$itemTags,
+          { label, value: option.value, exact: true, field: true },
+        ]);
+    optEvent = !optEvent;
   };
 </script>
 
-<Tabs>
+<Tabs bind:selected>
+  <Tab label="Set user" />
   <Tab label="Search results" />
   <Tab label="Set Parents" />
   <Tab label="Set Sub Items" />
   <svelte:fragment slot="content">
     <div bind:this={tabsRef}>
+      <!-- user -->
+      <TabContent>
+        <Users
+          showSelected
+          bind:selected={user}
+          on:click={(e) => {
+            user = e.detail;
+            selected = 1;
+          }}
+        />
+      </TabContent>
+
+      <!-- results -->
       <TabContent>
         <Items
-          bind:add
+          {add}
+          on:add={({ detail }) =>
+            dispatch("add", { type: "result", value: detail.value })}
+          labelText={resultLabelText}
           on:click
           {sameUser}
           bind:options
           {user}
-          bind:children
-          bind:parents
+          bind:items={$items}
+          bind:children={$children}
+          bind:parents={$parents}
+          bind:tags={$itemTags}
         />
       </TabContent>
-      <TabContent>
-        {#if parents.length > 0}
-          <Button on:click={() => (parentsVisible = !parentsVisible)}
-            >{parentsVisible ? "Hide parents" : "Show parents"}</Button
-          >
-          {#if parentsVisible}
-            <p>Parents</p>
-            {#each parents as parent}
-              <p>
-                id: {parent.id};
-              </p>
-            {/each}
-          {/if}
-        {/if}
 
-        <Items
-          bind:add
-          on:click={(e) => toggleParent(e.detail)}
-          {user}
-          {height}
-          {sameUser}
-        /></TabContent
-      >
+      <!-- parents -->
       <TabContent>
-        {#if children.length > 0}
-          <Button on:click={() => (childrenVisible = !childrenVisible)}
-            >{childrenVisible ? "Hide children" : "Show children"}</Button
-          >
-          {#if childrenVisible}
-            <p>Children</p>
-            {#each children as child}
-              <p>
-                id: {child.id};
-              </p>
-            {/each}
-          {/if}
-        {/if}<Items
-          bind:add
-          on:click={(e) => toggleChild(e.detail)}
+        <ItemsTab
+          {add}
           {user}
-          {height}
           {sameUser}
-        /></TabContent
-      >
+          {optEvent}
+          {optSelected}
+          bind:selected={$parents}
+          bind:items={$parentItems}
+          bind:tags={$parentTags}
+          on:add={({ detail }) =>
+            dispatch("add", { type: "parent", value: detail.value })}
+          on:action={addTag}
+          labelText={parentLabelText}
+          showOptions='selected'
+          name='parents'
+          type='parent'
+        />
+      </TabContent>
+
+      <!-- children -->
+      <TabContent>
+        <ItemsTab
+          {add}
+          {user}
+          {sameUser}
+          {optEvent}
+          {optSelected}
+          bind:selected={$children}
+          bind:items={$childItems}
+          bind:tags={$childTags}
+          on:add={({ detail }) =>
+            dispatch("add", { type: "child", value: detail.value })}
+          labelText={childLabelText}
+          name='children'
+          type='child'
+        />
+      </TabContent>
     </div>
   </svelte:fragment>
 </Tabs>

@@ -18,7 +18,7 @@
   const dev = process.env.NODE_ENV === "development";
 </script>
 
-<Row>
+<Row noGutter>
   <Column lg="{16}">
     <h1>{status}</h1>
     <div>

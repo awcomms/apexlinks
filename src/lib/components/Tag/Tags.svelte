@@ -10,30 +10,16 @@
   export let is_focused = false;
 
   import { notify } from "$lib/stores";
-  import EditTag from "$lib/components/Tag/EditTag.svelte";
+  import Tag from "$lib/components/Tag/Tag.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import Options from "$lib/components/Options/Options.svelte";
   import { createEventDispatcher } from "svelte";
   import {
-    Tag,
     Button,
     Checkbox,
     ContextMenu,
     ContextMenuOption,
   } from "carbon-components-svelte";
-
-  // $: if (options) {
-  //   // options.forEach((option) => {
-  //   //   option.options.forEach((opt) => {
-  //   //     if (opt.selected) {
-  //   //       tags.push({
-  //   //         value: opt.value,
-  //   //         exact: true,
-  //   //       });
-  //   //     }
-  //   //   });
-  //   // });
-  // }
 
   $: if (ref && is_focused) ref.focus();
 
@@ -86,10 +72,7 @@
         title: "Tag not added because of presence of empty tag in tags",
         subtitle: "Remove or edit the empty tag before trying adding a new one",
       };
-      // setTimeout(()=> $notify = null)
     }
-    // if (value && !tags.find((t) => t.value === value)) {
-    // if (value && !tags.includes(value)){
     tags = [...tags, { value: "", inputRef: null, ref: null, exact: false }];
     // }
   };
@@ -119,7 +102,7 @@
   {...$$restProps}
 /> -->
 <div class='head'>
-  <p class='title' on:click={toggleOpen}>{tags.length} tags</p>
+  <p class='title' on:click={toggleOpen}>{tags.length} {`${tags.length === 1 ? 'tag' : 'tags'}`}</p>
   <Button
       kind="ghost"
       size="small"
@@ -155,19 +138,19 @@
       <ContextMenuOption
         labelText="Exact"
         bind:selected={tag.exact}
-        on:click={() => {
-          tag.exact = !tag.exact;
-        }}
       />
     </ContextMenu>
 
-    <EditTag
-      inputEventDelay={2000}
+    <Tag
+      inputEventDelay={1500}
       on:input={() => dispatch("change")}
+      on:keydown={(e)=> {if (e.key === 'Enter') add()}}
       bind:value={tag.value}
       bind:inputRef={tag.inputRef}
       bind:ref={tag.ref}
       filter
+      focusOnMount
+      editable
       bind:focused
       on:close={del(tag)}
     />

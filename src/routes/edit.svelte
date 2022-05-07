@@ -1,11 +1,11 @@
 <script context="module">
-  import { send } from "$lib/send";
+  import { routes } from "$lib/utils";
   export  const load = async({ session }) => {
     let user = session.user;
     if (!user) {
       return {
         status: 302,
-        redirect: "/",
+        redirect: routes.login,
       };
     }
     // let { schema } = await send({ method: "GET", path: "users/schema" });
@@ -49,7 +49,7 @@
   // import { abslinkRegex } from "$lib/utils/regex";
 
   onMount(async() => {
-    location = await currentLocation.then(l => l).catch(e => console.log('currentLocation error:', e))
+    location = await currentLocation.then(l => l)/*.catch(e => console.log('currentLocation error:', e))*/
   });
 
   let editLocation = true

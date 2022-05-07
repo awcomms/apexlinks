@@ -1,10 +1,11 @@
 <script context="module">
+  import { routes } from "$lib/utils";
   export const load = async ({ session }) => {
     const { user } = session;
     if (!user) {
       return {
         status: 302,
-        redirect: "/",
+        redirect: routes.login,
       };
     }
     return { props: { user } };
@@ -17,7 +18,7 @@
   import Edit from '$lib/components/Items/Edit.svelte'
 </script>
 
-<Row>
+<Row noGutter>
   <Column>
     <Edit method='post' {user} prompt='Add new item' />
   </Column>

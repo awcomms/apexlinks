@@ -39,7 +39,7 @@ import Items from "$lib/components/Items/Items.svelte";
   };
 </script>
 
-<Row>
+<Row noGutter>
   {#if item.image}
     <Column lg={2} sm={2} md={2} xlg={2}>
       <img width="100%" alt="item display _image" src={item.image} />
@@ -64,55 +64,46 @@ import Items from "$lib/components/Items/Items.svelte";
 
 <br />
 
-{#each item.fields as field}
-  <div>
-    <div class="bold">{field.label}</div>
-    {#if field.type === "text"}
-      <div>{field.value}</div>
-    {:else if field.type === "number"}
-      <div>{field.num}</div>
-    {:else if field.type === "range"}
-      <div>{field.min} - {field.num}</div>
+<Row no Gutter>
+  <Column>
+    {#each item.fields as field}
+      <div>
+        <div class="bold">{field.label}</div>
+        {#if field.type === "text"}
+          <div>{field.value}</div>
+        {:else if field.type === "number"}
+          <div>{field.num}</div>
+        {:else if field.type === "range"}
+          <div>{field.min} - {field.num}</div>
+        {/if}
+      </div>
+    {/each}
+  
+    {#if !item.redirect && itext}
+          <div>{@html itext}</div>
     {/if}
-  </div>
-{/each}
-
-{#if !item.redirect && itext}
-  <Row>
-    <Column lg={6} sm={6} md={6} xlg={6}>
-      <div>{@html itext}</div>
-    </Column>
-  </Row>
-{/if}
-
-id: {item.id}
-<!-- <p>Tags</p>
-{#each (item.tags || []) as tag}
-  <Tag>{tag.value}</Tag>
-{/each} -->
-
-{#if item.embed}
-  <div class="embed">
-    <iframe
-      width="426"
-      height="240"
-      src="https://www.youtube.com/embed/{item.embed}"
-      title="YouTube video player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    />
-  </div>
-{/if}
-
-<Tabs>
-  <Tab label="Parent items" />
-  <Tab label="Sub items" />
-  <svelte:fragment slot="content">
-    <TabContent><Items on:click={(e)=>go(e.detail)} children={[item.id]} /></TabContent>
-    <TabContent><Items on:click={(e)=>go(e.detail)} parents={[item.id]} /></TabContent>
-  </svelte:fragment>
-</Tabs>
+  
+    id: {item.id}
+    <!-- <p>Tags</p>
+    {#each (item.tags || []) as tag}
+      <Tag>{tag.value}</Tag>
+    {/each} -->
+  
+    {#if item.embed}
+      <div class="embed">
+        <iframe
+          width="426"
+          height="240"
+          src="https://www.youtube.com/embed/{item.embed}"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        />
+      </div>
+    {/if}
+  </Column>
+</Row>
 
 <style>
   .bold {

@@ -4,7 +4,6 @@
     let value
 
     $: if (input && input.files[0]) {
-        console.log('zee')
         audio.src = input.files[0]
     }
 

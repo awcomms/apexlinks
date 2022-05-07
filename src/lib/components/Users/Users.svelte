@@ -1,4 +1,6 @@
 <script>
+    export let selected = {}
+    export let showSelected
   import {
     Row,
     Column,
@@ -16,9 +18,12 @@
   // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { goto } from "$app/navigation";
+import { createEventDispatcher } from "svelte";
 
   $: get(sort);
   $: if (got) get(page);
+
+  const dispatch = createEventDispatcher()
 
   $extraFields = [
     {
@@ -60,7 +65,6 @@
   };
 
   const get = async () => {
-    console.log($userTags);
     loading = true;
     let tagString = JSON.stringify($userTags);
     let fields = $userFields.map((uf) => ({
@@ -89,7 +93,7 @@
 </script>
 
 {#if loading}
-  <Loading />
+  <Loading withOverlay={false} />
 {/if}
 
 <!-- <Row noGutter>
@@ -143,7 +147,7 @@
   <br />
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
-      <div on:click={goto(`/u/${user.username}`)} class="pointer user">
+      <div class:selected={showSelected && selected?.id === user?.id} on:click={dispatch('click', user)} class="pointer user">
         <!-- {#if user.image}
           <img
             style="vertical-align: top;"
@@ -192,6 +196,9 @@
 {/if}
 
 <style>
+    .selected {
+        background-color: gray;
+    }
   .actions {
     margin-right: 1rem;
   }

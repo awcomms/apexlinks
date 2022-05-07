@@ -1,5 +1,6 @@
 <script context='module'>
     import { api } from '$lib/api'
+  import { routes } from "$lib/utils";
     export  const load = async({ params, session }) =>{
         let user = session.user
         let {id} = params
@@ -7,7 +8,7 @@
         if (!user){
             return {
                 status: 302,
-                redirect: '/',
+                redirect: routes.login,
             }
         }
         if (!(room.user == user.username)){

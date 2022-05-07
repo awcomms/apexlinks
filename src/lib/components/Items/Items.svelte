@@ -1,28 +1,35 @@
 <script>
+  export let selected = []
+  export let items = [];
+  export let tags = [];
+  export let optEvent = false;
+  export let optSelected = () => false;
+  export let showOptionsControl = false;
+  export let showOptions = false;
   export let add = false;
-  export let options = []
+  export let labelText = "Add a new item";
+  export let options = [];
   export let children = [];
   export let parents = [];
   export let height;
   export let sameUser, user;
+  export let type = ''
   //   export let countries, /* markets, */ states, cities;
 
   import {
-    Button,
+    Loading,
     TextInput,
     PaginationNav,
     Checkbox,
+    Row,
+    Button,
   } from "carbon-components-svelte";
   import { api } from "$lib/api";
-  import { itemFields, itemTags, notify } from "$lib/stores";
   import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag/Tags.svelte";
-  import { goto } from "$app/navigation";
-  import Save from "$lib/components/Save.svelte";
-  import Field from "$lib/components/Fields/Field.svelte";
-  import Filters from "$lib/components/Filters.svelte";
   import { createEventDispatcher, onMount } from "svelte";
-import { send } from "$lib/send";
+  import { ids } from "$lib/utils";
+  import Options from "../Options/Options.svelte";
 
   $: if (container) {
     container.style.height = `${height ? `${height}px` : "null"}`;
@@ -93,12 +100,10 @@ import { send } from "$lib/send";
   //   // }
   // ];
 
-  $: get(page, children, parents);
-
-  let filtersOpen;
+  $: updateSelected(selected) 
+  $: get(saved, page, children, parents, user);
 
   let loading;
-  let items = [];
   let page = 0;
   let total = 0;
   let pages = 0;
@@ -107,35 +112,27 @@ import { send } from "$lib/send";
 
   let got;
 
-  const go = async (item) => {
-    item = await api.get(`items/${item.id}`);
-    if (!item || item.error) {
-      $notify = {
-        title: error,
-      };
-      return;
-    } else {
-      goto(`/i/${item.id}`);
+  const updateSelected = () => {
+    items = items.map(i => i.selected = selected.find(s => s.id === i.id))
+  }
+
+  const addInputKeydown = (e) => {
+    if (e.key === "Enter") {
+      dispatch("add", { value, anonymous });
     }
   };
 
-  const addInputKeydown = (e) => {
-    if (e.key === 'Enter') {
-      send('post', {fields: {label: 'name', value}, children, parents})
-    }
-  }
-
   const get = async () => {
     loading = true;
-    let tagArg = JSON.stringify($itemTags);
-    let fieldArg = JSON.stringify($itemFields);
+    let tagArg = JSON.stringify(tags);
     // let extraFieldsArg = JSON.stringify($extraFields);
     let url = `items?tags=${tagArg}&page=${page + 1}`;
     if (user) url = url.concat(`&user-id=${user.id}`);
+    if (type) url = url.concat(`&${type}`);
     if (children.length > 0)
-      url = url.concat(`&child-ids=${JSON.stringify(children.map(c => c.id))}`);
+      url = url.concat(`&children=${JSON.stringify(ids(children))}`);
     if (parents.length > 0)
-      url = url.concat(`&parent-ids=${JSON.stringify(parents.map(p => p.id))}`);
+      url = url.concat(`&parents=${JSON.stringify(ids(parents))}`);
     if (saved) url = url.concat(`&saved`);
     // url.concat(`&country=country`);
     let res = await api.get(url).finally(() => (loading = false));
@@ -143,7 +140,7 @@ import { send } from "$lib/send";
       items = res.items;
       total = res.total;
       pages = res.pages;
-      got = true;
+      !got ? (got = true) : {};
     }
   };
 </script>
@@ -152,72 +149,100 @@ import { send } from "$lib/send";
   <title>Apexlinks</title>
 </svelte:head>
 
-    <div class="container" bind:this={container}>
-      <Tag bind:tags={$itemTags} bind:options selectable={true} editable={false} on:change={get} />
+<div class="container" bind:this={container}>
+  {#if loading}
+    <Loading withOverlay={false} />
+  {/if}
 
-      {#if sameUser}
-            <Checkbox
-              on:change={get}
-              labelText="Only saved items"
-              bind:checked={saved}
-            />
+  <Tag
+    bind:tags
+    bind:options
+    selectable={true}
+    editable={false}
+    on:change={get}
+  />
+
+  {#if sameUser}
+    <Checkbox labelText="Only saved items" bind:checked={saved} />
+
+    {#if showOptionsControl}
+      <Checkbox labelText="Show options" bind:checked={showOptions} />
+    {/if}
+  {/if}
+
+  {#each items as item}
+    <br />
+    <div on:click={() =>{ dispatch("click", item)}} class="pointer item">
+      {#if item.image}
+        <img
+          style="vertical-align: top;"
+          height="52px"
+          width="52px"
+          alt="profile pic"
+          src={item.image}
+        />
+      {:else}
+        <img
+          style="vertical-align: top;"
+          height="52px"
+          width="52px"
+          alt="profile pic"
+          src="/placeholder.png"
+        />
       {/if}
-
-      {#each items as item}
-        <br />
-            <div on:click={() => dispatch("click", item)} class="pointer item">
-              {#if item.image}
-                <img
-                  style="vertical-align: top;"
-                  height="52px"
-                  width="52px"
-                  alt="profile pic"
-                  src={item.image}
-                />
-              {:else}
-                <img
-                  style="vertical-align: top;"
-                  height="52px"
-                  width="52px"
-                  alt="profile pic"
-                  src="/placeholder.png"
-                />
-              {/if}
-              <div class="label">
-                <h4>
-                  {item.fields?.find((f) => f.label === "name")?.value ||
-                    item.id}
-                </h4>
-                {#if !sameUser && item.user}
-                  <p class="bx--link--sm">{item.user.username}</p>
-                {/if}
-              </div>
-            </div>
-            <div class="actions">
-              <!-- <Save bind:item /> -->
-            </div>
-      {/each}
-
-      {#if got && total < 1}
-        <!-- <Row noGutter> -->
-          <!-- <Column> -->
-            <p>There don't seem to be any results</p>
-          <!-- </Column> -->
-        <!-- </Row> -->
-      {/if}
-
-      {#if add}
-        <TextInput on:keydown={addInputKeydown} bind:value labelText='Add a new item' />
-      {/if}
-
-      {#if total > 10}
-        <!-- <Row noGutter> -->
-          <!-- <Column> -->
-            <PaginationNav loop bind:page bind:total={pages} />
-          <!-- </Column> -->
-        <!-- </Row> -->
-      {/if}
+      <div class="label">
+        <p>
+          {item.tags?.find((f) => f.label === "name")?.value || item.id}
+        </p>
+        {#if !sameUser && item.user?.username}
+          <p class="bx--link--sm">{item.user.username}</p>
+        {/if}
+      </div>
     </div>
+    {#if showOptions === true || (showOptions === 'selected' && item.selected)}
+      <Options
+        {optEvent}
+        selected={optSelected}
+        on:action
+        selectable={true}
+        options={item.options}
+      />
+    {/if}
+    <div class="actions">
+      <!-- <Save bind:item /> -->
+    </div>
+  {/each}
+
+  {#if got && total < 1}
+    <!-- <Row noGutter> -->
+    <!-- <Column> -->
+    <p>There don't seem to be any results</p>
+    <!-- </Column> -->
+    <!-- </Row> -->
+  {/if}
+
+  {#if add}
+    <Row>
+      <TextInput on:input on:keydown={addInputKeydown} bind:value {labelText} />
+      <!-- <Button
+          hasIconOnly
+          icon={User}
+          disabled={anonymous}
+          iconDescription="add item anonymously"
+          on:click={() => (anonymous = !anonymous)}
+        /> -->
+    </Row>
+    <!-- TODO -->
+  {/if}
+
+  {#if total > 10}
+    <!-- <Row noGutter> -->
+    <!-- <Column> -->
+    <PaginationNav loop bind:page bind:total={pages} />
+    <!-- </Column> -->
+    <!-- </Row> -->
+  {/if}
+</div>
 
 <style>
   .container {

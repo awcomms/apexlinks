@@ -1,5 +1,5 @@
 import adapter from '@sveltejs/adapter-node'
-import sveltePreprocess from 'svelte-preprocess'
+import preprocess from 'svelte-preprocess'
 
 export default {
 	kit: {
@@ -7,7 +7,7 @@ export default {
 			out: 'build'
 		}),
 	},
-	preprocess: sveltePreprocess({
+	preprocess: preprocess({
 		preserve: [
 			'ld+json'
 		]

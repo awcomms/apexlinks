@@ -16,6 +16,7 @@
     SideNav,
     Header,
   } from "carbon-components-svelte";
+import { routes } from "$lib/utils";
 
   let show;
   let installRef;
@@ -84,7 +85,7 @@
   persistentHamburgerMenu={true}
   company="Apexlinks"
   bind:isSideNavOpen={$isSideNavOpen}
-  href="/u"
+  href={routes.index}
 >
   {#if $navigating}
     <InlineLoading />
@@ -124,16 +125,11 @@
         <SideNavMenuItem isSelected={$page.url.pathname === '/i/add'} href='/i/add' text="Add item" />
         <SideNavMenuItem
           text="My items"
-          href="/i?username={$session.user.username}"
-          isSelected={$page.url.pathname === '/i' && $page.url.searchParams.get('username') ===
+          href="{routes.index}?username={$session.user.username}"
+          isSelected={$page.url.pathname === '{routes.index}' && $page.url.searchParams.get('username') ===
             $session.user.username}
         />
       {/if}
-      <SideNavMenuItem
-        isSelected={$page.url.pathname === '/i' && !$page.url.searchParams.get('username')}
-        text="Search all items"
-        href="/o"
-      />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.username}" />

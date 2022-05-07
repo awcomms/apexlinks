@@ -1,28 +1,40 @@
 <script>
-  export let valid
-  export let editable = false
-  export let selectable = false
+  export let valid;
+  export let title = false;
+  export let options = [];
+  export let editable = false;
+  export let selectable = false;
+  export let selections = [];
+  export let selected = () => false;
   import { Row, Column, Button } from "carbon-components-svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import { createEventDispatcher } from "svelte";
   import Option from "./Option.svelte";
 
-  export let title = true;
-  export let options = [];
-
   const dispatch = createEventDispatcher();
 
-  const nameInput = ({detail}) => {
-    let option = options.find(o => o.name === detail)
+  const labelInput = ({ detail }) => {
+    let option = options.find((o) => o.name === detail);
     if (option) {
-      valid = false
-      option.invalid = true
+      valid = false;
+      option.invalid = true;
     }
-  }
+  };
+
+  const add = () => {
+    options = [
+      ...options,
+      {
+        label: "",
+        invalid: false,
+        options: [],
+      },
+    ];
+  };
 
   const del = (option) => {
-    options = options.filter(o => o.name !== option.name)
-  }
+    options = options.filter((o) => o.name !== option.label);
+  };
 </script>
 
 <div>
@@ -34,24 +46,17 @@
       iconDescription="Add an option set"
       icon={Add}
       size="small"
-      on:click={() => {
-        options = [
-          ...options,
-          {
-            name: "",
-            invalid: false,
-            options: [],
-          },
-        ];
-      }}>Add an option set</Button
+      on:click={add}>Add an option set</Button
     >
   {/if}
   {#each options as option}
     <Option
-      on:del={()=>del(option)}
-      on:nameInput={nameInput}
+      {selections}
+      {selected}
+      on:del={() => del(option)}
+      on:labelInput={labelInput}
       on:action={(e) => {
-        dispatch("action", { name: option.name, option: e.detail });
+        dispatch("action", { label: option.label, option: e.detail });
       }}
       bind:valid
       bind:option

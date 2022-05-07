@@ -1,13 +1,15 @@
 <script>
   export let valid;
-  export let editable = false
-  export let selectable = false
+  export let editable = false;
+  export let selectable = false;
+  export let optEvent = false;
+  export let selected = () => false;
   export let option = {
-    name: "",
+    label: "",
     options: [],
   };
 
-  $: valid = !option.name === ""
+  $: valid = !option.label === "";
 
   option.options = option.options || [];
 
@@ -15,27 +17,26 @@
   import WarningAlt from "carbon-icons-svelte/lib/WarningAlt.svelte";
   import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
-  import Opt from '$lib/components/Options/Opt.svelte'
-  import ETag from "$lib/components/Tag/_Tag.svelte";
+  import Opt from "$lib/components/Options/Opt.svelte";
   import { createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    inputRef ? inputRef.focus() : {}
+    inputRef ? inputRef.focus() : {};
   });
 
   let inputRef;
 
   let id = 0;
 
-  let nameInputDelaying;
-  const nameInput = () => {
-    if (nameInputDelaying) return;
-    nameInputDelaying = true;
+  let labelInputDelaying;
+  const labelInput = () => {
+    if (labelInputDelaying) return;
+    labelInputDelaying = true;
     setTimeout(() => {
-      dispatch("nameInput", option.name);
-      nameInputDelaying = false;
+      dispatch("labelInput", option.label);
+      labelInputDelaying = false;
     });
   };
 
@@ -73,14 +74,18 @@
   };
 </script>
 
-<div>
+<div class="container">
   {#if editable}
-    <input on:input={nameInput} bind:this={inputRef} bind:value={option.name} />
+    <input
+      on:input={labelInput}
+      bind:this={inputRef}
+      bind:value={option.label}
+    />
     <Button
       on:click={() => dispatch("del")}
       hasIconOnly
       icon={TrashCan}
-      iconDescription="Delete this option"
+      iconDescription="Delete this option set"
       size="small"
       kind="ghost"
     />
@@ -88,7 +93,7 @@
       <WarningAlt />
     {/if}
   {:else}
-    <p>{option.name}</p>
+    <p class='label'>{option.label}: </p>
   {/if}
   <!-- <div class="options"> -->
   {#if editable}
@@ -101,29 +106,43 @@
       on:click={add}
     />
   {/if}
-  {#each option.options as opt}
-    <Opt
-      on:input={() => input(opt)}
-      on:del={() => del(opt)}
-      bind:opt
-      bind:editable
-      bind:selectable
-      on:action
-      on:click
-      bind:valid
-    />
-  {/each}
+
+  <div class="opts">
+    {#each option.options as opt}
+      <Opt
+        {optEvent}
+        {selected}
+        on:input={() => input(opt)}
+        on:del={() => del(opt)}
+        bind:opt
+        bind:editable
+        bind:selectable
+        on:action
+        on:click
+        bind:valid
+      />
+    {/each}
+  </div>
   <!-- </div> -->
 </div>
 
-<style>
-  input {
-    size: 0;
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
-  }
+<style lang="sass">
+  @use '@carbon/type'
 
-  input:focus {
-    border: none;
-  }
+  .label
+    @include type.type-style('label-01')
+    
+  .container
+    display: grid
+    grid-template-columns: min-content 1fr
+    align-items: center
+    margin-left: 1rem
+
+  input
+    size: 0
+    border: none
+    background-color: rgba(0, 0, 0, 0)
+
+  input:focus 
+    border: none
 </style>

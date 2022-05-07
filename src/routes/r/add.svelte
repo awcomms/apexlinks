@@ -1,10 +1,11 @@
 <script context="module">
+    import { routes } from "$lib/utils";
     export  const load = async({ session }) => {
         let user = session.user
         if (!user) {
             return {
                 status: 302,
-                redirect: '/'
+                redirect: routes.login
             }
         }
         return {

@@ -1,19 +1,25 @@
 <script context='module'>
     import { api } from '$lib/api'
+  import { routes } from "$lib/utils";
     export  const load = async({ params, session}) =>{
         let user = session.user
         if (!user){
             return {
                 status: 302,
-                redirect: '/'
+                redirect: routes.login
             }
         }
         let {id} = params
         let item = await api.get(`items/${id}`)
         if (item.user.username !== user.username){
+            session.notify = {
+                kind: 'error',
+                title: 'Authenticated user (you) is not authorized to edit that item',
+                caption: new Date().toLocaleString()
+            }
             return {
                 status: 302,
-                redirect: `/items/?username=${user.username}`
+                redirect: `${routes.index}?username=${user.username}`
             }
         }
         return {

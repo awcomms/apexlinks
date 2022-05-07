@@ -24,7 +24,6 @@ export const send = async (method, {tags, fields, image, options, parents, child
       return r;
     });
     // return res
-    console.log("edit res", res);
     if (res.id) {
         return true
       goto(`/i/${res.id}`);

@@ -36,7 +36,8 @@
   import { goto } from "$app/navigation";
   import { api } from "$lib/api";
   import Items from "$lib/components/Items/Items.svelte";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { selected } from '$lib/utils'
+  import { onMount } from "svelte";
   import Options from "../Options/Options.svelte";
 
   // const dispatch = createEventDispatcher();
@@ -45,8 +46,6 @@
     defaultTabsRefDisplayStyle = tabsRef.style.display;
     tabsRef.style.display = "none";
   });
-
-  // $: console.log("choices", choices);
 
   let nameInvalid;
 
@@ -63,7 +62,7 @@
 
   let defaultTabsRefDisplayStyle;
 
-  let tags = item.tags || [];
+  let tags = item.tags || [{label: 'name', value: ''}];
   let loading;
   let image = item.image;
   let embed = item.embed;
@@ -72,7 +71,6 @@
   let tabsRef;
 
   let choices = item.choices || [];
-  console.log("choices", choices);
 
   let options = item.options || [];
   let parents = item.parents || [];
@@ -81,21 +79,13 @@
   let childrenVisible = false;
   let parentsVisible = false;
 
-  console.log(options);
-  parents.forEach((p) => console.log(p.id, p.options));
-
   const updateChoice = (parent, option) => {
-    console.log(option)
-    if (!choices.find((c) => c.id === parent.id)) {
-      choices = [...choices, { id: parent.id, choices: {} }];
-    }
-    choices.find((c) => c.id === parent.id).choices[option.name] =
-      option.option;
     if (
       tags.find(
         (t) =>
           t.exact 
-          && t.value === option.option.value 
+          && t.label === option.option.label
+          && t.value === option.option.value
           // && t.parent === parent.id
       )
     ) {
@@ -104,9 +94,9 @@
       else {tags = [
         ...tags,
         {
-          exact: true,
+          field: true,
           parent: parent.id,
-          option: option.name,
+          label: option.label,
           value: option?.option?.value,
         },
       ];}
@@ -168,9 +158,6 @@
   const send = async () => {
     loading = true;
 
-    console.log(item.children);
-    console.log(children);
-
     let data = {
       id: item.id,
       options,
@@ -196,13 +183,10 @@
       embed,
     };
 
-    console.log("edit send data: ", data);
-
     let res = await api[method]("items", data).finally((r) => {
       loading = false;
       return r;
     });
-    console.log("edit res", res);
     if (res.nameError) {
       nameInvalid = true;
     }
@@ -223,11 +207,11 @@
 <br />
 
 {#if parents.length > 0}
-  <Button on:click={toggleParentsVisible}
+  <Button size='small' on:click={toggleParentsVisible}
     >{childrenVisible ? "Hide parents" : "Show parents"}</Button
   >
   {#if parentsVisible}
-    <p>Parents</p>
+    <!-- <p>Parents</p> -->
     {#each parents as parent}
       <p>
         id: {parent.id}; {parent.fields?.find((f) => f.label === "name").value}
@@ -238,6 +222,8 @@
         bind:valid={optionsValid}
         options={parent.options}
         selectable
+        selections={tags}
+        {selected}
       />
     {/each}
   {/if}
@@ -246,11 +232,11 @@
 <br />
 
 {#if children.length > 0}
-  <Button on:click={toggleChildrenVisible}
+  <Button size='small' on:click={toggleChildrenVisible}
     >{childrenVisible ? "Hide children" : "Show children"}</Button
   >
   {#if childrenVisible}
-    <p>Children</p>
+    <!-- <p>Children</p> -->
     {#each children as child}
       <p>
         id: {child.id};
