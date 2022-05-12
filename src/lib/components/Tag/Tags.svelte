@@ -1,19 +1,19 @@
 <script>
-  // export let vertical = false
-  export let showUseOptions = false
+  export let showUseOptions = false;
   export let useOptions = false;
   export let options = [];
   export let editable = false;
   export let selectable = false;
-  // export let helperText = "";
+  export let hidable = false
+  export let open = false;
   export let tags = [];
-  export let is_focused = false;
+  export let focusLast = false;
 
   import { notify } from "$lib/stores";
   import Tag from "$lib/components/Tag/Tag.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import Options from "$lib/components/Options/Options.svelte";
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import {
     Button,
     Checkbox,
@@ -25,11 +25,14 @@
 
   const dispatch = createEventDispatcher();
 
+  onMount(() => {
+    if (focusLast) tags[tags.length - 1]?.ref.focus();
+  });
+
   let tagGroup = false;
   let focused;
   let visible;
   // let value;
-  let open;
   let ref;
 
   const focus = () => {
@@ -73,7 +76,10 @@
         subtitle: "Remove or edit the empty tag before trying adding a new one",
       };
     }
-    tags = [...tags, { value: "", inputRef: null, ref: null, exact: false }];
+    tags = [
+      ...tags,
+      { label: "", value: "", inputRef: null, ref: null, exact: false },
+    ];
     // }
   };
 
@@ -101,24 +107,27 @@
     : "Add tag"}
   {...$$restProps}
 /> -->
-<div class='head'>
-  <p class='title' on:click={toggleOpen}>{tags.length} {`${tags.length === 1 ? 'tag' : 'tags'}`}</p>
+<div class="head">
+  <p class="title" on:click={toggleOpen}>
+    {tags.length}
+    {`${tags.length === 1 ? "tag" : "tags"}`}
+  </p>
   <Button
-      kind="ghost"
-      size="small"
-      hasIconOnly
-      icon={Add}
-      on:click={() => {
-        add();
-        if (!open) toggleOpen();
-      }}
-      iconDescription="Add a new tag"
-    />
+    kind="ghost"
+    size="small"
+    hasIconOnly
+    icon={Add}
+    on:click={() => {
+      add();
+      if (!open) toggleOpen();
+    }}
+    iconDescription="Add a new tag"
+  />
 </div>
 <slot />
 
 {#if showUseOptions}
-<Checkbox bind:checked={useOptions} labelText="Use options" />
+  <Checkbox bind:checked={useOptions} labelText="Use options" />
 {/if}
 
 {#if open}
@@ -134,17 +143,17 @@
                 </Tag>
             {/if} -->
   {#each tags as tag}
+  {#if hidable}
     <ContextMenu target={tag.ref}>
-      <ContextMenuOption
-        labelText="Exact"
-        bind:selected={tag.exact}
-      />
+      <ContextMenuOption labelText="Hide" bind:selected={tag.hide} />
     </ContextMenu>
+  {/if}
 
     <Tag
-      inputEventDelay={1500}
+      inputEventDelay={2100}
       on:input={() => dispatch("change")}
-      on:keydown={(e)=> {if (e.key === 'Enter') add()}}
+      on:enter={add}
+      bind:label={tag.label}
       bind:value={tag.value}
       bind:inputRef={tag.inputRef}
       bind:ref={tag.ref}
@@ -168,6 +177,6 @@
   }
 
   .title {
-    width: max-content
+    width: max-content;
   }
 </style>

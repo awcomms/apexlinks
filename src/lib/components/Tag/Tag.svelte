@@ -1,15 +1,22 @@
 <script>
+  let input;
+  let labelInput;
+
   export let inputEventDelay = 0;
   export let warning = false;
-  export let filter
+  export let filter;
+  // export let label = ""
   export let value = "";
-  export let type = "cool-gray"
+  export let type = "cool-gray";
   export let editable = false;
-  export let ref
+  // export {labelInput as labelRef}
+  export { input as valueRef };
+  // export let o
+  export let ref;
 
   import { Button, Tag } from "carbon-components-svelte";
   import WarningAlt from "carbon-icons-svelte/lib/WarningAlt.svelte";
-  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
+  // import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
 
   import { onMount, createEventDispatcher } from "svelte";
 
@@ -23,33 +30,48 @@
 
   onMount(() => {
     input ? input.focus() : {};
-    context = document.createElement('canvas').getContext('2d')
-    context.font = `0.75rem "IBM Plex Mono"` // TODO-verify
   });
 
-  let context;
+  let s;
 
   const dispatch = createEventDispatcher();
 
-  let input;
   let delayId;
 
-  const inputEvent = () => {
-    let {width} = context.measureText(input.value) + 1
-    if (input) input.style.width = `${width}px`
+  const keydownEvent = (e) => {
+    if (e.key === "Enter") dispatch("enter");
+  };
 
-    typeof delayId === 'number' ? clearTimeout(delayId) : {}
+  const inputEvent = ({ target }) => {
+    if (s) {
+      s.innerText = target.value;
+      // let { width } = s.getBoundingClientRect();
+      let { width } = window.getComputedStyle(s);
+      target.style.width = `${parseFloat(width.split("px")[0]) + 10}px`;
+    }
+
+    typeof delayId === "number" ? clearTimeout(delayId) : {};
     delayId = setTimeout(() => {
       dispatch("input");
     }, inputEventDelay);
   };
 </script>
 
+<div class="s" bind:this={s}>{value}</div>
+
 <Tag bind:ref {type} {filter} on:close on:click>
   {#if editable}
-    <input
+    <!-- <input
       on:input={inputEvent}
       on:keydown={()=>dispatch('keydown')}
+      on:blur={() => dispatch("blur")}
+      bind:this={labelInput}
+      bind:value={label}
+    /> -->
+    <input
+      spellcheck="false"
+      on:input={inputEvent}
+      on:keydown={keydownEvent}
       on:blur={() => dispatch("blur")}
       bind:this={input}
       bind:value
@@ -94,17 +116,24 @@
 <style lang="sass">
   @use '@carbon/type'
 
+  .s
+    @include type.type-style('label-01')
+    // box-sizing: border-box
+    visibility: hidden
+    height: 0
+    // display: none
+    width: fit-content
+
   input
-    @include type.type-style('code-01')
+    @include type.type-style('label-01')
     margin: 0 0
     outline: none
     appearance: none
-    font-family: monospace
     border: none
     background-color: rgba(0, 0, 0, 0)
 
   input:focus
     outline: none
-    appearance: none
+    // appearance: none
     border: none
 </style>

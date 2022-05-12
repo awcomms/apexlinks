@@ -145,7 +145,7 @@
     });
     if (res.id) {
       $session.user = res;
-      goto(`/u/${res.username}`);
+      goto(`/u/${res.id}`);
     }
   };
 </script>
@@ -208,7 +208,7 @@
   </Column>
 </Row>
 
-<Tag bind:tags />
+<Tag hidable={true} bind:tags />
 
 <Row noGutter>
   <Column>

@@ -41,12 +41,30 @@
     items,
   } from "$lib/stores";
 
-  const socket = io('ws://localhost:5000');
+  const socket = io("http://localhost:5000");
 
   $children = [...$children, ...childrenArgs];
   $parents = [...$parents, ...parentArgs];
 
+  const del = async ({detail}) => {
+    console.log($items)
+    console.log('.i', detail.item)
+    const res = await api.del(`items/${detail.item.id}`)
+    switch (detail.type) {
+        case "result":
+          console.log($items)
+          $items = $items.filter(i => i.id !== detail.item.id);
+          break;
+        case "parent":
+          $parentItems = $parentItems.filter(i => i.id !== detail.item.id);
+          break;
+        case "child":
+          $childItems = $childItems.filter(i => i.id !== detail.item.id);
+      }
+  }
+
   socket.on("add", (data) => {
+    console.log("11add");
     parentsEqual = idEqual(data.children, $items);
     childrenEqual = idEqual(data.parents, $items);
     itemsEqual =
@@ -65,6 +83,12 @@
         },
       ],
     };
+    let type = null;
+    let dict = {
+      parent: $parentItems,
+      child: $childItems,
+      result: $items,
+    };
     switch (detail.type) {
       case "result":
         params.parents = ids($parents);
@@ -76,13 +100,26 @@
       case "child":
         params.parents = ids($items);
     }
-    api.post("items", params);
+    const res = await api.post("items", params);
+    console.log(res.id, res.tags);
+    if (res.id) {
+      switch (detail.type) {
+        case "result":
+          $items = [...$items, res];
+          break;
+        case "parent":
+          $parentItems = [...$parentItems, res];
+          break;
+        case "child":
+          $childItems = [...$childItems, res];
+      }
+    }
   };
 
-  const go = async (item) => {
-    goto(`/i/${item.id}`);
+  const go = async (type, item) => {
+    goto(`/${type}/${item.id}`);
   };
 </script>
 
 <!-- TODO-multiple : add -->
-<Tabs on:add={add} on:click={({ detail }) => go(detail)} {user} />
+<Tabs add on:del={del} on:add={add} on:click={({ detail }) => go('u', detail)} {user} />

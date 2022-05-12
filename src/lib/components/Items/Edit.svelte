@@ -36,7 +36,6 @@
   import { goto } from "$app/navigation";
   import { api } from "$lib/api";
   import Items from "$lib/components/Items/Items.svelte";
-  import { selected } from '$lib/utils'
   import { onMount } from "svelte";
   import Options from "../Options/Options.svelte";
 
@@ -223,7 +222,7 @@
         options={parent.options}
         selectable
         selections={tags}
-        {selected}
+        optSelected = {(opt)=>false}
       />
     {/each}
   {/if}

@@ -66,26 +66,14 @@ import { createEventDispatcher } from "svelte";
 
   const get = async () => {
     loading = true;
-    let tagString = JSON.stringify($userTags);
-    let fields = $userFields.map((uf) => ({
-      label: uf.label,
-      value: uf.value,
-    }));
-    let fieldString = JSON.stringify(fields);
-    let extraString = JSON.stringify($extraFields);
-    let loc = await currentLocation.then((l) => l);
-    loc = JSON.stringify(loc);
-    let url = `users?sort=${sort}&loc=${loc}&extraFields=${extraString}&fields=${fieldString}&tags=${tagString}&page=${
+    let tagString = JSON.stringify($userTags.map(t => {return {value: t.value}}));
+    let url = `users?&tags=${tagString}&page=${
       page + 1
     }`;
-    // if (limit) url.concat(`&limit=${limit}`)
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
-      min = res.min;
-      max = res.max;
-      // limit = sorted == 'tag' ? min : max TODO-settings
       $users = res.items;
-      total = res.total;
+      total = res.items.length;
       pages = res.pages;
       got = true;
     }
@@ -93,7 +81,7 @@ import { createEventDispatcher } from "svelte";
 </script>
 
 {#if loading}
-  <Loading withOverlay={false} />
+  <Loading />
 {/if}
 
 <!-- <Row noGutter>

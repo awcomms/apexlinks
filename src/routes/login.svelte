@@ -143,7 +143,7 @@
         passwordInvalid = r.passwordInvalid
         if (r.OK) {
             r.user ? $session.user = r.user : {}
-            goto('/u')
+            goto(routes.index)
         }
     }
 
@@ -192,6 +192,7 @@
             passwordInvalid = true
             passwordError = r.passwordError
         }
+        console.log(r)
         if (r.OK) {
             r.user ? $session.user = r.user : {}
             goto('/edit')

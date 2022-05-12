@@ -1,5 +1,6 @@
 <script>
-  export let selected = []
+  // export let deleteButton = false;
+  export let clearOnEnter = false;
   export let items = [];
   export let tags = [];
   export let optEvent = false;
@@ -12,8 +13,8 @@
   export let children = [];
   export let parents = [];
   export let height;
-  export let sameUser, user;
-  export let type = ''
+  export let user;
+  export let type = "";
   //   export let countries, /* markets, */ states, cities;
 
   import {
@@ -25,10 +26,12 @@
     Button,
   } from "carbon-components-svelte";
   import { api } from "$lib/api";
+  import TrashCan from "carbon-icons-svelte/lib/Trashcan.svelte";
   import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { ids } from "$lib/utils";
+  import { session } from "$app/stores";
   import Options from "../Options/Options.svelte";
 
   $: if (container) {
@@ -38,9 +41,9 @@
   let container;
   let value;
 
-  onMount(() => {
-    container.style.height = `${height ? `${height}px` : "100%"}`;
-  });
+  // onMount(() => {
+  //   container.style.height = `${height ? `${height}px` : "100%"}`;
+  // });
 
   const dispatch = createEventDispatcher();
 
@@ -100,25 +103,21 @@
   //   // }
   // ];
 
-  $: updateSelected(selected) 
+  $: sameUser = $session.user?.id === user?.id;
   $: get(saved, page, children, parents, user);
 
   let loading;
   let page = 0;
-  let total = 0;
   let pages = 0;
 
   let saved;
 
   let got;
 
-  const updateSelected = () => {
-    items = items.map(i => i.selected = selected.find(s => s.id === i.id))
-  }
-
   const addInputKeydown = (e) => {
     if (e.key === "Enter") {
-      dispatch("add", { value, anonymous });
+      dispatch("add", { value });
+      if (clearOnEnter) value = "";
     }
   };
 
@@ -138,7 +137,6 @@
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
       items = res.items;
-      total = res.total;
       pages = res.pages;
       !got ? (got = true) : {};
     }
@@ -172,7 +170,12 @@
 
   {#each items as item}
     <br />
-    <div on:click={() =>{ dispatch("click", item)}} class="pointer item">
+    <div
+      on:click={() => {
+        dispatch("click", item);
+      }}
+      class="pointer item"
+    >
       {#if item.image}
         <img
           style="vertical-align: top;"
@@ -192,14 +195,27 @@
       {/if}
       <div class="label">
         <p>
-          {item.tags?.find((f) => f.label === "name")?.value || item.id}
+          {item?.tags?.find((f) => f.label === "name")?.value || item.id}
         </p>
         {#if !sameUser && item.user?.username}
           <p class="bx--link--sm">{item.user.username}</p>
         {/if}
       </div>
+      {#if $session.user?.id === item?.user?.id}
+        <div on:click|stopPropagation>
+          <Button
+            size="field"
+            kind="ghost"
+            hasIconOnly
+            icon={TrashCan}
+            iconDescription="Delete"
+            on:click={() => dispatch("del", item)}
+          />
+        </div>
+      {/if}
     </div>
-    {#if showOptions === true || (showOptions === 'selected' && item.selected)}
+
+    {#if showOptions === true || (showOptions === "selected" && item.selected)}
       <Options
         {optEvent}
         selected={optSelected}
@@ -213,7 +229,7 @@
     </div>
   {/each}
 
-  {#if got && total < 1}
+  {#if got && items.length < 1}
     <!-- <Row noGutter> -->
     <!-- <Column> -->
     <p>There don't seem to be any results</p>
@@ -235,7 +251,7 @@
     <!-- TODO -->
   {/if}
 
-  {#if total > 10}
+  {#if items.length > 10}
     <!-- <Row noGutter> -->
     <!-- <Column> -->
     <PaginationNav loop bind:page bind:total={pages} />
@@ -245,11 +261,11 @@
 </div>
 
 <style>
-  .container {
+  /* .container {
     width: 100%;
     overflow-y: scroll;
     overflow-x: visible;
-  }
+  } */
   .actions {
     margin-right: 1rem;
   }
@@ -257,8 +273,9 @@
     padding-left: 0.5rem;
   }
   .item {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(3, min-content);
+    align-items: center;
   }
   .pointer:hover {
     cursor: pointer;

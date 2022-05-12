@@ -1,8 +1,8 @@
 <script context="module">
   import { send } from "$lib/send";
   export const load = async ({ params }) => {
-    let { username } = params;
-    let user = await send({ method: "GET", path: `users/${username}` });
+    let { id } = params;
+    let user = await send({ method: "GET", path: `users/${id}` });
     if (!user) {
       return {
         status: 404,
@@ -85,6 +85,8 @@
 <!-- {#each user.tags as tag}
   <Tag>{tag}</Tag>
 {/each} -->
+
+<!-- {#each user.tags as tag} -->
 
 {#each user.fields as field}
   <DisplayField {field} />

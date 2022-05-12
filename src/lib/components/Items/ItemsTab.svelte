@@ -20,12 +20,14 @@
 
   let visible;
 
-  console.log(sp);
-
   const toggleSelected = (item) => {
-    items.find((i) => i[sp] === item[sp])
-      ? (items = items.filter((i) => i.id !== item.id))
-      : (items = [...items, item]);
+    if (selected.find((i) => i[sp] === item[sp])) {
+      selected = selected.filter((i) => i[sp] !== item[sp]);
+      items.find(i => i.id === item.id).selected = false
+    } else {
+      selected = [...selected, item];
+      items.find(i => i.id === item.id).selected = true
+    }
   };
 </script>
 
@@ -44,6 +46,8 @@
 {/if}
 
 <Items
+  clearOnEnter={true}
+  deleteButton={true}
   {type}
   {add}
   {user}
@@ -52,10 +56,10 @@
   {labelText}
   {showOptions}
   {optSelected}
-  bind:selected
   bind:items
   bind:tags
   on:click={({ detail }) => toggleSelected(detail)}
-  on:add
   on:action
+  on:del
+  on:add
 />

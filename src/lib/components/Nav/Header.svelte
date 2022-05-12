@@ -106,7 +106,7 @@ import { routes } from "$lib/utils";
           text="Add To Homescreen"
         />
       {/if}
-      <SideNavLink isSelected={$page.url.pathname === '/login'} text="Login" href="/" />
+      <SideNavLink isSelected={$page.url.pathname === routes.login} text="Login" href={routes.login} />
     {/if}
     <!-- <SideNavMenu text='Rooms'>
       {#if $session.user}
