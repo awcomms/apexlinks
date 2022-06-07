@@ -26,7 +26,7 @@
     Button,
   } from "carbon-components-svelte";
   import { api } from "$lib/utils";
-  import TrashCan from "carbon-icons-svelte/lib/Trashcan.svelte";
+  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { ids } from "$lib/utils";

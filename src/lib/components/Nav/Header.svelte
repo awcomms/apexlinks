@@ -113,7 +113,7 @@ import { routes } from "$lib/utils";
         <SideNavMenuItem isSelected={$page.url.pathname === `${routes.rooms}/add`} href='{routes.rooms}/add' text="Add room" />
         <SideNavMenuItem
           text="My rooms"
-          href="{routes.items}?user={$session.user.id}"
+          href="{routes.rooms}?user={$session.user.id}"
           isSelected={$page.url.pathname === routes.rooms && $page.url.searchParams.get('user') ===
             $session.user.id}
         />
