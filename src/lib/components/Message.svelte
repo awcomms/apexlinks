@@ -1,9 +1,9 @@
 <script>
   export let message, room, items, user, id;
 
-  import { api } from "$lib/utils";
+  import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
-  import { Row, Column, TextArea, Truncate } from "carbon-components-svelte";
+  import { Row, Column, TextArea, Truncate, Link } from "carbon-components-svelte";
   import io from "socket.io-client";
   import { createEventDispatcher, onMount } from "svelte";
   import { parse } from "cookie";
@@ -84,6 +84,7 @@
   <Column>
     <span>
       <div on:click={go} class="head">
+        <!-- <Link href='{routes.rooms}/{room.id' -->
         <Truncate clamp="end">{message?.value || room?.name}</Truncate>
       </div>
       <p on:click={exit} class="pointer">Leave room</p>

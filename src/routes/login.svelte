@@ -141,7 +141,7 @@
         passwordError = r.passwordError
         usernameInvalid = r.usernameInvalid
         passwordInvalid = r.passwordInvalid
-        if (r.OK) {
+        if (r.token) {
             r.user ? $session.user = r.user : {}
             goto(routes.index)
         }

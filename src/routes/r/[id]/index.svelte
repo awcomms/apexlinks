@@ -38,8 +38,8 @@
 
   const send = async (detail) => {
     const { token: auth } = parse(document.cookie);
-    console.log(auth)
-    socket.emit("msg", {data: detail, auth});
+    api.post('messages', detail)
+    socket.emit("msg", detail);
   };
 </script>
 

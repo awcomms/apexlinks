@@ -7,16 +7,15 @@ export default (base, path, opts) => {
           try {
             json = JSON.parse(text);
           } catch (err) {
-            return { text, STATUS: r.status, OK: r.statusText === OK };
+            return text;
           }
           json.STATUS = r.status;
-          json.OK = r.statusText === "OK";
           return json;
         })
         .catch((err) => {
-          return { status: 500, error: "internal error" };
+          return { status: 500, error: `fetch internal error: ${err}` };
         });
-    } catch {
-      return { status: 500, error: "internal error" };
+    } catch (err) {
+      return { status: 500, error: `real internal error: ${err}` };
     }
 }

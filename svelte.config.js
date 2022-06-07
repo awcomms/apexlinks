@@ -12,7 +12,7 @@ const send = (method, path, body, auth) => {
     },
     body
   };
-  return cFetch("http://localhost:5000", path, opts);
+  return cFetch("http://127.0.0.1:5000", path, opts);
 }
 
 const roomAction = (socket, name) => {
@@ -36,7 +36,8 @@ export default {
             io.on("connection", (socket) => {
               socket.on("msg", (data) => {
                 console.log('h')
-                send('POST', 'messages', data.data, data.auth).then(() => {
+                send('POST', 'messages', data.data, data.auth).then((r) => {
+                  console.log('cr', r)
                   io.emit("msg", data.data);
                 });
               });
