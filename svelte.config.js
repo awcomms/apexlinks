@@ -1,25 +1,6 @@
 import adapter from "@sveltejs/adapter-node";
 import { Server } from "socket.io";
 import preprocess from "svelte-preprocess";
-import cFetch from "./src/lib/utils/cFetch.js"
-
-const send = (method, path, body, auth) => {
-  let opts = {
-    method,
-    "content-type": "application/json",
-    headers: {
-      auth,
-    },
-    body
-  };
-  return cFetch("http://127.0.0.1:5000", path, opts);
-}
-
-const roomAction = (socket, name) => {
-  socket.on(name, data => {
-    send("PUT", name, { room: data.room }, data.auth);
-  })
-}
 
 export default {
   kit: {
@@ -35,11 +16,16 @@ export default {
 
             io.on("connection", (socket) => {
               socket.on("msg", (data) => {
-                  io.emit("msg", data.data);
+                io.to(data.room).emit("msg", data);
               });
 
-              roomAction(socket, "join");
-              roomAction(socket, "leave");
+              socket.on("join", (id) => {
+                socket.join(id);
+              });
+
+              socket.on("leave", (id) => {
+                socket.leave(id);
+              });
             });
           },
         },

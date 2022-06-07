@@ -1,10 +1,11 @@
 <script>
+  export let text = "";
   export let showUseOptions = false;
   export let useOptions = false;
   export let options = [];
   export let editable = false;
   export let selectable = false;
-  export let hidable = false
+  export let hidable = false;
   export let open = false;
   export let tags = [];
   export let focusLast = false;
@@ -96,17 +97,7 @@
 
 <svelte:window on:keydown={keydown} />
 
-<!-- <TextInput
-  bind:ref
-  on:focus={focus}
-  on:blur={blur}
-  bind:value
-  bind:helperText
-  placeholder={tags.length > 0
-    ? `${tags.length} ${tags.length > 1 ? "tags" : "tag"}`
-    : "Add tag"}
-  {...$$restProps}
-/> -->
+{#if text}<p>{text}</p>{/if}
 <div class="head">
   <p class="title" on:click={toggleOpen}>
     {tags.length}
@@ -121,7 +112,7 @@
       add();
       if (!open) toggleOpen();
     }}
-    iconDescription="Add a new tag"
+    iconDescription="Add a tag"
   />
 </div>
 <slot />
@@ -143,11 +134,11 @@
                 </Tag>
             {/if} -->
   {#each tags as tag}
-  {#if hidable}
-    <ContextMenu target={tag.ref}>
-      <ContextMenuOption labelText="Hide" bind:selected={tag.hide} />
-    </ContextMenu>
-  {/if}
+    {#if hidable}
+      <ContextMenu target={tag.ref}>
+        <ContextMenuOption labelText="Hide" bind:selected={tag.hide} />
+      </ContextMenu>
+    {/if}
 
     <Tag
       inputEventDelay={2100}
