@@ -35,7 +35,8 @@ export default {
 
             io.on("connection", (socket) => {
               socket.on("msg", (data) => {
-                send('put', 'messages', data.data, data.auth).then(() => {
+                console.log('h')
+                send('POST', 'messages', data.data, data.auth).then(() => {
                   io.emit("msg", data.data);
                 });
               });

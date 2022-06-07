@@ -1,5 +1,6 @@
 export default {
     index: '/',
     login: '/login',
-    items: '/i'
+    items: '/i',
+    rooms: '/r'
 }

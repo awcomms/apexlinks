@@ -22,8 +22,7 @@
 
 <script>
   export let rooms, total, page, user;
-  import { Row, Link, Column } from "carbon-components-svelte";
-  import { onMount } from "svelte";
+  import { Row, Column } from "carbon-components-svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { goto } from "$app/navigation";
 
@@ -39,7 +38,7 @@
   }
 
   let go = (room) => {
-    goto(`room/${room.id}`);
+    goto(`r/${room.id}`);
   };
 
   let get = async () => {

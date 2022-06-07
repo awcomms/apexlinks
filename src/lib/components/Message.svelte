@@ -1,5 +1,7 @@
 <script>
   export let message, room, items, user, id;
+
+  import { api } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { Row, Column, TextArea, Truncate } from "carbon-components-svelte";
   import io from "socket.io-client";
@@ -8,13 +10,14 @@
 
   const dispatch = createEventDispatcher();
 
-  const { token: auth } = parse(document.cookie);
+  let auth;
   const socket = io();
   let mounted;
   let value;
   let ref;
 
   onMount(() => {
+    ({ token: auth } = parse(document.cookie));
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     mounted = true;
     ref.focus();
@@ -81,9 +84,9 @@
   <Column>
     <span>
       <div on:click={go} class="head">
-        <Truncate clamp="end">value: {message?.value || room?.name}</Truncate>
+        <Truncate clamp="end">{message?.value || room?.name}</Truncate>
       </div>
-      <p on:click={exit} class="pointer">Leave</p>
+      <p on:click={exit} class="pointer">Leave room</p>
       <br />
     </span>
     <div class="head-space" />

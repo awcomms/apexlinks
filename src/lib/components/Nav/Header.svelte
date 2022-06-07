@@ -108,18 +108,18 @@ import { routes } from "$lib/utils";
       {/if}
       <SideNavLink isSelected={$page.url.pathname === routes.login} text="Login" href={routes.login} />
     {/if}
-    <!-- <SideNavMenu text='Rooms'>
+    <SideNavMenu text="Rooms">
       {#if $session.user}
-        <SideNavMenuItem isSelected={$page.url.pathname === '/add-room'} href='add-room' text="Add room" />
+        <SideNavMenuItem isSelected={$page.url.pathname === `${routes.rooms}/add`} href='{routes.rooms}/add' text="Add room" />
         <SideNavMenuItem
           text="My rooms"
-          href="/rooms?username={$session.user.username}"
-          isSelected={$page.url.searchParams.get('username') ===
-            $session.user.username}
+          href="{routes.items}?user={$session.user.id}"
+          isSelected={$page.url.pathname === routes.rooms && $page.url.searchParams.get('user') ===
+            $session.user.id}
         />
       {/if}
-      <SideNavMenuItem text='All rooms' href='/rooms' isSelected={$page.url.pathname === '/rooms'} />
-    </SideNavMenu> -->
+      <SideNavMenuItem text='All rooms' href='/r' isSelected={$page.url.pathname === routes.rooms} />
+    </SideNavMenu>
     <SideNavMenu text="Items">
       {#if $session.user}
         <SideNavMenuItem isSelected={$page.url.pathname === '/i/add'} href='/i/add' text="Add item" />

@@ -193,7 +193,7 @@
             passwordError = r.passwordError
         }
         console.log(r)
-        if (r.OK) {
+        if (r.token) { //TODO-unsafe
             r.user ? $session.user = r.user : {}
             goto('/edit')
         } else {
