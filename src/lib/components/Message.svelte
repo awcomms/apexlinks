@@ -57,7 +57,7 @@
 
   const send = async () => {
     if (!value) return;
-    let obj = { user: user.id };
+    let obj = { user };
     if (message) {
       obj = {
         ...obj,
@@ -104,7 +104,7 @@
   <Row noGutter>
     <Column>
       <a href="/m/{item.id}">
-        <p on:click={goUser(item.user)} class="small pointer">{item.user}</p>
+        <p on:click={goUser(item.user)} class="small pointer">{item.user.username}</p>
         <p class="message">{item.value}</p>
       </a>
     </Column>

@@ -35,11 +35,7 @@ export default {
 
             io.on("connection", (socket) => {
               socket.on("msg", (data) => {
-                console.log('h')
-                send('POST', 'messages', data.data, data.auth).then((r) => {
-                  console.log('cr', r)
                   io.emit("msg", data.data);
-                });
               });
 
               roomAction(socket, "join");

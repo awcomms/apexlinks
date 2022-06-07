@@ -46,7 +46,7 @@
 <Message
   on:send={(e) => send(e.detail)}
   bind:room
-  bind:items
+  {items}
   bind:total
   bind:user
   bind:id
