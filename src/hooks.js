@@ -1,7 +1,7 @@
 import { parse } from "cookie";
 import { send } from "$lib/send";
-import { minify } from "html-minifier";
-import { dev, prerendering } from "$app/env";
+// import { minify } from "html-minifier";
+// import { dev, prerendering } from "$app/env";
 
 const min_opts = {
   collapseBooleanAttributes: true,
@@ -33,14 +33,7 @@ export const getSession = async ({ locals }) => {
 
 export async function handle({ event, resolve }) {
   const { request } = event;
-  const cookie = request.headers.get("cookie");
-
-  if (cookie) {
-    const { token } = parse(request.headers.get('cookie') || "");
-
-    event.locals.token = token;
-  }
-
+  event.locals.token = parse(request.headers.get('cookie') || "").token;
   const response = await resolve(event);
 
   // if (

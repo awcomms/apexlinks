@@ -1,5 +1,5 @@
 <script context="module">
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   export const load = async ({ url }) => {
     let parents = url.searchParams.get("p");
     parents = parents ? idArgs(parents) : [];
@@ -29,10 +29,10 @@
   export { childrenArgs as children };
   export { parentArgs as parent };
 
+  import Users from '$lib/components/Users/Users.svelte'
   import Tabs from "$lib/components/Items/Tabs.svelte";
   import { goto } from "$app/navigation";
   import { idArgs, idEqual, ids } from "$lib/utils";
-  import { io } from "socket.io-client";
   import {
     children,
     childItems,
@@ -40,8 +40,6 @@
     parents,
     items,
   } from "$lib/stores";
-
-  const socket = io("http://localhost:5000");
 
   $children = [...$children, ...childrenArgs];
   $parents = [...$parents, ...parentArgs];
@@ -62,17 +60,6 @@
           $childItems = $childItems.filter(i => i.id !== detail.item.id);
       }
   }
-
-  socket.on("add", (data) => {
-    console.log("11add");
-    parentsEqual = idEqual(data.children, $items);
-    childrenEqual = idEqual(data.parents, $items);
-    itemsEqual =
-      idEqual(data.parents, $parentItems) &&
-      idEqual(data.children, $childItems);
-    if (idEqual(data.children, children) && idEqual(data.parents, parents))
-      $items = [...$items, data];
-  });
 
   const add = async ({ detail }) => {
     let params = {
@@ -122,4 +109,6 @@
 </script>
 
 <!-- TODO-multiple : add -->
-<Tabs add on:del={del} on:add={add} on:click={({ detail }) => go('u', detail)} {user} />
+<!-- <Tabs add on:del={del} on:add={add} on:click={({ detail }) => go('u', detail)} {user} /> -->
+
+<Users on:click={({detail}) => go('u', detail)} />

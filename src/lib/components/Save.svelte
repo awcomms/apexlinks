@@ -1,7 +1,7 @@
 <script>
   export let model = 'user'
   export let item = {};
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   import Save from "carbon-icons-svelte/lib/Save.svelte";
   import { Button } from "carbon-components-svelte";
 

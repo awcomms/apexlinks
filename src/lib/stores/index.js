@@ -31,7 +31,7 @@ export const userQuery = store()
 export const itemQuery = store()
 export const globalQuery = store()
 export const isSideNavOpen = store()
-
+export const selectedUsers = store();
 
 
 export const parents = store();

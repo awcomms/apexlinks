@@ -1,5 +1,5 @@
 <script context="module">
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   export const load = async ({ session, params }) => {
     let user = session.user;
     let { id } = params;

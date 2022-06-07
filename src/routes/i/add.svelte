@@ -59,7 +59,7 @@
     FluidForm,
   } from "carbon-components-svelte";
   import { goto } from "$app/navigation";
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   import Items from "$lib/components/Items/Items.svelte";
   import { onMount } from "svelte";
 

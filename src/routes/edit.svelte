@@ -21,7 +21,7 @@
 <script>
   export let user;
 
-  import { api } from "$lib/api.js";
+  import { api } from "$lib/utils";
   import currentLocation from "$lib/utils/currentLocation";
   import { goto } from "$app/navigation";
   import {

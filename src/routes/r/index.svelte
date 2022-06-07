@@ -1,5 +1,5 @@
 <script context="module">
-  import { api } from "$lib/utils/api";
+  import { api } from "$lib/utils";
   import { routes } from "$lib/utils";
   export async function load({ session }) {
     let user = session.user;
@@ -26,7 +26,6 @@
   import { onMount } from "svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { goto } from "$app/navigation";
-  import { routes } from "$lib/utils";
 
   let tags;
 

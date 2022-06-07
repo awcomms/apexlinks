@@ -1,5 +1,6 @@
 import { dev, browser } from "$app/env";
 import { parse } from "cookie";
+import cFetch from "$lib/utils/cFetch"
 
 let local = "http://127.0.0.1:5000";
 import { API as live } from "$lib/env";
@@ -29,24 +30,5 @@ export function send({ method, path, data, auth }) {
     opts.body = JSON.stringify(data);
   }
 
-  try {
-    return fetch(`${base}/${path}`, opts)
-      .then(async (r) => {
-        const text = await r.text();
-        let json;
-        try {
-          json = JSON.parse(text);
-        } catch (err) {
-          return {text, STATUS: r.status, OK: r.statusText === OK};
-        }
-        json.STATUS = r.status;
-        json.OK = r.statusText === "OK";
-        return json;
-      })
-      .catch((err) => {
-        return { status: 500, error: "internal error" };
-      });
-  } catch {
-    return { status: 500, error: "internal error" };
-  }
+  return cFetch(base, path, opts)
 }

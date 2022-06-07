@@ -1,6 +1,6 @@
 <script>
-    export let selected = {}
-    export let showSelected
+  export let selected = {};
+  export let showSelected = false;
   import {
     Row,
     Column,
@@ -10,31 +10,19 @@
     RadioButton,
     Slider,
   } from "carbon-components-svelte";
-  import currentLocation from "$lib/utils/currentLocation";
-  import Save from "$lib/components/Save.svelte";
-  import { api } from "$lib/api";
-  import { extraFields } from "$lib/_stores/users";
-  import { users, userTags, userFields } from "$lib/stores";
+  // import currentLocation from "$lib/utils/currentLocation";
+  // import Save from "$lib/components/Save.svelte";
+  import { api } from "$lib/utils";
+  import { selectedUsers, users, userTags, userFields } from "$lib/stores";
   // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
-  import { goto } from "$app/navigation";
-import { createEventDispatcher } from "svelte";
+  // import { goto } from "$app/navigation";
+  import { createEventDispatcher } from "svelte";
 
   $: get(sort);
   $: if (got) get(page);
 
-  const dispatch = createEventDispatcher()
-
-  $extraFields = [
-    {
-      label: "user ID",
-      value: "",
-    },
-    {
-      label: "username",
-      value: "",
-    },
-  ];
+  const dispatch = createEventDispatcher();
 
   let loading;
   let changeLimitInterval;
@@ -50,26 +38,28 @@ import { createEventDispatcher } from "svelte";
 
   let got;
 
-  $: sliderLabelUnit = sort == "tag" ? "km" : "points";
+  // $: sliderLabelUnit = sort == "tag" ? "km" : "points";
 
-  const startChangeLimit = (detail) => {
-    // if (changeLimitInterval) return
-    changeLimitInterval = setInterval(() => {
-      detail ? (limit += step) : (limit -= step);
-    }, 1000);
-  };
+  // const startChangeLimit = (detail) => {
+  //   // if (changeLimitInterval) return
+  //   changeLimitInterval = setInterval(() => {
+  //     detail ? (limit += step) : (limit -= step);
+  //   }, 1000);
+  // };
 
-  const stopChangeLimit = () => {
-    clearInterval(changeLimitInterval);
-    changeLimitInterval = null;
-  };
+  // const stopChangeLimit = () => {
+  //   clearInterval(changeLimitInterval);
+  //   changeLimitInterval = null;
+  // };
 
   const get = async () => {
     loading = true;
-    let tagString = JSON.stringify($userTags.map(t => {return {value: t.value}}));
-    let url = `users?&tags=${tagString}&page=${
-      page + 1
-    }`;
+    let tagString = JSON.stringify(
+      $userTags.map((t) => {
+        return { value: t.value };
+      })
+    );
+    let url = `users?&tags=${tagString}&page=${page + 1}`;
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {
       $users = res.items;
@@ -135,7 +125,11 @@ import { createEventDispatcher } from "svelte";
   <br />
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
-      <div class:selected={showSelected && selected?.id === user?.id} on:click={dispatch('click', user)} class="pointer user">
+      <div
+        class:selected={showSelected && $selectedUsers.find(s => s.id === user?.id)}
+        on:click={() => {if (user.id) dispatch("click", user)}}
+        class="pointer user"
+      >
         <!-- {#if user.image}
           <img
             style="vertical-align: top;"
@@ -184,9 +178,9 @@ import { createEventDispatcher } from "svelte";
 {/if}
 
 <style>
-    .selected {
-        background-color: gray;
-    }
+  .selected {
+    background-color: gray;
+  }
   .actions {
     margin-right: 1rem;
   }

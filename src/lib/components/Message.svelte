@@ -1,23 +1,18 @@
 <script>
-  export let message, room, items, /*page,*/ total, user, id;
+  export let message, room, items, user, id;
   import { goto } from "$app/navigation";
-  import { context } from "$lib/stores";
   import { Row, Column, TextArea, Truncate } from "carbon-components-svelte";
   import io from "socket.io-client";
   import { createEventDispatcher, onMount } from "svelte";
+  import { parse } from "cookie";
 
   const dispatch = createEventDispatcher();
 
-  // $context = room.name;
+  const { token: auth } = parse(document.cookie);
   const socket = io();
-  // const socket = io("http://dev.localhost:5000")
   let mounted;
   let value;
   let ref;
-
-  $: if (mounted && total > 100 && window.scrollY == 0) {
-    get();
-  }
 
   onMount(() => {
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
@@ -26,7 +21,7 @@
   });
 
   socket.on("connect", () => {
-    socket.emit("join", { user: user.id, room: room.id });
+    socket.emit("join", { auth, room: room.id });
   });
 
   socket.on("msg", async (obj) => {
@@ -38,21 +33,12 @@
   const keydown = (e) => {
     switch (e.keyCode) {
       case 13:
-        (async()=>await send())()
+        (async () => await send())();
     }
   };
 
-  const get = async () => {
-    res = await api.get(`messages?id=${id}&page=${1}`);
-    // res = await api.get(`messages?id=${id}&page=${page+1}`)
-    items = res.items;
-    total = res.total;
-    // if (page) page++
-  };
-
   const exit = async () => {
-    socket.emit("leave", { user: user.id, room: room.id });
-    await api.put("leave", { id: room.id });
+    socket.emit("leave", { room: room.id });
     goto("/");
   };
 
@@ -67,19 +53,21 @@
   };
 
   const send = async () => {
-    let obj = {user: user.id}
+    if (!value) return;
+    let obj = { user: user.id };
     if (message) {
       obj = {
         ...obj,
         message: message.id,
-        reply: true
-      }
+        reply: true,
+      };
     } else {
-      obj.room = room.id
+      obj.value = value;
+      obj.room = room.id;
     }
     dispatch("send", obj);
-    updateScroll()
-    value = ''
+    updateScroll();
+    value = "";
   };
 
   const updateScroll = () => {
@@ -88,8 +76,6 @@
     }, 0);
   };
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <Row noGutter>
   <Column>
@@ -123,7 +109,7 @@
 
 <Row noGutter>
   <Column>
-    <TextArea rows={2} bind:ref bind:value />
+    <TextArea on:keydown={keydown} rows={2} bind:ref bind:value />
   </Column>
 </Row>
 

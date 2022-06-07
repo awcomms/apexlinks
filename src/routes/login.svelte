@@ -25,7 +25,7 @@
         ButtonSet,
         InlineLoading,
     } from 'carbon-components-svelte';
-    import { api } from '$lib/api'
+    import { api } from '$lib/utils'
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
@@ -149,24 +149,24 @@
 
     const join  = async function() {
         joinLoading = true
-        if ($newUser && !email){
-            emailInvalid = true
-            emailError = 'Empty'
-            joinLoading = false
-            return
-        }
-        if (!username){
-            usernameInvalid = true
-            usernameError = 'Empty'
-            joinLoading = false
-            return
-        }
-        if (checkEmail(username)){
-            usernameInvalid = true
-            usernameError = 'Unaccepted'
-            joinLoading = false
-            return
-        }
+        // if ($newUser && !email){
+        //     emailInvalid = true
+        //     emailError = 'Empty'
+        //     joinLoading = false
+        //     return
+        // }
+        // if (!username){
+        //     usernameInvalid = true
+        //     usernameError = 'Empty'
+        //     joinLoading = false
+        //     return
+        // }
+        // if (checkEmail(username)){
+        //     usernameInvalid = true
+        //     usernameError = 'Unaccepted'
+        //     joinLoading = false
+        //     return
+        // }
         if (!password && !noPassword){
             noPasswordModal = true
             return

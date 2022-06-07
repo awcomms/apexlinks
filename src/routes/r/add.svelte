@@ -36,7 +36,7 @@
         username
     } from '$lib/stores'
     import { goto } from '$app/navigation'
-    import { api } from '$lib/api'
+    import { api } from '$lib/utils'
 
     let nameInvalid
     let userInvalid
@@ -77,7 +77,6 @@
         }
         let data = {
             username: $username,
-            // open: $open,
             name,
             tags,
         }
@@ -95,7 +94,7 @@
         } else if (res.id) {
             $context=name
             loading=false
-            goto(`/room/${res.id}`)
+            goto(`/r/${res.id}`)
         }
     }
 </script>

@@ -24,15 +24,6 @@
     bind:open
 >
 
-    <!-- {#each extraFields as extraField}
-        <Field
-            autoAccept
-            bind:field={extraField}
-            deletable={false}
-            acceptKey='Enter'
-        />
-    {/each} -->
-
     <Fields
         on:enter={()=>{open=false; dispatch('search')}}
         prompt='Add Filter'

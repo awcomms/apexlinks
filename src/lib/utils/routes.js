@@ -1,4 +1,5 @@
 export default {
     index: '/',
-    login: '/login'
+    login: '/login',
+    items: '/i'
 }

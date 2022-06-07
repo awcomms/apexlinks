@@ -1,6 +1,5 @@
 <script context='module'>
-    import { api } from '$lib/api'
-  import { routes } from "$lib/utils";
+  import { api, routes } from "$lib/utils";
     export  const load = async({ params, session}) =>{
         let user = session.user
         if (!user){

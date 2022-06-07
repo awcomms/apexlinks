@@ -65,7 +65,7 @@
   <script id="ld" type="application/ld+json"></script>
 </svelte:head>
 
-<Link href="/i?username={user.username}">User's items</Link>
+<Link href="/i?user={user.id}">User's items</Link>
 
 {#if user.image}
   <Column lg={2} sm={2} md={2} xlg={2}>

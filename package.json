@@ -11,6 +11,7 @@
     "build": "svelte-kit build",
     "export": "svelte-kit export",
     "start": "node build",
+    "check": "svelte-check",
     "preview": "svelte-kit preview -H --port 3200"
   },
   "dependencies": {
@@ -27,13 +28,15 @@
     "sass": "^1.51.0",
     "socket.io": "^4.5.0",
     "socket.io-client": "^4.5.0",
-    "svelte-preprocess": "^4.10.6"
+    "svelte-check": "^2.7.0",
+    "svelte-preprocess": "^4.10.6",
+    "ws": "^8.7.0"
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
     "carbon-components-svelte": "^0.63.7",
     "carbon-icons-svelte": "^11.0.1",
-    "eslint": "^8.14.0",
+    "eslint": "^8.15.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "prettier": "^2.6.2",
     "svelte": "^3.48.0"

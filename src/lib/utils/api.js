@@ -1,9 +1,9 @@
 import { post } from '$lib/utils/fetch/post'
 import { browser } from '$app/env'
 import { send } from '$lib/send'
-import { browserSend } from './utils/browserSend'
+import { browserSend } from './browserSend'
 
-export const api = {
+export default {
     get: async (path) => {
         let method = 'GET'
         if (browser) {

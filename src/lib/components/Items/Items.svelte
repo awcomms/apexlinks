@@ -25,9 +25,8 @@
     Row,
     Button,
   } from "carbon-components-svelte";
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   import TrashCan from "carbon-icons-svelte/lib/Trashcan.svelte";
-  import { extraFields } from "$lib/_stores/items";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { ids } from "$lib/utils";
@@ -46,62 +45,6 @@
   // });
 
   const dispatch = createEventDispatcher();
-
-  // get value via label from extra fields
-  const g = (label) => {
-    return $extraFields.find((e) => e.label === label).value;
-  };
-
-  $extraFields = [];
-
-  /*
-    $: (async ($extraFields) => {
-        if (!Array.isArray(extraFields)) return
-        let country = g('country')
-        let state = g('state')
-        // let marketsUrl = 'markets?'
-        // marketsUrl.concat(`&country=${g('country')}`)
-        // marketsUrl.concat(`&state=${g('state')}`)
-        // marketsUrl.concat(`&city=${g('city')}`)
-        // $extraFields.find(e => e.label===url).items = await api.get(url).then(r => r.res)
-        
-        if (country) {
-            let statesUrl = 'states?'
-            statesUrl.concat(`&country=${value}`)
-            $extraFields.find(e => e.label===statesUrl).items = await api.get(url).then(r => r.res)
-        }
-        
-        if (state) {
-            let citiesUrl = 'cities?'
-            citiesUrl.concat(`&country=${g('country')}`)
-            citiesUrl.concat(`&state=${g('state')}`)
-            $extraFields.find(e => e.label===citiesUrl).items = await api.get(url).then(r => r.res)
-        }
-    })()
-    */
-
-  // $extraFields = [
-  //   {
-  //     items: countries,
-  //     label: "country",
-  //     value: "",
-  //   },
-  //   {
-  //     items: states,
-  //     label: "state",
-  //     value: "",
-  //   },
-  //   {
-  //     items: cities,
-  //     label: "city",
-  //     value: "",
-  //   },
-  //   // {
-  //   //     items: markets,
-  //   //     label: 'market',
-  //   //     value: ''
-  //   // }
-  // ];
 
   $: sameUser = $session.user?.id === user?.id;
   $: get(saved, page, children, parents, user);
@@ -124,7 +67,6 @@
   const get = async () => {
     loading = true;
     let tagArg = JSON.stringify(tags);
-    // let extraFieldsArg = JSON.stringify($extraFields);
     let url = `items?tags=${tagArg}&page=${page + 1}`;
     if (user) url = url.concat(`&user-id=${user.id}`);
     if (type) url = url.concat(`&${type}`);

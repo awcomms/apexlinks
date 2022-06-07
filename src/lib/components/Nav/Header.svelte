@@ -1,7 +1,7 @@
 <script>
   import SideNavLink from "./SideNavLink.svelte";
   import SideNavMenuItem from "./SideNavMenuItem.svelte";
-  import { api } from "$lib/api";
+  import { api } from "$lib/utils";
   import { page } from "$app/stores";
   import url8 from "$lib/url8";
   import { post } from "$lib/utils/fetch/post";
@@ -125,9 +125,9 @@ import { routes } from "$lib/utils";
         <SideNavMenuItem isSelected={$page.url.pathname === '/i/add'} href='/i/add' text="Add item" />
         <SideNavMenuItem
           text="My items"
-          href="{routes.index}?username={$session.user.username}"
-          isSelected={$page.url.pathname === '{routes.index}' && $page.url.searchParams.get('username') ===
-            $session.user.username}
+          href="{routes.items}?user={$session.user.id}"
+          isSelected={$page.url.pathname === routes.items && $page.url.searchParams.get('user') ===
+            $session.user.id}
         />
       {/if}
     </SideNavMenu>
