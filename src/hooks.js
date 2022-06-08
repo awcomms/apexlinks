@@ -1,7 +1,7 @@
 import { parse } from "cookie";
 import { send } from "$lib/send";
-// import { minify } from "html-minifier";
-// import { dev, prerendering } from "$app/env";
+import { minify } from "html-minifier";
+import { dev, prerendering } from "$app/env";
 
 const min_opts = {
   collapseBooleanAttributes: true,
@@ -25,23 +25,26 @@ const min_opts = {
 export const getSession = async ({ locals }) => {
   let { token: auth } = locals;
   let user = await send({ method: "GET", path: "user", auth });
-  if (!user || user.error) return {}
+  if (!user || user.error) return {};
   return {
-    user
+    user,
   };
 };
 
 export async function handle({ event, resolve }) {
   const { request } = event;
-  event.locals.token = parse(request.headers.get('cookie') || "").token;
+  event.locals.token = parse(request.headers.get("cookie") || "").token;
   const response = await resolve(event);
 
-  // if (
-  //   prerendering &&
-  //   response.headers.get("content-type").startsWith("text/html")
-  // ) {
-  //   response.body = minify(response.body, min_opts);
-  // }
-  
+  if (
+    prerendering &&
+    response.headers.get("content-type")?.startsWith("text/html")
+  ) {
+    return new Response(minify(await response.text(), min_opts), {
+      status: response.status,
+      headers: response.headers,
+    });
+  }
+
   return response;
 }

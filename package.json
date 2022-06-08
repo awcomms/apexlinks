@@ -3,11 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "a": "concurrently \"npm:server\" \"npm:dev\"",
-    "server": "node src/socket",
     "dev": "svelte-kit dev --port 3700",
-    "odev": "svelte-kit dev --port 3700 --open",
-    "sdev": "svelte-kit dev --https --port 3700",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
     "start": "node build",

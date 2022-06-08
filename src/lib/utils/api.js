@@ -1,4 +1,3 @@
-import { post } from '$lib/utils/fetch/post'
 import { browser } from '$app/env'
 import { send } from '$lib/send'
 import { browserSend } from './browserSend'
