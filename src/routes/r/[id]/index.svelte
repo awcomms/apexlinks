@@ -31,17 +31,20 @@
   export let room, items, total, user, page, pages;
   import Message from "$lib/components/Message.svelte";
   import { io } from "socket.io-client";
+  import { goto } from '$app/navigation'
 
   const socket = io();
 
-  const send = async (detail) => {
+  const send = async (value) => {
+    let data = {user, value, room: room.id}
     await api
-      .post("messages", detail)
+      .post("messages", data)
       .then((message) => {socket.emit("msg", message)});
   };
 </script>
 
 <Message
+  on:titleClick={()=>goto(`${routes.rooms}/${room.id}/about`)}
   on:send={(e) => send(e.detail)}
   bind:room
   {items}

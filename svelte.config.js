@@ -10,7 +10,7 @@ export default {
     vite: {
       plugins: [
         {
-          name: "socket",
+          name: "sveltekit-socket-io",
           configureServer(server) {
             const io = new Server(server.httpServer);
 

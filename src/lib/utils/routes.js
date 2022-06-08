@@ -2,5 +2,6 @@ export default {
     index: '/',
     login: '/login',
     items: '/i',
-    rooms: '/r'
+    rooms: '/r',
+    messages: '/m'
 }

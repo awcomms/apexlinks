@@ -1,5 +1,5 @@
 <script>
-  export let selected = {};
+  export const selected = {};
   export let showSelected = false;
   import {
     Row,

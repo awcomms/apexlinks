@@ -1,5 +1,5 @@
 <script>
-  export let page, pages, message, room, items, user;
+  export let page, pages, message, room, items;
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -26,12 +26,13 @@
   });
 
   socket.on("connect", () => {
-    api.put(`join/${room.id}`);
-    socket.emit("join", room.id);
+    if (room) api.put(`join/${room.id}`);
+    let id = room ? room.id : `m-${message?.id}`
+    socket.emit("join", id);
   });
 
   socket.on("msg", async (obj) => {
-    await api.put(`seen?id=${room.id}`, {});
+    if (room) await api.put(`seen?id=${room.id}`, {});
     items = [...items, obj];
     updateScroll();
   });
@@ -39,7 +40,7 @@
   const keydown = (e) => {
     switch (e.key) {
       case "Enter":
-        (async () => await send())();
+        dispatch('send')
     }
   };
 
@@ -49,37 +50,21 @@
     goto(routes.rooms);
   };
 
-  const go = () => {
-    goto(`${routes.rooms}/${room.id}/about`);
-  };
-
   const goUser = (user) => {
     goto(user);
   };
 
   const get = async () => {
-    await api.get(`messages?id=${id}&page=${page - 1}`).then((r) => {
+    await api.get(`messages?${message ? 'model=message&mode=replies' : ''}&page=${page - 1}`).then((r) => {
       page = r.page;
+      pages = r.pages
       items = [r.items, ...items];
     });
   };
 
   const send = async () => {
     if (!value) return;
-    console.log(user);
-    let obj = { user };
-    if (message) {
-      obj = {
-        ...obj,
-        message: message.id,
-        reply: true,
-      };
-    } else {
-      obj.value = value;
-      obj.room = room.id;
-    }
-    dispatch("send", obj);
-    updateScroll();
+    dispatch("send", value);
     value = "";
   };
 
@@ -93,10 +78,12 @@
 <Row noGutter>
   <Column>
     <span>
-      <div on:click={go} class="head">
+      <div on:click={() => dispatch('titleClick')} class="head">
         <Truncate clamp="end">{message?.value || room?.name}</Truncate>
       </div>
+      {#if room}
       <p on:click={exit} class="pointer">Leave room</p>
+      {/if}
       <br />
     </span>
     <div class="head-space" />
@@ -116,12 +103,10 @@
 {#each items as item}
   <Row noGutter>
     <Column>
-      <a href="/m/{item.id}">
         <p on:click={goUser(item.user)} class="small pointer">
           {item.user.username}
         </p>
-        <p class="message">{item.value}</p>
-      </a>
+        <Link href="/m/{item.id}" class="message">{item.value}</Link>
     </Column>
   </Row>
 {/each}
