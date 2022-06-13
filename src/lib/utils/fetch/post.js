@@ -1,5 +1,6 @@
-export function post(path, data) {
-    return fetch(path, {
+export function post(path, data, _fetch) {
+    let f = _fetch || fetch
+    return f(path, {
         method: 'POST',
         body: JSON.stringify(data || {}),
         headers: {

@@ -1,14 +1,20 @@
 <script context='module'>
     import { api } from '$lib/utils'
-    export  const load = async({session, params}) =>{
+    export  const load = async({session, params, fetch}) =>{
         let {id} = params
-        let event = await api.get(`events/${id}`)
-        if (event == '404')(
-            this.error(404, 'event not Found')
-        )
-        if (event == '423')(
-            this.error(423, 'event not visible')
-        )
+        let event = await api.get(`events/${id}`, fetch)
+        if (event.STATUS === 404){
+            return {
+                status: 404,
+                error: `event ${id} not found`
+            }
+        }
+        if (event.STATUS === 423){
+             return {
+                status: 404,
+                error: `event ${id} not visible`
+            }
+        } //TODO-error
         return {event}
     }
 </script>

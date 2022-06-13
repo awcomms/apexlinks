@@ -32,7 +32,6 @@
     import { newUser } from '$lib/stores' 
     import { post } from '$lib/utils/fetch/post'
     import { checkEmail } from '$lib/utils/checkEmail'
-    import NavNotification from '$lib/components/Notifications/NavNotification.svelte'
 
     $: if($newUser) {
         userText = 'Login instead'
@@ -200,8 +199,6 @@
         }
     }
 </script>
-
-<NavNotification />
 
 <Modal
     danger

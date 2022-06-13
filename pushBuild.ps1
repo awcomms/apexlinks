@@ -1,5 +1,6 @@
 npm run build
 cd build
+"{`"type`": `"module`"}" | out-file "package.json"
 git init
 git add .
 git commit -m "."

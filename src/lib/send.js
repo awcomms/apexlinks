@@ -1,13 +1,13 @@
 import { dev, browser } from "$app/env";
 import { parse } from "cookie";
-import cFetch from "$lib/utils/cFetch"
+import {cFetch} from "$lib/utils"
 
 let local = "http://127.0.0.1:5000";
 import { API as live } from "$lib/env";
 
 export let base = dev ? local : live;
 
-export function send({ method, path, data, auth }) {
+export function send({ method, path, data, auth }, f) {
   const opts = { method, headers: {} };
 
   if (auth) {
@@ -30,5 +30,5 @@ export function send({ method, path, data, auth }) {
     opts.body = JSON.stringify(data);
   }
 
-  return cFetch(base, path, opts)
+  return cFetch(base, path, opts, f)
 }

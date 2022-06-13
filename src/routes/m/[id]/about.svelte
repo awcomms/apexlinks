@@ -1,8 +1,8 @@
 <script context="module">
-  export const load = async ({ params }) => {
+  export const load = async ({ params, fetch }) => {
     let { id } = params;
     const message = await api.get(
-      `messages?model=message&id=${id}&mode=single`
+      `messages?model=message&id=${id}&mode=single`, fetch
     );
     return { props: { message } };
   };
@@ -13,9 +13,9 @@
   import { Row, Column } from "carbon-components-svelte";
   import { parseMarkdown } from "$lib/utils/parseMarkdown";
 
-  let text = message.text.markdown ? parseMarkdown(message.text) : message.text;
+  let about = message.about.markdown ? parseMarkdown(message.about) : message.about;
 </script>
 
 <Row noGutter>
-  <Column>{@html text}</Column>
+  <Column>{@html about}</Column>
 </Row>

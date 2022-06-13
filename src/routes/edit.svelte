@@ -32,28 +32,17 @@
     Column,
     Row,
   } from "carbon-components-svelte";
-  import Fields from "$lib/components/Fields/Fields.svelte";
-  import Paystack from "$lib/components/Paystack.svelte";
   import Input from "$lib/components/Input/Input.svelte";
-  // import Image from "$lib/components/Image.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { session } from "$app/stores";
   import { onMount } from "svelte";
-  import {browser} from '$app/env'
   import {
     PAYSTACK_TEST,
     PAYSTACK_TEST_KEY,
     PAYSTACK_LIVE_KEY,
   } from "$lib/env";
-  // import { checkEmail } from "$lib/utils/checkEmail";
-  // import { abslinkRegex } from "$lib/utils/regex";
-
-  onMount(async() => {
-    location = await currentLocation.then(l => l)/*.catch(e => console.log('currentLocation error:', e))*/
-  });
 
   let editLocation = true
-  let location = {}
 
   let config = {
     key: PAYSTACK_TEST === "true" ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
@@ -73,14 +62,10 @@
   let username = user.username;
   let hidden = user.hidden;
   let image = user.image;
-  let fields = user.fields || [];
   let tags = user.tags || [];
 
   let usernameInvalid;
   let usernameError;
-
-  // let emailInvalid;
-  // let emailError;
 
   let loading;
 
@@ -95,21 +80,6 @@
 
   const edit = async () => {
     loading = true;
-    let req_fields = fields.map((f) => {
-      return { label: f.label, value: f.value };
-    });
-    // if (!email) {
-    //   emailInvalid = true;
-    //   emailError = "Empty";
-    //   loading = false;
-    //   return;
-    // }
-    // if (!checkEmail(email)) {
-    //   emailInvalid = true;
-    //   emailError = "Unaccepted";
-    //   loading = false;
-    //   return;
-    // }
     if (!username) {
       usernameInvalid = true;
       usernameError = "Empty";
@@ -124,18 +94,10 @@
         return;
       }
     }
-    // if (checkEmail(username)) {
-    //   usernameInvalid = true;
-    //   usernameError = "Unaccepted";
-    //   loading = false;
-    //   return;
-    // }
 
     let dt = {
       username,
-      location: editLocation ? location: null,
       hidden,
-      fields: req_fields,
       image,
       tags,
     };
@@ -152,8 +114,6 @@
 
 <svelte:window on:keydown={keydown} />
 
-<Paystack {config} />
-
 <Row noGutter>
   <Column>
     <h1>Edit your profile</h1>
@@ -162,48 +122,12 @@
 
 <br />
 
-<!-- <Image bind:image>
-  {#if user.paid}
-    <Button
-      on:click={() => {
-        config.open = true;
-      }}
-      size="small"
-    >
-      Renew subscription
-    </Button>
-    <Button
-      on:click={() => {
-        config.open = true;
-        config.amount = 3000;
-        config.metadata.purpose = "change_card";
-      }}
-      size="small"
-    >
-      Change card
-    </Button>
-  {:else}
-    <Button
-      on:click={() => {
-        config.open = true;
-      }}
-      size="small"
-    >
-      Subscribe
-    </Button>
-  {/if}
-</Image> -->
-
 <Row noGutter>
   <Column>
     <Checkbox
       on:change={edit}
       bind:checked={hidden}
       labelText="Hide profile from public"
-    />
-    <Checkbox
-      bind:checked={editLocation}
-      labelText="Edit Location"
     />
   </Column>
 </Row>
@@ -226,7 +150,6 @@
 <br />
 <Row noGutter>
   <Column>
-    <Fields bind:fields />
   </Column>
 </Row>
 <br />

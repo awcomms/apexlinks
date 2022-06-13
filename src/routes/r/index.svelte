@@ -1,7 +1,7 @@
 <script context="module">
   import { api } from "$lib/utils";
   import { routes } from "$lib/utils";
-  export async function load({ session }) {
+  export async function load({ session, fetch }) {
     let user = session.user;
     if (!user) {
       return {
@@ -10,7 +10,7 @@
       };
     }
     let rooms;
-    let { items, total, page } = (await api.get("xrooms", user.token)) || {};
+    let { items, total, page } = (await api.get("xrooms", fetch)) || {};
     if (Array.isArray(items)) {
       rooms = items;
     } else {

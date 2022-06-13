@@ -1,7 +1,7 @@
 <script context="module">
   import { api } from "$lib/utils";
   import { routes } from "$lib/utils";
-  export const load = async ({ params, session }) => {
+  export const load = async ({ params, session, fetch }) => {
     let { user } = session;
     let { id } = params;
     if (!user) {
@@ -10,7 +10,7 @@
         redirect: routes.login,
       };
     }
-    let room = await api.get(`rooms/${id}`);
+    let room = await api.get(`rooms/${id}`, fetch);
     if (!(room.user.id == user.id)) {
       return {
         error: "You're not authorized to edit this room",
@@ -68,9 +68,10 @@
     if (res.nameError) {
       nameInvalid = true;
     }
+    console.log(about)
     if (res.id) {
       $context = name;
-      goto(`${routes.rooms}/${room.id}`);
+      goto(`${routes.rooms}/${room.id}/about`);
     }
   };
 </script>

@@ -1,6 +1,7 @@
-export default (base, path, opts) => {
+export default (base, path, opts, _fetch) => {
+  let f = _fetch || fetch
     try {
-      return fetch(`${base}/${path}`, opts)
+      return f(`${base}/${path}`, opts)
         .then(async (r) => {
           const text = await r.text();
           let json;
@@ -10,12 +11,13 @@ export default (base, path, opts) => {
             return text;
           }
           json.STATUS = r.status;
+          json.OK = !r.status.toString().startsWith('4')
           return json;
         })
         .catch((err) => {
-          return { status: 500, error: `fetch internal error: ${err}` };
+          return { STATUS: 500, error: `API fetch error: ${err}` };
         });
     } catch (err) {
-      return { status: 500, error: `real internal error: ${err}` };
+      return { STATUS: 500, error: `API fetch error: ${err}` };
     }
 }

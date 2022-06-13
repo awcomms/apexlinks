@@ -36,6 +36,7 @@ renderer.list = (body, ordered, start) => {
 
 marked.setOptions({
     renderer: renderer,
+    breaks: true
 })
 
 export function parseMarkdown(markdown) {

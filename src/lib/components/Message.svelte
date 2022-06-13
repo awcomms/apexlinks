@@ -1,5 +1,5 @@
 <script>
-  export let page, pages, message, room, items;
+  export let title, page, pages, message, room, items, leaveText = 'Leave room';
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -8,11 +8,11 @@
     Column,
     TextInput,
     Truncate,
-    Link,
+    Link
   } from "carbon-components-svelte";
   import io from "socket.io-client";
   import { createEventDispatcher, onMount } from "svelte";
-  import { parse } from "cookie";
+  import { session } from '$app/stores'
 
   const dispatch = createEventDispatcher();
 
@@ -26,9 +26,7 @@
   });
 
   socket.on("connect", () => {
-    if (room) api.put(`join/${room.id}`);
-    let id = room ? room.id : `m-${message?.id}`
-    socket.emit("join", id);
+    dispatch('connect')
   });
 
   socket.on("msg", async (obj) => {
@@ -40,26 +38,29 @@
   const keydown = (e) => {
     switch (e.key) {
       case "Enter":
-        dispatch('send')
+        dispatch("send", value);
+        value = "";
     }
   };
 
   const exit = async () => {
-    await api.put(`leave/${room.id}`)
+    await api.put(`leave/${room.id}`);
     socket.emit("leave", room.id);
     goto(routes.rooms);
   };
 
-  const goUser = (user) => {
-    goto(user);
-  };
-
   const get = async () => {
-    await api.get(`messages?${message ? 'model=message&mode=replies' : ''}&page=${page - 1}`).then((r) => {
-      page = r.page;
-      pages = r.pages
-      items = [r.items, ...items];
-    });
+    await api
+      .get(
+        `messages?${message ? "model=message&mode=replies" : ""}&page=${
+          page - 1
+        }`
+      )
+      .then((r) => {
+        page = r.page;
+        pages = r.pages;
+        items = [r.items, ...items];
+      });
   };
 
   const send = async () => {
@@ -78,11 +79,11 @@
 <Row noGutter>
   <Column>
     <span>
-      <div on:click={() => dispatch('titleClick')} class="head">
-        <Truncate clamp="end">{message?.value || room?.name}</Truncate>
+      <div on:click={() => dispatch("titleClick")} class="head">
+        <Truncate clamp="end">{title}</Truncate>
       </div>
       {#if room}
-      <p on:click={exit} class="pointer">Leave room</p>
+        <p on:click={exit} class="pointer">{leaveText}</p>
       {/if}
       <br />
     </span>
@@ -100,24 +101,37 @@
   <p on:click={get}>Get older messages</p>
 {/if}
 
-{#each items as item}
-  <Row noGutter>
-    <Column>
-        <p on:click={goUser(item.user)} class="small pointer">
+<div class='con'>
+  {#each items as item}
+    <Row noGutter>
+      <Column>
+        <p on:click={()=>goto(`${routes.users}/${item.user.id}`)} class="small pointer">
           {item.user.username}
         </p>
-        <Link href="/m/{item.id}" class="message">{item.value}</Link>
-    </Column>
-  </Row>
-{/each}
+        <p on:click={() => dispatch("itemClick", item)}>{item.value}</p>
+      </Column>
+    </Row>
+  {/each}
 
-<Row noGutter>
-  <Column>
-    <TextInput on:keydown={keydown} rows={2} bind:ref bind:value />
-  </Column>
-</Row>
+  <div class='input'>
+    <Row noGutter>
+      <Column>
+        {#if $session.user}
+          <TextInput on:keydown={keydown} rows={2} bind:ref bind:value />
+        {:else}
+        <div class='login-prompt'>
+          <Link href={routes.login}>Login to send messages to this room</Link>
+        </div>
+        {/if}
+      </Column>
+    </Row>
+  </div>
+</div>
 
 <style>
+  .input {
+    position: sticky;
+  }
   .pointer {
     cursor: pointer;
   }

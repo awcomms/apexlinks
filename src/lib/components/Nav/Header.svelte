@@ -16,6 +16,7 @@
     SideNav,
     Header,
   } from "carbon-components-svelte";
+  import {onMount } from 'svelte'
 import { routes } from "$lib/utils";
 
   let show;
@@ -65,12 +66,11 @@ import { routes } from "$lib/utils";
       });
   };
 
-  if (typeof window != "undefined") {
+  onMount(()=>{
     if (navigator && navigator.serviceWorker && $session.user) {
       getSub();
     }
-  }
-
+  })
 
   const exit = () => {
     $session.user = null;
@@ -119,17 +119,6 @@ import { routes } from "$lib/utils";
         />
       {/if}
       <SideNavMenuItem text='All rooms' href='/r' isSelected={$page.url.pathname === routes.rooms} />
-    </SideNavMenu>
-    <SideNavMenu text="Items">
-      {#if $session.user}
-        <SideNavMenuItem isSelected={$page.url.pathname === '/i/add'} href='/i/add' text="Add item" />
-        <SideNavMenuItem
-          text="My items"
-          href="{routes.items}?user={$session.user.id}"
-          isSelected={$page.url.pathname === routes.items && $page.url.searchParams.get('user') ===
-            $session.user.id}
-        />
-      {/if}
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.username}" />

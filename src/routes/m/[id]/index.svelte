@@ -1,63 +1,65 @@
 <script context="module">
   import { api } from "$lib/utils";
   import { routes } from "$lib/utils";
-  export const load = async ({ params, session }) => {
-    const {user} = session
+  export const load = async ({ params, session, fetch }) => {
     const { id } = params;
     const message = await api.get(
-      `messages?model=message&id=${id}&mode=single`
+      `messages?model=message&id=${id}&mode=single`, fetch
     );
-    console.log(message);
-    let mode = "replies";
-    let items;
-    let res = await api.get(`messages?model=message&id=${id}&mode=${mode}`);
-    if (!Array.isArray(items)) {
-      items = [];
-    } else {
-      items = res.items;
-    } //TODO
-    items = res.items || [];
-    let { total, page, pages } = res;
+    let res = await api.get(`messages?model=message&id=${id}&mode=replies`, fetch);
+    if (!res.OK) {
+      return {
+        status: Number(res.STATUS),
+        error: res.error
+      }
+    }
+    let { items, total, page, pages } = res;
+    // console.log(items, total, pages, page)
 
     return {
       props: {
-        message,
-        user,
-        items,
-        page,
-        pages,
-        total,
+        // message,
+        // items,
+        // page,
+        // pages,
+        // total,
       },
     };
   };
 </script>
 
 <script>
-  export let message, items, total, page, pages;
-  import Message from "$lib/components/Message.svelte";
+  // export let message, items, total, page, pages;
+  // import Message from "$lib/components/Message.svelte";
   import { goto } from "$app/navigation";
   import { socket } from '$lib/utils'
 
-  let id = `m-${message.id}`
+  // let id = `m-${message.id}`
 
-  const send = ({detail}) => {
-    let data = {value: detail, message: message.id}
-    api.post(`messages`, data).then(message => {
-      socket.emit("msg", {...message, room: id})
-    })
-  }
+  // const connect = () => {
+  //   socket.emit("join", id)
+  // }
+
+  // const send = ({detail}) => {
+  //   let data = {value: detail, message: message.id}
+  //   api.post(`messages`, data).then(message => {
+  //     socket.emit("msg", {...message, room: id})
+  //   })
+  // }
 </script>
 
-<Message
+<!-- <Message
   on:send={send}
-  on:titleClick={() => goto(`${routes.messages}/${message.id}/text`)}
+  on:conect={connect}
+  on:itemClick={({detail: item})=>goto(`${routes.messages}/${item.id}`)}
+  on:titleClick={() => goto(`${routes.messages}/${message.id}/about`)}
   {message}
   {items}
   {total}
   {pages}
   {page}
-/>
+/> -->
 
 <svelte:head>
-  <title>{message.value}</title>
+  <!-- <title>{message.value || 'eee'}</title> -->
 </svelte:head>

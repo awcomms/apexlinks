@@ -25,7 +25,7 @@ const min_opts = {
 export const getSession = async ({ locals }) => {
   let { token: auth } = locals;
   let user = await send({ method: "GET", path: "user", auth });
-  if (!user || user.error) return {};
+  if (!user.OK) return {}; //TODO
   return {
     user,
   };

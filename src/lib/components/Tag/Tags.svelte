@@ -13,7 +13,6 @@
   import { notify } from "$lib/stores";
   import Tag from "$lib/components/Tag/Tag.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
-  import Options from "$lib/components/Options/Options.svelte";
   import { onMount, createEventDispatcher } from "svelte";
   import {
     Button,
@@ -125,18 +124,10 @@
   {#if tags.length > 0}
     <Tag on:click on:click={clear} type="magenta">Clear</Tag>
   {/if}
-  <!-- {#if tagGroup}
-                <Tag on:click={initCreate} type='magenta'>
-                    All tag groups
-                </Tag>
-                <Tag on:click={initCreate} type='magenta'>
-                    New tag group
-                </Tag>
-            {/if} -->
   {#each tags as tag}
     {#if hidable}
       <ContextMenu target={tag.ref}>
-        <ContextMenuOption labelText="Hide" bind:selected={tag.hide} />
+        <ContextMenuOption selectable labelText="Hide" bind:selected={tag.hide} />
       </ContextMenu>
     {/if}
 
@@ -155,10 +146,6 @@
       on:close={del(tag)}
     />
   {/each}
-{/if}
-
-{#if useOptions}
-  <Options bind:options bind:selectable bind:editable />
 {/if}
 
 <style>

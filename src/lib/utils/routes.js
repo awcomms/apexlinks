@@ -1,7 +1,8 @@
 export default {
-    index: '/',
-    login: '/login',
-    items: '/i',
-    rooms: '/r',
-    messages: '/m'
-}
+  index: "/",
+  login: "/login",
+  items: "/i",
+  rooms: "/r",
+  users: "/u",
+  messages: "/m",
+};
