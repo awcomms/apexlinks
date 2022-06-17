@@ -15,11 +15,14 @@ export default {
             const io = new Server(server.httpServer);
 
             io.on("connection", (socket) => {
-              socket.on("msg", (data) => {
-                io.to(data.room).emit("msg", data);
+              socket.on("msg", (data, callback) => {
+                console.log('msg', data)
+                io.to(data.room).timeout(37000).emit("msg", data, r => console.log('msg r', r));
+                callback(`sent message: ${JSON.stringify(data)}`)
               });
 
               socket.on("join", (id) => {
+                console.log('j', socket.id, id)
                 socket.join(id);
               });
 

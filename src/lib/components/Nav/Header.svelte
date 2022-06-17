@@ -121,7 +121,7 @@ import { routes } from "$lib/utils";
       <SideNavMenuItem text='All rooms' href='/r' isSelected={$page.url.pathname === routes.rooms} />
     </SideNavMenu>
     {#if $session.user}
-      <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.username}" />
+      <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.id}" />
       <SideNavLink isSelected={$page.url.pathname === '/edit'} href="/edit" text="Edit Profile" />
       <SideNavLink text="Exit" href={null} on:click={exit} />
     {/if}

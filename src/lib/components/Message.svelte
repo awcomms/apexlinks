@@ -1,5 +1,11 @@
 <script>
-  export let title, page, pages, message, room, items, leaveText = 'Leave room';
+  export let title,
+    page,
+    pages,
+    message,
+    room,
+    items,
+    leaveText = "Leave room";
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -8,11 +14,11 @@
     Column,
     TextInput,
     Truncate,
-    Link
+    Link,
   } from "carbon-components-svelte";
   import io from "socket.io-client";
   import { createEventDispatcher, onMount } from "svelte";
-  import { session } from '$app/stores'
+  import { session } from "$app/stores";
 
   const dispatch = createEventDispatcher();
 
@@ -23,16 +29,17 @@
   onMount(() => {
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     ref.focus();
+
+    socket.on("msg", async (obj, callback) => {
+      callback('received msg', obj)
+      if (room) await api.put(`seen?id=${room.id}`, {});
+      items = [...items, obj];
+      updateScroll();
+    });
   });
 
   socket.on("connect", () => {
-    dispatch('connect')
-  });
-
-  socket.on("msg", async (obj) => {
-    if (room) await api.put(`seen?id=${room.id}`, {});
-    items = [...items, obj];
-    updateScroll();
+    dispatch("connect");
   });
 
   const keydown = (e) => {
@@ -101,11 +108,14 @@
   <p on:click={get}>Get older messages</p>
 {/if}
 
-<div class='con'>
+<div class="con">
   {#each items as item}
     <Row noGutter>
       <Column>
-        <p on:click={()=>goto(`${routes.users}/${item.user.id}`)} class="small pointer">
+        <p
+          on:click={() => goto(`${routes.users}/${item.user.id}`)}
+          class="small pointer"
+        >
           {item.user.username}
         </p>
         <p on:click={() => dispatch("itemClick", item)}>{item.value}</p>
@@ -113,15 +123,15 @@
     </Row>
   {/each}
 
-  <div class='input'>
+  <div class="input">
     <Row noGutter>
       <Column>
         {#if $session.user}
           <TextInput on:keydown={keydown} rows={2} bind:ref bind:value />
         {:else}
-        <div class='login-prompt'>
-          <Link href={routes.login}>Login to send messages to this room</Link>
-        </div>
+          <div class="login-prompt">
+            <Link href={routes.login}>Login to send messages to this room</Link>
+          </div>
         {/if}
       </Column>
     </Row>

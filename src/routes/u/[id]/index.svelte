@@ -28,7 +28,6 @@
         error: room.error,
       };
     }
-    console.log("uroom", room);
     let { items, total, page, pages } = await api.get(`messages?id=${room.id}`);
     return {
       props: {
@@ -45,17 +44,17 @@
 
 <script>
   export let items = [],
-    total = 0,
-    page = 1,
-    pages = 1,
-    room = { id: 1 },
-    user = { id: 1 };
+    total,
+    page,
+    pages,
+    room,
+    user;
   import Message from "$lib/components/Message.svelte";
   import { goto } from "$app/navigation";
   import { socket } from "$lib/utils";
 
   const connect = () => {
-    socket.emit("join", room);
+    socket.emit("join", room.id);
   };
 
   const send = async ({ detail: value }) => {
@@ -63,18 +62,18 @@
     await api.post(`messages`, data).then((res) => {
       console.log(res);
       if (!res.OK) {
-        console.log(res);
+        console.log('not ok - ', res);
         return;
       }
-      socket.emit("msg", res);
-      items = [...items, res]
+      socket.emit("msg", res, r => console.log('on:msg r', r));
     });
   };
 </script>
 
 <Message
+  leaveText='Stop receiving messages from this user'
   on:itemClick={({ detail: item }) => goto(`${routes.messages}/${item.id}`)}
-  on:titleClick={() => goto(`${routes.rooms}/${room.id}/about`)}
+  on:titleClick={() => goto(`${routes.users}/${user.id}`)}
   on:connect={connect}
   on:send={send}
   bind:title={user.username}

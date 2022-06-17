@@ -12,6 +12,12 @@
         error: room.error
       }
     }
+    if (room.dm) {
+      return {
+        status: 401,
+        error: "That's a private room" //TODO
+      }
+    }
     let messagesUrl = `messages?id=${id}`
     if (m) {
       messagesUrl = messagesUrl.concat(`&model=message&mode=replies`)
@@ -58,8 +64,7 @@
   const send = async ({ detail: value }) => {
     let data = { value, room: room.id };
     await api.post("messages", data).then((message) => {
-      socket.emit("msg", message);
-      items = [...items, message]
+      socket.emit("msg", message, r => console.log('on:msg r', r));
     });
   };
 </script>

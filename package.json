@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.65.2",
+    "carbon-components-svelte": "^0.65.3",
     "carbon-icons-svelte": "^11.1.0",
     "eslint": "^8.17.0",
     "eslint-plugin-svelte3": "^4.0.0",
-    "prettier": "^2.6.2",
+    "prettier": "^2.7.1",
     "svelte": "^3.48.0"
   }
 }

@@ -14,41 +14,41 @@
       }
     }
     let { items, total, page, pages } = res;
-    // console.log(items, total, pages, page)
+    console.log(items, total, pages, page)
 
     return {
       props: {
-        // message,
-        // items,
-        // page,
-        // pages,
-        // total,
+        message,
+        items,
+        page,
+        pages,
+        total,
       },
     };
   };
 </script>
 
 <script>
-  // export let message, items, total, page, pages;
-  // import Message from "$lib/components/Message.svelte";
+  export let message, items, total, page, pages;
+  import Message from "$lib/components/Message.svelte";
   import { goto } from "$app/navigation";
   import { socket } from '$lib/utils'
 
-  // let id = `m-${message.id}`
+  let id = `m-${message.id}`
 
-  // const connect = () => {
-  //   socket.emit("join", id)
-  // }
+  const connect = () => {
+    socket.emit("join", id)
+  }
 
-  // const send = ({detail}) => {
-  //   let data = {value: detail, message: message.id}
-  //   api.post(`messages`, data).then(message => {
-  //     socket.emit("msg", {...message, room: id})
-  //   })
-  // }
+  const send = ({detail}) => {
+    let data = {value: detail, message: message.id}
+    api.post(`messages`, data).then(message => {
+      socket.emit("msg", {...message, room: id})
+    })
+  }
 </script>
 
-<!-- <Message
+<Message
   on:send={send}
   on:conect={connect}
   on:itemClick={({detail: item})=>goto(`${routes.messages}/${item.id}`)}
@@ -58,7 +58,7 @@
   {total}
   {pages}
   {page}
-/> -->
+/>
 
 <svelte:head>
   <!-- <title>{message.value || 'eee'}</title> -->
