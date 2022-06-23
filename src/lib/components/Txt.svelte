@@ -88,7 +88,7 @@
 <Row noGutter>
   <Column>
   <Truncate>
-    txt: {txt.value}
+    txt {txt.id}: {txt.value}
   </Truncate>
 </Column>
 </Row>
@@ -106,7 +106,7 @@
           on:click={() => goto(`${routes.users}/${item.user.id}`)}
           class="small pointer"
         >
-          {item.user.username}
+          {item.user?.username}
         </p>
         <p on:click={() => dispatch("itemClick", item)}>{item.value}</p>
       </Column>

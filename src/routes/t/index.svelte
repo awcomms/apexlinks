@@ -102,12 +102,10 @@
   on:connect={connect}
   on:join={join}
   on:titleClick={() => {
-    if (txt) goto(`${routes.txts}/${txt.id}`);
+    if (txt) goto(`${routes.txts}/${txt.id}/about`);
   }}
   on:itemClick={({ detail: item }) => {
-    txt = item; 
-    window.history.pushState({}, '')
-    get();
+    goto(`${routes.txts}/${item.id}`);
     // $sveltePage.url.searchParams.append('id', item.id)
   }}
   {socket}
