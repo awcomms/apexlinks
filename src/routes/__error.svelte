@@ -13,17 +13,17 @@
   export let status = ''
   export let error = ''
 
-  import { Row, Column, Link } from "carbon-components-svelte";
+  import { Row, Column } from "carbon-components-svelte";
 
   const dev = process.env.NODE_ENV === "development";
 </script>
 
 <Row noGutter>
   <Column lg="{16}">
-    <h1>{status}</h1>
+    <h1>Error code: {status}</h1>
     <div>
-      {error.message || ''}
-      <Link inline href="/">Return home</Link>
+      {error.txt || ''}
+      <!-- <Link inline href="/">Return home</Link> -->
     </div>
     {#if error && dev && error.stack}
       <div>

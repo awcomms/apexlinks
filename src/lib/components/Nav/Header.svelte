@@ -45,7 +45,7 @@ import { routes } from "$lib/utils";
 
   const getSub = () => {
     navigator.serviceWorker.ready
-      .then((registration) => {
+      .then(async(registration) => {
         return registration.pushManager.getSubscription().then(async (sub) => {
           if (sub) {
             return sub;
@@ -108,17 +108,17 @@ import { routes } from "$lib/utils";
       {/if}
       <SideNavLink isSelected={$page.url.pathname === routes.login} text="Login" href={routes.login} />
     {/if}
-    <SideNavMenu text="Rooms">
+    <SideNavMenu text="Txts">
       {#if $session.user}
-        <SideNavMenuItem isSelected={$page.url.pathname === `${routes.rooms}/add`} href='{routes.rooms}/add' text="Add room" />
+        <SideNavMenuItem isSelected={$page.url.pathname === `${routes.txts}/add`} href='{routes.txts}/add' text="Add txt" />
         <SideNavMenuItem
-          text="My rooms"
-          href="{routes.rooms}?user={$session.user.id}"
-          isSelected={$page.url.pathname === routes.rooms && $page.url.searchParams.get('user') ===
+          text="My txts"
+          href="{routes.txts}?user={$session.user.id}"
+          isSelected={$page.url.pathname === routes.txts && $page.url.searchParams.get('user') ===
             $session.user.id}
         />
       {/if}
-      <SideNavMenuItem text='All rooms' href='/r' isSelected={$page.url.pathname === routes.rooms} />
+      <SideNavMenuItem text='All txts' href={routes.txts} isSelected={$page.url.pathname === routes.txts} />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.id}" />

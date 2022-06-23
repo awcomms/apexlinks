@@ -1,10 +1,8 @@
 <script>
+  export let prefix = '';
   export let text = "";
   export let showUseOptions = false;
   export let useOptions = false;
-  export let options = [];
-  export let editable = false;
-  export let selectable = false;
   export let hidable = false;
   export let open = false;
   export let tags = [];
@@ -29,21 +27,9 @@
     if (focusLast) tags[tags.length - 1]?.ref.focus();
   });
 
-  let tagGroup = false;
   let focused;
-  let visible;
   // let value;
   let ref;
-
-  const focus = () => {
-    focused = true;
-    if (tags.length > 0) open = true;
-  };
-
-  const blur = () => {
-    focused = false;
-    add();
-  };
 
   const keydown = (e) => {
     switch (e.keyCode) {
@@ -56,14 +42,6 @@
 
   const toggleOpen = () => {
     open = !open;
-  };
-
-  const toggleTagGroup = () => {
-    tagGroup = !tagGroup;
-  };
-
-  const initCreate = () => {
-    return;
   };
 
   const add = () => {
@@ -100,7 +78,7 @@
 <div class="head">
   <p class="title" on:click={toggleOpen}>
     {tags.length}
-    {`${tags.length === 1 ? "tag" : "tags"}`}
+    {`${tags.length === 1 ? `${prefix}tag` : `${prefix}tags`}`}
   </p>
   <Button
     kind="ghost"

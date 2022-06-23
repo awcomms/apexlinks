@@ -6,35 +6,35 @@
     Column,
     PaginationNav,
     Loading,
-    RadioButtonGroup,
-    RadioButton,
-    Slider,
+    // RadioButtonGroup,
+    // RadioButton,
+    // Slider,
   } from "carbon-components-svelte";
   // import currentLocation from "$lib/utils/currentLocation";
   // import Save from "$lib/components/Save.svelte";
   import { api } from "$lib/utils";
-  import { selectedUsers, users, userTags, userFields } from "$lib/stores";
+  import { selectedUsers, users, userTags } from "$lib/stores";
   // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   // import { goto } from "$app/navigation";
   import { createEventDispatcher } from "svelte";
 
-  $: get(sort);
+  // $: get(sort);
   $: if (got) get(page);
 
   const dispatch = createEventDispatcher();
 
   let loading;
-  let changeLimitInterval;
-  let sort = "tag";
+  // let changeLimitInterval;
+  // let sort = "tag";
   $users = [];
   let page = 0;
-  let step = 1;
+  // let step = 1;
   // let limit;
   let total = 0;
   let pages = 0;
-  let min = 0;
-  let max = 0;
+  // let min = 0;
+  // let max = 0;
 
   let got;
 

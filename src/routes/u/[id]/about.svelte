@@ -22,8 +22,7 @@
 
 <script>
   export let user;
-  import { Column, Link, Tag } from "carbon-components-svelte";
-  import { parseMarkdown } from "$lib/utils/parseMarkdown";
+  import { Column, Tag } from "carbon-components-svelte";
 
   // onMount(() => {
   //   (() => {
@@ -38,9 +37,6 @@
   //     document.getElementById("ld").innerText = JSON.stringify(ld);
   //   })();
   // });
-
-  let about;
-  if (user.about) about = parseMarkdown(user.about);
 </script>
 
 <svelte:head>

@@ -31,7 +31,6 @@
     import { session } from '$app/stores'
     import { newUser } from '$lib/stores' 
     import { post } from '$lib/utils/fetch/post'
-    import { checkEmail } from '$lib/utils/checkEmail'
 
     $: if($newUser) {
         userText = 'Login instead'
@@ -57,8 +56,8 @@
     let emailError = 'Invalid Email'
     let email
 
-    let resetPasswordLoading
-    let resetPasswordRes
+    // let resetPasswordLoading
+    // let resetPasswordRes
     let loginLoading
     let joinLoading
 
@@ -77,25 +76,18 @@
         }            
     }
 
-    const validateEmail=()=>{
-        if(email) emailInvalid = false
-        if(emailRef) emailRef.focus()
-    }
-
-    const validateUsername=()=>{
-        if(username) usernameInvalid = false
-        if(usernameRef) usernameRef.focus()
-    }
-
+    /*
     const validatePassword=()=>{
         if(password) passwordInvalid = false
         if(passwordRef) passwordRef.focus()
     }
+    */
 
     const toggleNewUser=()=>{
         $newUser = !$newUser
     }
 
+    /*
     const resetPassword=async()=>{
         if(!username){
             usernameInvalid = true
@@ -114,6 +106,7 @@
             resetPasswordRes = res.r
         }
     }
+    */
 
     const login = async function() {
         loginLoading = true

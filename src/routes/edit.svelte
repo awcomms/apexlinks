@@ -22,7 +22,6 @@
   export let user;
 
   import { api } from "$lib/utils";
-  import currentLocation from "$lib/utils/currentLocation";
   import { goto } from "$app/navigation";
   import {
     InlineLoading,
@@ -35,29 +34,6 @@
   import Input from "$lib/components/Input/Input.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   import { session } from "$app/stores";
-  import { onMount } from "svelte";
-  import {
-    PAYSTACK_TEST,
-    PAYSTACK_TEST_KEY,
-    PAYSTACK_LIVE_KEY,
-  } from "$lib/env";
-
-  let editLocation = true
-
-  let config = {
-    key: PAYSTACK_TEST === "true" ? PAYSTACK_TEST_KEY : PAYSTACK_LIVE_KEY,
-    email: user.email, // TODO
-    metadata: {
-      id: user.id,
-    },
-    amount: 3000,
-    currency: "NGN",
-    embed: false,
-    value: "Pay",
-    callback: () => {
-      api.put("users/activate", { id: user.id });
-    },
-  };
 
   let username = user.username;
   let hidden = user.hidden;

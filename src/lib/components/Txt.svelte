@@ -1,82 +1,62 @@
 <script>
   export let title,
+  add,
     page,
     pages,
-    message,
-    room,
+    txt,
     items,
-    leaveText = "Leave room";
+    // socket,
+    leaveText = "Leave txt";
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
-  import {
-    Row,
-    Column,
-    TextInput,
-    Truncate,
-    Link,
-  } from "carbon-components-svelte";
-  import io from "socket.io-client";
+  import { TxtInput } from "$lib/components";
+  import { Row, Column, Truncate } from "carbon-components-svelte";
   import { createEventDispatcher, onMount } from "svelte";
-  import { session } from "$app/stores";
+  import { socket } from "$lib/utils";
+  import { browser } from '$app/env';
+
+  $: updateScroll(add)
 
   const dispatch = createEventDispatcher();
 
-  const socket = io();
   let value;
   let ref;
 
   onMount(() => {
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     ref.focus();
-
-    socket.on("msg", async (obj, callback) => {
-      callback('received msg', obj)
-      if (room) await api.put(`seen?id=${room.id}`, {});
-      items = [...items, obj];
-      updateScroll();
-    });
-  });
-
-  socket.on("connect", () => {
-    dispatch("connect");
   });
 
   const keydown = (e) => {
     switch (e.key) {
       case "Enter":
-        dispatch("send", value);
-        value = "";
+        send();
     }
   };
 
   const exit = async () => {
-    await api.put(`leave/${room.id}`);
-    socket.emit("leave", room.id);
-    goto(routes.rooms);
+    await api.put(`leave/${txt.id}`);
+    socket.emit("leave", txt.id);
+    goto(routes.txts);
   };
 
   const get = async () => {
-    await api
-      .get(
-        `messages?${message ? "model=message&mode=replies" : ""}&page=${
-          page - 1
-        }`
-      )
-      .then((r) => {
-        page = r.page;
-        pages = r.pages;
-        items = [r.items, ...items];
-      });
+    await api.get(`txts?replies&page=${page - 1}`).then((r) => {
+      page = r.page;
+      pages = r.pages;
+      items = [r.items, ...items];
+    });
   };
 
-  const send = async () => {
+  const send = () => {
     if (!value) return;
     dispatch("send", value);
     value = "";
   };
 
   const updateScroll = () => {
+    if (!browser) return
     setTimeout(() => {
       window.scrollTo({ left: 0, top: document.body.scrollHeight });
     }, 0);
@@ -89,7 +69,7 @@
       <div on:click={() => dispatch("titleClick")} class="head">
         <Truncate clamp="end">{title}</Truncate>
       </div>
-      {#if room}
+      {#if txt}
         <p on:click={exit} class="pointer">{leaveText}</p>
       {/if}
       <br />
@@ -98,14 +78,14 @@
   </Column>
 </Row>
 
-{#if message}
+{#if txt}
   <Truncate clamp="front">
-    {message.value}
+    {txt.value}
   </Truncate>
 {/if}
 
 {#if pages > 1}
-  <p on:click={get}>Get older messages</p>
+  <p on:click={get}>Get older txts</p>
 {/if}
 
 <div class="con">
@@ -123,25 +103,10 @@
     </Row>
   {/each}
 
-  <div class="input">
-    <Row noGutter>
-      <Column>
-        {#if $session.user}
-          <TextInput on:keydown={keydown} rows={2} bind:ref bind:value />
-        {:else}
-          <div class="login-prompt">
-            <Link href={routes.login}>Login to send messages to this room</Link>
-          </div>
-        {/if}
-      </Column>
-    </Row>
-  </div>
+  <TxtInput on:keydown={keydown} bind:value bind:ref />
 </div>
 
 <style>
-  .input {
-    position: sticky;
-  }
   .pointer {
     cursor: pointer;
   }
@@ -149,14 +114,8 @@
     color: grey;
     font-size: 0.75rem;
   }
-  .message {
-    overflow-wrap: break-word;
-  }
   .head-space {
     height: 0.5rem;
-  }
-  .head-link {
-    cursor: pointer;
   }
   .head {
     font-size: 0.875rem;

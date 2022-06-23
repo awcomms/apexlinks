@@ -1,6 +1,6 @@
 <script context='module'>
     import { api } from '$lib/utils'
-    export  const load = async({session, params, fetch}) =>{
+    export  const load = async({params, fetch}) =>{
         let {id} = params
         let event = await api.get(`events/${id}`, fetch)
         if (event.STATUS === 404){

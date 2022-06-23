@@ -1,6 +1,5 @@
 <script>
   let input;
-  let labelInput;
 
   export let inputEventDelay = 0;
   export let warning = false;
@@ -14,7 +13,7 @@
   // export let o
   export let ref;
 
-  import { Button, Tag } from "carbon-components-svelte";
+  import { Tag } from "carbon-components-svelte";
   import WarningAlt from "carbon-icons-svelte/lib/WarningAlt.svelte";
   // import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
 
