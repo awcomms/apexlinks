@@ -21,7 +21,7 @@
     "marked": "4.0.17",
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.28.0",
-    "sass": "^1.52.3",
+    "sass": "^1.53.0",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "svelte-check": "^2.7.2",
@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "carbon-components-svelte": "^0.65.3",
+    "carbon-components-svelte": "^0.66.0",
     "carbon-icons-svelte": "^11.1.0",
-    "eslint": "^8.17.0",
+    "eslint": "^8.18.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "prettier": "^2.7.1",
     "svelte": "^3.48.0"
