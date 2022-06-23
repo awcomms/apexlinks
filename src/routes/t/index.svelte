@@ -36,10 +36,12 @@
 
 <script>
   export let txt, items, total, page, pages;
+  import { Row, Column } from 'carbon-components-svelte'
   import Txt from "$lib/components/Txt.svelte";
   import { Tags } from "$lib/components";
-  // import { routes } from "$lib/utils";
-  // import { goto } from "$app/navigation";
+  import { routes } from "$lib/utils";
+  import { goto } from "$app/navigation";
+  import { page as sveltePage } from "$app/stores";
   import { io } from "socket.io-client";
   // import { socket } from "$lib/utils";
 
@@ -58,6 +60,8 @@
     // updateScroll()
     add = !add;
   });
+
+  const join = () => {}
 
   const connect = () => {
     socket.emit("join", room);
@@ -87,15 +91,24 @@
   };
 </script>
 
-<Tags on:change={get} prefix="search " bind:tags />
+<Row noGutter>
+  <Column>
+    <Tags on:change={get} prefix="search " bind:tags />
+  </Column>
+</Row>
 
 <Txt
   on:send={send}
   on:connect={connect}
-  on:titleClick
+  on:join={join}
+  on:titleClick={() => {
+    if (txt) goto(`${routes.txts}/${txt.id}`);
+  }}
   on:itemClick={({ detail: item }) => {
-    txt = item;
+    txt = item; 
+    window.history.pushState({}, '')
     get();
+    // $sveltePage.url.searchParams.append('id', item.id)
   }}
   {socket}
   {txt}
@@ -105,7 +118,3 @@
   {pages}
   {page}
 />
-
-<!-- <svelte:head>
-  <title></title>
-</svelte:head> -->

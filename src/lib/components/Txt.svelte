@@ -66,11 +66,17 @@
 <Row noGutter>
   <Column>
     <span>
+      {#if title}
       <div on:click={() => dispatch("titleClick")} class="head">
         <Truncate clamp="end">{title}</Truncate>
       </div>
+      {/if}
       {#if txt}
+        {#if txt.joined}
         <p on:click={exit} class="pointer">{leaveText}</p>
+        {:else}
+        <p on:click={()=>dispatch('join')} class='pointer'>Join this txt</p>
+        {/if}
       {/if}
       <br />
     </span>
@@ -79,9 +85,13 @@
 </Row>
 
 {#if txt}
-  <Truncate clamp="front">
-    {txt.value}
+<Row noGutter>
+  <Column>
+  <Truncate>
+    txt: {txt.value}
   </Truncate>
+</Column>
+</Row>
 {/if}
 
 {#if pages > 1}

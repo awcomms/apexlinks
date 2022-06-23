@@ -1,4 +1,4 @@
-export default {
+export const routes = {
   index: "/",
   login: "/login",
   items: "/i",

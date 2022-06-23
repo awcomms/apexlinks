@@ -1,1 +1,1 @@
-export default (x) => x.map(i => i.id)
+export const ids = (x) => x.map(i => i.id)

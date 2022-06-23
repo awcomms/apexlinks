@@ -1,6 +1,6 @@
 import { browser } from '$app/env'
 
-export default new Promise((resolve) => {
+export const currentLocation = new Promise((resolve) => {
   let location = {};
   if (browser) {
     window.navigator.geolocation.getCurrentPosition(

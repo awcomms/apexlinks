@@ -2,7 +2,7 @@ import { browser } from '$app/env'
 import { send } from '$lib/send'
 import { browserSend } from './browserSend'
 
-export default {
+export const api = {
     get: async (path, fetch) => {
         let method = 'GET'
         if (browser) {

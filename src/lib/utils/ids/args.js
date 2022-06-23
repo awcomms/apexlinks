@@ -1,4 +1,4 @@
-export default (arg, seperator = '+') => {
+export const args = (arg, seperator = '+') => {
     let ids = arg.split("+");
     let items = ids.map((p) => {
       let id;

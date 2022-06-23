@@ -1,5 +1,6 @@
 export * from './ids'
-export { default as api } from "./api"
-export { default as routes } from "./routes";
-export { default as cFetch } from "./cFetch";
-export { default as socket } from "./socket";
+export { api } from "./api"
+export { routes } from "./routes";
+export { cFetch } from "./cFetch";
+export { socket } from "./socket";
+export { urlBase64ToUint8Array as url8 } from "./url8";

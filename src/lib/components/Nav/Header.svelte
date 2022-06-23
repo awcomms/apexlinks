@@ -3,7 +3,7 @@
   import SideNavMenuItem from "./SideNavMenuItem.svelte";
   import { api } from "$lib/utils";
   import { page } from "$app/stores";
-  import url8 from "$lib/url8";
+  import { url8 } from "$lib/utils";
   import { post } from "$lib/utils/fetch/post";
   import { goto } from "$app/navigation";
   import { navigating, session } from "$app/stores";
@@ -17,7 +17,7 @@
     Header,
   } from "carbon-components-svelte";
   import {onMount } from 'svelte'
-import { routes } from "$lib/utils";
+  import { routes } from "$lib/utils";
 
   let show;
   let installRef;

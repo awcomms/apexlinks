@@ -1,4 +1,4 @@
-export default (base, path, opts, _fetch) => {
+export const cFetch = (base, path, opts, _fetch) => {
   let f = _fetch || fetch
     try {
       return f(`${base}/${path}`, opts)
