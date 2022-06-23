@@ -4,6 +4,8 @@ import {cFetch} from "$lib/utils"
 
 import { API as base } from "$lib/env";
 
+export {base};
+
 export function send({ method, path, data, auth }, f) {
   const opts = { method, headers: {} };
 
