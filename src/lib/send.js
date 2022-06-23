@@ -2,10 +2,7 @@ import { dev, browser } from "$app/env";
 import { parse } from "cookie";
 import {cFetch} from "$lib/utils"
 
-let local = "http://127.0.0.1:5000";
-import { API as live } from "$lib/env";
-
-export let base = dev ? local : live;
+import { API as base } from "$lib/env";
 
 export function send({ method, path, data, auth }, f) {
   const opts = { method, headers: {} };
