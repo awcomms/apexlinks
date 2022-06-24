@@ -1,13 +1,14 @@
-import { browser } from "$app/env";
+import { dev, browser } from "$app/env";
 import { parse } from "cookie";
 import {cFetch} from "$lib/utils"
 
-import { API } from "$lib/env";
+// import { API } from "$lib/env";
 
-console.log('API', API)
+// export const base = API || "http://127.0.0.1:5000";
 
-export const base = API || "http://127.0.0.1:5000";
-console.log("base", base);
+export const base = dev
+  ? "http://127.0.0.1:5000"
+  : "https://apexlinks-nhw6.onrender.com";
 
 export function send({ method, path, data, auth }, f) {
   const opts = { method, headers: {} };
