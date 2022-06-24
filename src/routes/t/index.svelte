@@ -12,7 +12,7 @@
         };
       }
     }
-    let repliesUrl = id ? `txts?id=${id}&replies` : `txts`;
+    let repliesUrl = id ? `txts?id=${id}` : `txts`;
     let res = await api.get(repliesUrl, fetch);
     if (!res.OK) {
       return {
@@ -68,7 +68,7 @@
 
   const get = async () => {
     const res = await api.get(
-      `txts?tags=${JSON.stringify(tags)}&id=${txt.id}&replies`
+      `txts?tags=${JSON.stringify(tags)}&id=${txt.id}`
     );
     if (!res.OK) {
       console.log(`txt fetch response`, res);

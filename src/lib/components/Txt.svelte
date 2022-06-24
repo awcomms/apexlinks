@@ -11,7 +11,7 @@
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
-  import { Row, Column, Truncate } from "carbon-components-svelte";
+  import { Row, Column, Truncate, Link } from "carbon-components-svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { socket } from "$lib/utils";
   import { browser } from '$app/env';
@@ -42,7 +42,7 @@
   };
 
   const get = async () => {
-    await api.get(`txts?replies&page=${page - 1}`).then((r) => {
+    await api.get(`txts?page=${page - 1}`).then((r) => {
       page = r.page;
       pages = r.pages;
       items = [r.items, ...items];
@@ -67,9 +67,9 @@
   <Column>
     <span>
       {#if title}
-        <a href="{routes.txts}/{txt.id}/about">
+        <Link href="{routes.txts}/{txt.id}/about">
           <Truncate clamp="end">{title}</Truncate>
-        </a>
+        </Link>
       {/if}
       {#if txt}
         {#if txt.joined}
@@ -103,16 +103,16 @@
     <Row noGutter>
       <Column>
 
-        <a href="{routes.users}/{item.user.id}">
+        <Link href="{routes.users}/{item.user.id}">
           <p
             class="small pointer"
           >
             {item.user?.username}
           </p>
-        </a>
-        <a href="{routes.txts}/{item.id}">
+        </Link>
+        <Link href="{routes.txts}/{item.id}">
           <p>{item.value}</p>
-        </a>
+        </Link>
       </Column>
     </Row>
   {/each}

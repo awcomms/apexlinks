@@ -1,6 +1,7 @@
 <script>
   export let prefix = '';
   export let text = "";
+  export let editable = true;
   export let showUseOptions = false;
   export let useOptions = false;
   export let hidable = false;
@@ -99,11 +100,11 @@
 {/if}
 
 {#if open}
-  {#if tags.length > 0}
+  {#if editable && tags.length > 0}
     <Tag on:click on:click={clear} type="magenta">Clear</Tag>
   {/if}
   {#each tags as tag}
-    {#if hidable}
+    {#if editable && hidable}
       <ContextMenu target={tag.ref}>
         <ContextMenuOption selectable labelText="Hide" bind:selected={tag.hide} />
       </ContextMenu>

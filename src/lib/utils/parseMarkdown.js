@@ -10,9 +10,9 @@ renderer.heading = (text, level) => {
 
     return `
             <h${level}>
-              <a name="${escapedText}" class="anchor" href="#${escapedText}">
+              <Link name="${escapedText}" class="anchor" href="#${escapedText}">
                 <span class="header-link"></span>
-              </a>
+              </Link>
               ${text}
             </h${level}>`;
 }

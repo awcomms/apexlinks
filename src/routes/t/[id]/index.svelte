@@ -4,7 +4,7 @@
     const {id} = params
     let txt;
     if (id) {
-      txt = await api.get(`txts?id=${id}`, fetch);
+      txt = await api.get(`txts/${id}`, fetch);
       if (!txt.OK) {
         return {
           status: Number(txt.STATUS),
@@ -12,7 +12,8 @@
         };
       }
     }
-    let repliesUrl = id ? `txts?id=${id}&replies` : `txts`;
+    console.log(txt)
+    let repliesUrl = id ? `txts?id=${id}` : `txts`;
     let res = await api.get(repliesUrl, fetch);
     if (!res.OK) {
       return {
@@ -65,7 +66,7 @@
 
   const get = async () => {
     const res = await api.get(
-      `txts?tags=${JSON.stringify(tags)}&id=${txt.id}&replies`
+      `txts?tags=${JSON.stringify(tags)}&id=${txt.id}`
     );
     if (!res.OK) {
       console.log(`txt fetch response`, res);
