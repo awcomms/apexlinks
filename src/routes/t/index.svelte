@@ -41,7 +41,6 @@
   import { Tags } from "$lib/components";
   import { routes } from "$lib/utils";
   import { goto } from "$app/navigation";
-  import { page as sveltePage } from "$app/stores";
   import { io } from "socket.io-client";
   // import { socket } from "$lib/utils";
 
@@ -103,10 +102,6 @@
   on:join={join}
   on:titleClick={() => {
     if (txt) goto(`${routes.txts}/${txt.id}/about`);
-  }}
-  on:itemClick={({ detail: item }) => {
-    goto(`${routes.txts}/${item.id}`);
-    // $sveltePage.url.searchParams.append('id', item.id)
   }}
   {socket}
   {txt}

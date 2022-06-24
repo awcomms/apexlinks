@@ -52,7 +52,6 @@
     user,
     authUser;
   import Txt from "$lib/components/Txt.svelte";
-  import { goto } from "$app/navigation";
   import { socket } from "$lib/utils";
 
   const connect = () => {
@@ -79,8 +78,6 @@
   leaveText={authUser.id === user.id
     ? "Texts to self"
     : "Stop receiving txts from this user"}
-  on:itemClick={({ detail: item }) => goto(`${routes.txts}/${item.id}`)}
-  on:titleClick={() => goto(`${routes.users}/${user.id}`)}
   on:connect={connect}
   on:send={send}
   bind:title={user.username}

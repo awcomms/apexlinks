@@ -67,9 +67,9 @@
   <Column>
     <span>
       {#if title}
-      <div on:click={() => dispatch("titleClick")} class="head">
-        <Truncate clamp="end">{title}</Truncate>
-      </div>
+        <a href="{routes.txts}/{txt.id}/about">
+          <Truncate clamp="end">{title}</Truncate>
+        </a>
       {/if}
       {#if txt}
         {#if txt.joined}
@@ -102,13 +102,17 @@
   {#each items as item}
     <Row noGutter>
       <Column>
-        <p
-          on:click={() => goto(`${routes.users}/${item.user.id}`)}
-          class="small pointer"
-        >
-          {item.user?.username}
-        </p>
-        <p on:click={() => dispatch("itemClick", item)}>{item.value}</p>
+
+        <a href="{routes.users}/{item.user.id}">
+          <p
+            class="small pointer"
+          >
+            {item.user?.username}
+          </p>
+        </a>
+        <a href="{routes.txts}/{item.id}">
+          <p>{item.value}</p>
+        </a>
       </Column>
     </Row>
   {/each}
@@ -126,11 +130,5 @@
   }
   .head-space {
     height: 0.5rem;
-  }
-  .head {
-    font-size: 0.875rem;
-    line-height: 1.125em;
-    font-weight: 600;
-    letter-spacing: 0.16px;
   }
 </style>

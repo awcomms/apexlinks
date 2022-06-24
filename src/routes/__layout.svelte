@@ -1,6 +1,6 @@
 <script>
   import { Content, Grid } from "carbon-components-svelte";
-  import { notify, newUser } from "$lib/stores";
+  import { newUser } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
   import Theme from "$lib/components/Theme.svelte";
