@@ -1,9 +1,9 @@
 .svelte-kit
 .vscode
-build
 .DS_Store
 node_modules
 dist
 yarn.lock
 yarn-error.log
 .env
+.vercel
