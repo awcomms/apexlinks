@@ -4,7 +4,10 @@ import {cFetch} from "$lib/utils"
 
 import { API } from "$lib/env";
 
+console.log('API', API)
+
 export const base = API || "http://127.0.0.1:5000";
+console.log("base", base);
 
 export function send({ method, path, data, auth }, f) {
   const opts = { method, headers: {} };
