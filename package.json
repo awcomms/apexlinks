@@ -10,6 +10,9 @@
     "check": "svelte-check",
     "preview": "svelte-kit preview -H --port 3200"
   },
+  "engines": {
+    "node": "~18.0"
+  },
   "dependencies": {
     "@carbon/type": "^11.4.0",
     "@ibm/plex": "^6.0.2",
