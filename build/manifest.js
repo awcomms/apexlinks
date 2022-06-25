@@ -3,7 +3,7 @@ export const manifest = {
 	assets: new Set(["BingSiteAuth.xml","apexlinks-144.png","apexlinks-192.png","apexlinks-512.png","apple-touch-icon-1024x1024.png","apple-touch-icon-120x120.png","apple-touch-icon-152x152.png","apple-touch-icon-167x167.png","apple-touch-icon-180x180.png","favicon.ico","junegull.ttf","manifest.webmanifest","placeholder.png","service-worker.js"]),
 	mimeTypes: {".xml":"application/xml",".png":"image/png",".ico":"image/vnd.microsoft.icon",".ttf":"font/ttf",".webmanifest":"application/manifest+json"},
 	_: {
-		entry: {"file":"start-d0b3301a.js","js":["start-d0b3301a.js","chunks/index-e47b4649.js","chunks/singletons-d1fb5791.js"],"css":[]},
+		entry: {"file":"start-3ccdcd72.js","js":["start-3ccdcd72.js","chunks/index-e47b4649.js","chunks/singletons-d1fb5791.js"],"css":[]},
 		nodes: [
 			() => import('./server/nodes/0.js'),
 			() => import('./server/nodes/1.js'),

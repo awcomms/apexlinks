@@ -4,7 +4,7 @@ const timestamp = {
   }
 };
 const build = [
-  "/_app/immutable/start-d0b3301a.js",
+  "/_app/immutable/start-3ccdcd72.js",
   "/_app/immutable/pages/__layout.svelte-404f06bd.js",
   "/_app/immutable/assets/pages/__layout.svelte-e6639c00.css",
   "/_app/immutable/pages/__error.svelte-c507533b.js",
