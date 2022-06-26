@@ -25,7 +25,7 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    if (focusLast) tags[tags.length - 1]?.ref.focus();
+    // if (focusLast) tags[tags.length - 1]?.ref.focus();
   });
 
   let focused;

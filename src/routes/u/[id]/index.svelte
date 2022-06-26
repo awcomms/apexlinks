@@ -51,8 +51,11 @@
     txt,
     user,
     authUser;
+
   import Txt from "$lib/components/Txt.svelte";
   import { socket } from "$lib/utils";
+
+  let sameUser = authUser.id === user.id
 
   const connect = () => {
     socket.emit("join", txt.id);
@@ -75,12 +78,15 @@
 </script>
 
 <Txt
-  leaveText={authUser.id === user.id
-    ? "Texts to self"
-    : "Stop receiving txts from this user"}
+  leaveText={sameUser
+    ? false
+    : "Remove this user from dm list"}
   on:connect={connect}
+  joinText = {
+    sameUser ? false : "Add this user to dm list"
+  }
   on:send={send}
-  bind:title={user.username}
+  {user}
   bind:txt
   bind:items
   bind:total

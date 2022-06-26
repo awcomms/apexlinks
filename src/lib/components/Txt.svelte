@@ -1,12 +1,12 @@
 <script>
-  export let title,
-  add,
+  export let user,
+    add,
     page,
     pages,
     txt,
     items,
-    // socket,
-    leaveText = "Leave txt";
+    leaveText = "Remove this txt from your list",
+    joinText = "Add this txt to your list";
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -14,9 +14,9 @@
   import { Row, Column, Truncate, Link } from "carbon-components-svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { socket } from "$lib/utils";
-  import { browser } from '$app/env';
+  import { browser } from "$app/env";
 
-  $: updateScroll(add)
+  $: updateScroll(add);
 
   const dispatch = createEventDispatcher();
 
@@ -56,26 +56,40 @@
   };
 
   const updateScroll = () => {
-    if (!browser) return
+    if (!browser) return;
     setTimeout(() => {
       window.scrollTo({ left: 0, top: document.body.scrollHeight });
     }, 0);
   };
 </script>
 
+{#if txt}
+  <Row noGutter>
+    <Column>
+      <Link href="{routes.txts}/{txt.id}/about">
+        <Truncate>
+          txt {txt.id}: {txt.value}
+        </Truncate>
+      </Link>
+    </Column>
+  </Row>
+{/if}
+
 <Row noGutter>
   <Column>
     <span>
-      {#if title}
-        <Link href="{routes.txts}/{txt.id}/about">
-          <Truncate clamp="end">{title}</Truncate>
+      {#if user}
+        <Link href="{routes.users}/{user.id}/about">
+          <Truncate clamp="end">{user.username}</Truncate>
         </Link>
       {/if}
       {#if txt}
         {#if txt.joined}
-        <p on:click={exit} class="pointer">{leaveText}</p>
-        {:else}
-        <p on:click={()=>dispatch('join')} class='pointer'>Join this txt</p>
+          {#if leaveText}
+            <p on:click={exit} class="pointer">{leaveText}</p>
+          {/if}
+        {:else if joinText}
+          <p on:click={() => dispatch("join")} class="pointer">{joinText}</p>
         {/if}
       {/if}
       <br />
@@ -83,16 +97,6 @@
     <div class="head-space" />
   </Column>
 </Row>
-
-{#if txt}
-<Row noGutter>
-  <Column>
-  <Truncate>
-    txt {txt.id}: {txt.value}
-  </Truncate>
-</Column>
-</Row>
-{/if}
 
 {#if pages > 1}
   <p on:click={get}>Get older txts</p>
@@ -102,11 +106,8 @@
   {#each items as item}
     <Row noGutter>
       <Column>
-
         <Link href="{routes.users}/{item.user.id}">
-          <p
-            class="small pointer"
-          >
+          <p class="small pointer">
             {item.user?.username}
           </p>
         </Link>

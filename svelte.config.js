@@ -20,7 +20,7 @@ export default {
         {
           name: "sveltekit-socket-io",
           configureServer(server) {
-            const io = getIO(server)
+            const io = getIO(server.httpServer)
           },
         },
       ],

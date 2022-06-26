@@ -108,7 +108,14 @@
 
 <Row noGutter>
   <Column>
-    <Tag text='Add tags to search for users' open={true} focusLast={true} bind:tags={$userTags} placeholder="Search" on:change={get} />
+    <Tag
+      text="Add tags to search for users"
+      open={true}
+      focusLast={true}
+      bind:tags={$userTags}
+      placeholder="Search"
+      on:change={get}
+    />
   </Column>
 </Row>
 
@@ -126,8 +133,11 @@
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
       <div
-        class:selected={showSelected && $selectedUsers.find(s => s.id === user?.id)}
-        on:click={() => {if (user.id) dispatch("click", user)}}
+        class:selected={showSelected &&
+          $selectedUsers.find((s) => s.id === user?.id)}
+        on:click={() => {
+          if (user.id) dispatch("click", user);
+        }}
         class="pointer user"
       >
         <!-- {#if user.image}
