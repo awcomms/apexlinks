@@ -1,10 +1,10 @@
 <script context="module">
   import { api } from "$lib/utils";
-  export const load = async ({ url, fetch }) => {
-    const id = url.searchParams.get("id");
+  export const load = async ({ params, fetch }) => {
+    const {id} = params
     let txt;
     if (id) {
-      txt = await api.get(`txts?id=${id}`, fetch);
+      txt = await api.get(`txts/${id}`, fetch);
       if (!txt.OK) {
         return {
           status: Number(txt.STATUS),
@@ -12,6 +12,13 @@
         };
       }
     }
+    // if (txt.dm) {
+    //   return {
+    //     status: 401,
+    //     error: `txt ${txt.id} not a public txt`
+    //   }
+    // }
+    console.log(txt)
     let repliesUrl = id ? `txts?id=${id}` : `txts`;
     let res = await api.get(repliesUrl, fetch);
     if (!res.OK) {

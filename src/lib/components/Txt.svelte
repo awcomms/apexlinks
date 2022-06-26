@@ -1,10 +1,11 @@
 <script>
-  export let user,
-    add,
-    page,
-    pages,
-    txt,
-    items,
+  export let text = "",
+    user = null,
+    hideUser = false,
+    page = 1,
+    pages = 1,
+    txt = null,
+    items = [],
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
@@ -14,11 +15,17 @@
   import { Row, Column, Truncate, Link } from "carbon-components-svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { socket } from "$lib/utils";
+  import { session } from "$app/stores";
+  import { Tags } from "$lib/components";
+  // import { io } from "socket.io-client";
   import { browser } from "$app/env";
 
-  $: updateScroll(add);
+  let tags = [];
+  let room = txt ? String(txt.id) : "home";
 
   const dispatch = createEventDispatcher();
+
+  let { user: authUser } = session;
 
   let value;
   let ref;
@@ -41,18 +48,35 @@
     goto(routes.txts);
   };
 
+  socket.on("connect", () => {
+    socket.emit("join", room);
+  });
+
+  socket.on("txt", async (obj) => {
+    if (txt) await api.put(`seen?id=${txt.id}`, {});
+    items = [...items, obj];
+    updateScroll();
+  });
+
   const get = async () => {
-    await api.get(`txts?page=${page - 1}`).then((r) => {
-      page = r.page;
-      pages = r.pages;
-      items = [r.items, ...items];
-    });
+    const res = await api.get(`txts?tags=${JSON.stringify(tags)}&id=${txt.id}`);
+    if (!res.OK) {
+      console.log(`txt fetch response`, res);
+      return;
+    }
+    ({ items, total, page, pages } = res);
   };
 
-  const send = () => {
-    if (!value) return;
-    dispatch("send", value);
-    value = "";
+  const send = async () => {
+    let data = { value };
+    if (txt) data.txt = txt.id;
+    await api.post(`txts`, data).then((res) => {
+      if (!res.OK) {
+        console.log("txt POST response: ", res);
+        return;
+      }
+      socket.emit("txt", { data: res, room });
+    });
   };
 
   const updateScroll = () => {
@@ -63,10 +87,16 @@
   };
 </script>
 
-{#if txt}
+<Row noGutter>
+  <Column>
+    <Tags on:change={get} prefix="search " bind:tags />
+  </Column>
+</Row>
+
+{#if !user && txt}
   <Row noGutter>
     <Column>
-      <Link href="{routes.txts}/{txt.id}/about">
+      <Link href="{routes.txts}/{txt.id}/txt">
         <Truncate>
           txt {txt.id}: {txt.value}
         </Truncate>
@@ -75,13 +105,24 @@
   </Row>
 {/if}
 
+{#if txt && authUser.id === txt.user.id}
+  <Row noGutter>
+    <Column>
+      <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
+    </Column>
+  </Row>
+{/if}
+
 <Row noGutter>
   <Column>
     <span>
-      {#if user}
+      {#if user && !hideUser}
         <Link href="{routes.users}/{user.id}/about">
           <Truncate clamp="end">{user.username}</Truncate>
         </Link>
+      {/if}
+      {#if text}
+        <p>{text}</p>
       {/if}
       {#if txt}
         {#if txt.joined}

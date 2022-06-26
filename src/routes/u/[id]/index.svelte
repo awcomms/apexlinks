@@ -1,95 +1,73 @@
 <script context="module">
-  import { api, routes } from "$lib/utils";
-  import { post } from "$lib/utils/fetch";
-
-  export const load = async ({ params, session, fetch }) => {
-    const { id } = params;
-    const user = await api.get(`users/${id}`, fetch);
+  import { api } from "$lib/utils";
+  export const load = async ({ params, fetch }) => {
+    let { id } = params;
+    let user = await api.get(`users/${id}`, fetch);
+    console.log('-u', user)
     if (!user.OK) {
+      console.log('yeet')
       return {
-        status: user.STATUS,
+        status: Number(user.STATUS),
         error: user.error,
       };
     }
-    if (!session.user) {
-      return {
-        status: 302,
-        redirect: `${routes.users}/${id}/about`,
-      };
-    }
-    const txt = await post(
-      "/send",
-      { path: "txts/users", method: "POST", data: { user: id } },
-      fetch
-    );
-    if (!txt.OK) {
-      return {
-        status: txt.STATUS,
-        error: txt.error,
-      };
-    }
-    let { items, total, page, pages } = await api.get(`txts?id=${txt.id}`);
+    if (!user.tags) user.tags = []
     return {
       props: {
-        txt,
-        items,
-        total,
-        page,
-        pages,
-        user,
-        authUser: session.user,
+        user
       },
     };
   };
 </script>
 
 <script>
-  export let items = [],
-    total,
-    page,
-    pages,
-    txt,
-    user,
-    authUser;
+  export let user;
+  import { Column, Tag } from "carbon-components-svelte";
 
-  import Txt from "$lib/components/Txt.svelte";
-  import { socket } from "$lib/utils";
-
-  let sameUser = authUser.id === user.id
-
-  const connect = () => {
-    socket.emit("join", txt.id);
-  };
-
-  const send = async ({ detail: value }) => {
-    const data = { txt: txt.id, value };
-    await api.post(`txts`, data).then((res) => {
-      console.log(res);
-      if (!res.OK) {
-        console.log("not ok - ", res);
-        return;
-      }
-      socket.emit(
-        "txt",
-        res
-      );
-    });
-  };
+  // onMount(() => {
+  //   (() => {
+  //     if (!user.fields) return;
+  //     let ld = {
+  //       "@context": "https://schema.org",
+  //       "@type": "Organization",
+  //     };
+  //     user.fields.forEach((field) => {
+  //       if (!(field.label in ld)) ld[field.label] = field.value;
+  //     });
+  //     document.getElementById("ld").innerText = JSON.stringify(ld);
+  //   })();
+  // });
 </script>
 
-<Txt
-  leaveText={sameUser
-    ? false
-    : "Remove this user from dm list"}
-  on:connect={connect}
-  joinText = {
-    sameUser ? false : "Add this user to dm list"
-  }
-  on:send={send}
-  {user}
-  bind:txt
-  bind:items
-  bind:total
-  bind:page
-  bind:pages
-/>
+<svelte:head>
+  <meta
+    name="keywords"
+    content={(() => {
+      let stringOfTags = "";
+      user.tags.forEach((t, i, a) => {
+        let tagString = i === a.length - 1 ? t : `${t}, `;
+        stringOfTags = stringOfTags.concat(tagString);
+      });
+      return stringOfTags;
+    })()}
+  />
+  <meta name="description" content="{user.name}'s Apexlinks page" />
+  <title>/{user.username}</title>
+  <script id="ld" type="application/ld+json"></script>
+</svelte:head>
+
+
+{#if user.image}
+  <Column lg={2} sm={2} md={2} xlg={2}>
+    <img style="width: 100%;" alt="user display _image" src={user.image} />
+  </Column>
+{/if}
+
+<p>id: {user.id}</p>
+<p>username: {user.username}</p>
+
+{#each user.tags as tag}
+  {#if !tag.hide}
+    <Tag>{tag.value}</Tag>
+  {/if}
+{/each}

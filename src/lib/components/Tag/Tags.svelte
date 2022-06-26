@@ -76,11 +76,13 @@
 <svelte:window on:keydown={keydown} />
 
 {#if text}<p>{text}</p>{/if}
+
 <div class="head">
   <p class="title" on:click={toggleOpen}>
     {tags.length}
     {`${tags.length === 1 ? `${prefix}tag` : `${prefix}tags`}`}
   </p>
+  {#if editable}
   <Button
     kind="ghost"
     size="small"
@@ -92,6 +94,7 @@
     }}
     iconDescription="Add a tag"
   />
+  {/if}
 </div>
 <slot />
 
