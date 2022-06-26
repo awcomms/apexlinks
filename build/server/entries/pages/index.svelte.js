@@ -46,7 +46,13 @@ ${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
       default: () => {
         return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
           default: () => {
-            return `${validate_component(Tags, "Tag").$$render($$result, { placeholder: "Search", tags: $userTags }, {
+            return `${validate_component(Tags, "Tag").$$render($$result, {
+              text: "Add tags to search for users",
+              open: true,
+              focusLast: true,
+              placeholder: "Search",
+              tags: $userTags
+            }, {
               tags: ($$value) => {
                 $userTags = $$value;
                 $$settled = false;

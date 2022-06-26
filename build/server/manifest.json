@@ -159,6 +159,27 @@
       "assets/entries/pages/login.svelte-910c7ef7.css"
     ]
   },
+  "src/routes/t/Txt.svelte": {
+    "file": "entries/pages/t/Txt.svelte.js",
+    "src": "src/routes/t/Txt.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-706e192e.js",
+      "_routes-fb6e9fa0.js",
+      "_socket-c916af1c.js",
+      "_TxtInput-e6d7f3c6.js",
+      "_Link-ac336e41.js",
+      "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
+      "_Row-d1968937.js",
+      "_Column-a86887bc.js",
+      "_stores-f80eb8f4.js",
+      "_TextInput-3971c789.js"
+    ],
+    "css": [
+      "assets/entries/pages/t/Txt.svelte-4d0213cd.css",
+      "assets/Tags.svelte_svelte_type_style_lang-4faf5820.css"
+    ]
+  },
   "src/routes/t/[id]/about.svelte": {
     "file": "entries/pages/t/_id_/about.svelte.js",
     "src": "src/routes/t/[id]/about.svelte",
@@ -214,10 +235,11 @@
       "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
       "_Row-d1968937.js",
       "_Column-a86887bc.js",
-      "_Txt-f21e3ddd.js",
+      "_Txt-6fba074b.js",
       "_Tags-8ac9097a.js",
       "_send-cf4176c0.js",
       "_routes-fb6e9fa0.js",
+      "_TxtInput-e6d7f3c6.js",
       "_stores-f80eb8f4.js",
       "_Link-ac336e41.js",
       "_TextInput-3971c789.js",
@@ -241,10 +263,11 @@
       "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
       "_Row-d1968937.js",
       "_Column-a86887bc.js",
-      "_Txt-f21e3ddd.js",
+      "_Txt-6fba074b.js",
       "_Tags-8ac9097a.js",
       "_send-cf4176c0.js",
       "_routes-fb6e9fa0.js",
+      "_TxtInput-e6d7f3c6.js",
       "_stores-f80eb8f4.js",
       "_Link-ac336e41.js",
       "_TextInput-3971c789.js",
@@ -281,8 +304,9 @@
       "_api-47bb839d.js",
       "_routes-fb6e9fa0.js",
       "_socket-c916af1c.js",
-      "_Txt-f21e3ddd.js",
+      "_Txt-6fba074b.js",
       "_send-cf4176c0.js",
+      "_TxtInput-e6d7f3c6.js",
       "_stores-f80eb8f4.js",
       "_Link-ac336e41.js",
       "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
@@ -421,21 +445,34 @@
       "_index-706e192e.js"
     ]
   },
-  "_Txt-f21e3ddd.js": {
-    "file": "chunks/Txt-f21e3ddd.js",
+  "_TxtInput-e6d7f3c6.js": {
+    "file": "chunks/TxtInput-e6d7f3c6.js",
     "imports": [
       "_index-706e192e.js",
+      "_stores-f80eb8f4.js",
       "_routes-fb6e9fa0.js",
       "_socket-c916af1c.js",
-      "_stores-f80eb8f4.js",
       "_Link-ac336e41.js",
       "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
       "_Row-d1968937.js",
       "_Column-a86887bc.js",
       "_TextInput-3971c789.js"
+    ]
+  },
+  "_Txt-6fba074b.js": {
+    "file": "chunks/Txt-6fba074b.js",
+    "imports": [
+      "_index-706e192e.js",
+      "_routes-fb6e9fa0.js",
+      "_socket-c916af1c.js",
+      "_TxtInput-e6d7f3c6.js",
+      "_Link-ac336e41.js",
+      "_HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js",
+      "_Row-d1968937.js",
+      "_Column-a86887bc.js"
     ],
     "css": [
-      "assets/Txt-af11f6f9.css",
+      "assets/entries/pages/t/Txt.svelte-4d0213cd.css",
       "assets/Tags.svelte_svelte_type_style_lang-4faf5820.css"
     ]
   },

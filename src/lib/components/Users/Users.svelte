@@ -108,7 +108,7 @@
 
 <Row noGutter>
   <Column>
-    <Tag bind:tags={$userTags} placeholder="Search" on:change={get} />
+    <Tag text='Add tags to search for users' open={true} focusLast={true} bind:tags={$userTags} placeholder="Search" on:change={get} />
   </Column>
 </Row>
 

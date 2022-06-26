@@ -5,12 +5,13 @@ import "../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
 import "flatpickr";
 import { R as Row } from "../../../chunks/Row-d1968937.js";
 import { C as Column } from "../../../chunks/Column-a86887bc.js";
-import { T as Txt } from "../../../chunks/Txt-f21e3ddd.js";
+import { T as Txt } from "../../../chunks/Txt-6fba074b.js";
 import { T as Tags } from "../../../chunks/Tags-8ac9097a.js";
 import { io } from "socket.io-client";
 import "../../../chunks/send-cf4176c0.js";
 import "cookie";
 import "../../../chunks/routes-fb6e9fa0.js";
+import "../../../chunks/TxtInput-e6d7f3c6.js";
 import "../../../chunks/stores-f80eb8f4.js";
 import "../../../chunks/Link-ac336e41.js";
 import "../../../chunks/TextInput-3971c789.js";
@@ -79,7 +80,11 @@ const T = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       default: () => {
         return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
           default: () => {
-            return `${validate_component(Tags, "Tags").$$render($$result, { prefix: "search ", tags }, {
+            return `${validate_component(Tags, "Tags").$$render($$result, {
+              text: "Add tags to search for txts",
+              prefix: "search ",
+              tags
+            }, {
               tags: ($$value) => {
                 tags = $$value;
                 $$settled = false;

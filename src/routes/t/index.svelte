@@ -92,7 +92,7 @@
 
 <Row noGutter>
   <Column>
-    <Tags on:change={get} prefix="search " bind:tags />
+    <Tags text='Add tags to search for txts' on:change={get} prefix="search " bind:tags />
   </Column>
 </Row>
 

@@ -3,20 +3,21 @@ export const manifest = {
 	assets: new Set(["BingSiteAuth.xml","apexlinks-144.png","apexlinks-192.png","apexlinks-512.png","apple-touch-icon-1024x1024.png","apple-touch-icon-120x120.png","apple-touch-icon-152x152.png","apple-touch-icon-167x167.png","apple-touch-icon-180x180.png","favicon.ico","junegull.ttf","manifest.webmanifest","placeholder.png","service-worker.js"]),
 	mimeTypes: {".xml":"application/xml",".png":"image/png",".ico":"image/vnd.microsoft.icon",".ttf":"font/ttf",".webmanifest":"application/manifest+json"},
 	_: {
-		entry: {"file":"start-3ccdcd72.js","js":["start-3ccdcd72.js","chunks/index-e47b4649.js","chunks/singletons-d1fb5791.js"],"css":[]},
+		entry: {"file":"start-daa80883.js","js":["start-daa80883.js","chunks/index-e47b4649.js","chunks/singletons-d1fb5791.js"],"css":[]},
 		nodes: [
 			() => import('./nodes/0.js'),
 			() => import('./nodes/1.js'),
 			() => import('./nodes/4.js'),
 			() => import('./nodes/2.js'),
 			() => import('./nodes/5.js'),
-			() => import('./nodes/9.js'),
-			() => import('./nodes/3.js'),
-			() => import('./nodes/8.js'),
-			() => import('./nodes/11.js'),
+			() => import('./nodes/10.js'),
 			() => import('./nodes/6.js'),
+			() => import('./nodes/3.js'),
+			() => import('./nodes/9.js'),
+			() => import('./nodes/12.js'),
 			() => import('./nodes/7.js'),
-			() => import('./nodes/10.js')
+			() => import('./nodes/8.js'),
+			() => import('./nodes/11.js')
 		],
 		routes: [
 			{
@@ -105,13 +106,24 @@ export const manifest = {
 			},
 			{
 				type: 'page',
+				id: "t/Txt",
+				pattern: /^\/t\/Txt\/?$/,
+				names: [],
+				types: [],
+				path: "/t/Txt",
+				shadow: null,
+				a: [0,6],
+				b: [1]
+			},
+			{
+				type: 'page',
 				id: "event/[id]",
 				pattern: /^\/event\/([^/]+?)\/?$/,
 				names: ["id"],
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,6],
+				a: [0,7],
 				b: [1]
 			},
 			{
@@ -122,7 +134,7 @@ export const manifest = {
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,7],
+				a: [0,8],
 				b: [1]
 			},
 			{
@@ -133,7 +145,7 @@ export const manifest = {
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,8],
+				a: [0,9],
 				b: [1]
 			},
 			{
@@ -144,7 +156,7 @@ export const manifest = {
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,9],
+				a: [0,10],
 				b: [1]
 			},
 			{
@@ -155,7 +167,7 @@ export const manifest = {
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,10],
+				a: [0,11],
 				b: [1]
 			},
 			{
@@ -166,7 +178,7 @@ export const manifest = {
 				types: [null],
 				path: null,
 				shadow: null,
-				a: [0,11],
+				a: [0,12],
 				b: [1]
 			}
 		],

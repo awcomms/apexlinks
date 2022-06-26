@@ -7,9 +7,15 @@ export default {
     adapter: adapter({
       out: "build",
       precompress: true,
-      envPrefix: 'X_CUSTOM_'
+      envPrefix: "X_CUSTOM_",
     }),
     vite: {
+      resolve: {
+        alias: {
+          "xmlhttprequest-ssl":
+            "./node_modules/engine.io-client/lib/xmlhttprequest.js",
+        },
+      },
       plugins: [
         {
           name: "sveltekit-socket-io",
@@ -18,9 +24,7 @@ export default {
 
             io.on("connection", (socket) => {
               socket.on("txt", (data) => {
-                io
-                  .to(String(data.room))
-                  .emit("txt", data.data);
+                io.to(String(data.room)).emit("txt", data.data);
               });
 
               socket.on("join", (room) => {
