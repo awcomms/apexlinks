@@ -1,7 +1,7 @@
 <script context="module">
   import { api } from "$lib/utils";
   export const load = async ({ params, fetch }) => {
-    const {id} = params
+    const { id } = params;
     let txt;
     if (id) {
       txt = await api.get(`txts/${id}`, fetch);
@@ -15,10 +15,10 @@
     if (txt.dm) {
       return {
         status: 401,
-        error: `txt ${txt.id} not a public txt`
-      }
+        error: `txt ${txt.id} not a public txt`,
+      };
     }
-    console.log(txt)
+    console.log(txt);
     let repliesUrl = id ? `txts?id=${id}` : `txts`;
     let res = await api.get(repliesUrl, fetch);
     if (!res.OK) {
@@ -46,10 +46,4 @@
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt
-  {txt}
-  {items}
-  {total}
-  {pages}
-  {page}
-/>
+<Txt labelText="Reply to this txt" {txt} {items} {total} {pages} {page} />

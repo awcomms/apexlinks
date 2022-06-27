@@ -2,20 +2,27 @@
   export let text = "",
     user = null,
     hideUser = false,
-    page = 1,
-    pages = 1,
+    page = 0,
+    labelText = "",
+    pages = 0,
     txt = null,
     items = [],
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
-    console.log('-t', txt)
+  console.log("-t", txt);
 
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
-  import { Button, Row, Column, Truncate, Link } from "carbon-components-svelte";
-  import { createEventDispatcher, onMount } from "svelte";
+  import {
+    Button,
+    Row,
+    Column,
+    Truncate,
+    Link,
+  } from "carbon-components-svelte";
+  import { onMount } from "svelte";
   import { session } from "$app/stores";
   import { Tags } from "$lib/components";
   import { io } from "socket.io-client";
@@ -44,11 +51,11 @@
   };
 
   const join = async () => {
-    const res = await api.put(`join/${txt.id}`)
+    const res = await api.put(`join/${txt.id}`);
     if (!res.OK) {
-      console.log('fetch PUT `join/${txt.id} res: ', res)
+      console.log("fetch PUT `join/${txt.id} res: ", res);
     }
-  }
+  };
 
   const exit = async () => {
     await api.put(`leave/${txt.id}`);
@@ -67,7 +74,9 @@
   });
 
   const get = async () => {
-    const res = await api.get(`txts?tags=${JSON.stringify(tags)}&id=${txt.id}`);
+    let url = `txts?tags=${JSON.stringify(tags)}`
+    if (txt) url = url.concat(`&id=${txt.id}`)
+    const res = await api.get(url);
     if (!res.OK) {
       console.log(`txt fetch response`, res);
       return;
@@ -84,6 +93,7 @@
         return;
       }
       socket.emit("txt", { data: res, room });
+      value = ""; //TODO-option
     });
   };
 
@@ -97,7 +107,12 @@
 
 <Row noGutter>
   <Column>
-    <Tags on:change={get} prefix="search " bind:tags />
+    <Tags
+      text="Add tags to search for txts"
+      on:change={get}
+      prefix="search "
+      bind:tags
+    />
   </Column>
 </Row>
 
@@ -135,10 +150,14 @@
       {#if txt}
         {#if txt.joined}
           {#if leaveText}
-            <Button size='small' on:click={exit} class="pointer">{leaveText}</Button>
+            <Button size="small" on:click={exit} class="pointer"
+              >{leaveText}</Button
+            >
           {/if}
         {:else if joinText}
-          <Button size='small' on:click={join} class="pointer">{joinText}</Button>
+          <Button size="small" on:click={join} class="pointer"
+            >{joinText}</Button
+          >
         {/if}
       {/if}
       <br />
@@ -155,19 +174,19 @@
   {#each items as item}
     <Row noGutter>
       <Column>
-        <Link href="{routes.user(item.user.id)}">
+        <Link href={routes.user(item.user.id)}>
           <p class="small pointer">
             {item.user?.username}
           </p>
         </Link>
-        <Link href="{routes.txtTxt(item.id)}">
+        <Link href={routes.txtTxt(item.id)}>
           <p>{item.value}</p>
         </Link>
       </Column>
     </Row>
   {/each}
 
-  <TxtInput on:keydown={keydown} bind:value bind:ref />
+  <TxtInput {labelText} on:keydown={keydown} bind:value bind:ref />
 </div>
 
 <style>

@@ -1,48 +1,5 @@
-<script context="module">
-  import { api } from "$lib/utils";
-  export const load = async ({ url, fetch }) => {
-    const id = url.searchParams.get("id");
-    let txt;
-    if (id) {
-      txt = await api.get(`txts?id=${id}`, fetch);
-      if (!txt.OK) {
-        return {
-          status: Number(txt.STATUS),
-          error: txt.error,
-        };
-      }
-    }
-    let repliesUrl = id ? `txts?id=${id}` : `txts`;
-    let res = await api.get(repliesUrl, fetch);
-    if (!res.OK) {
-      return {
-        status: Number(res.STATUS),
-        error: res.error,
-      };
-    }
-    let { items, total, page, pages } = res;
-
-    return {
-      props: {
-        txt,
-        items,
-        page,
-        pages,
-        total,
-      },
-    };
-  };
-</script>
-
 <script>
-  export let txt, items, total, page, pages;
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt
-  {txt}
-  {items}
-  {total}
-  {pages}
-  {page}
-/>
+<Txt labelText="Add a new txt" />
