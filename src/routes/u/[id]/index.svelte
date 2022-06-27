@@ -3,18 +3,17 @@
   export const load = async ({ params, fetch }) => {
     let { id } = params;
     let user = await api.get(`users/${id}`, fetch);
-    console.log('-u', user)
     if (!user.OK) {
-      console.log('yeet')
+      console.log("yeet");
       return {
         status: Number(user.STATUS),
         error: user.error,
       };
     }
-    if (!user.tags) user.tags = []
+    if (!user.tags) user.tags = [];
     return {
       props: {
-        user
+        user,
       },
     };
   };
@@ -22,7 +21,8 @@
 
 <script>
   export let user;
-  import { Column, Tag } from "carbon-components-svelte";
+  import { Row, Link, Column, Tag } from "carbon-components-svelte";
+  import { routes } from "$lib/utils";
 
   // onMount(() => {
   //   (() => {
@@ -56,18 +56,33 @@
   <script id="ld" type="application/ld+json"></script>
 </svelte:head>
 
+<Row noGutter>
+  <Column>
+    <Link href={routes.userTxt(user.id)}>Txt</Link>
+  </Column>
+</Row>
 
 {#if user.image}
-  <Column lg={2} sm={2} md={2} xlg={2}>
-    <img style="width: 100%;" alt="user display _image" src={user.image} />
-  </Column>
+  <Row noGutter>
+    <Column lg={2} sm={2} md={2} xlg={2}>
+      <img style="width: 100%;" alt="user display _image" src={user.image} />
+    </Column>
+  </Row>
 {/if}
 
-<p>id: {user.id}</p>
-<p>username: {user.username}</p>
+<Row noGutter>
+  <Column>
+    <p>id: {user.id}</p>
+    <p>username: {user.username}</p>
+  </Column>
+</Row>
 
 {#each user.tags as tag}
   {#if !tag.hide}
-    <Tag>{tag.value}</Tag>
+    <Row noGutter>
+      <Column>
+        <Tag>{tag.value}</Tag>
+      </Column>
+    </Row>
   {/if}
 {/each}

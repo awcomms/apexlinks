@@ -67,7 +67,7 @@
   hideUser={sameUser}
   text='Txts to self'
   {user}
-  bind:txt
+  {txt}
   bind:items
   bind:total
   bind:page

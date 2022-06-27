@@ -12,12 +12,12 @@
         };
       }
     }
-    // if (txt.dm) {
-    //   return {
-    //     status: 401,
-    //     error: `txt ${txt.id} not a public txt`
-    //   }
-    // }
+    if (txt.dm) {
+      return {
+        status: 401,
+        error: `txt ${txt.id} not a public txt`
+      }
+    }
     console.log(txt)
     let repliesUrl = id ? `txts?id=${id}` : `txts`;
     let res = await api.get(repliesUrl, fetch);

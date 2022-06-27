@@ -9,23 +9,24 @@
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
+    console.log('-t', txt)
+
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
-  import { Row, Column, Truncate, Link } from "carbon-components-svelte";
+  import { Button, Row, Column, Truncate, Link } from "carbon-components-svelte";
   import { createEventDispatcher, onMount } from "svelte";
-  import { socket } from "$lib/utils";
   import { session } from "$app/stores";
   import { Tags } from "$lib/components";
-  // import { io } from "socket.io-client";
+  import { io } from "socket.io-client";
   import { browser } from "$app/env";
+
+  const socket = io();
 
   let tags = [];
   let room = txt ? String(txt.id) : "home";
 
-  const dispatch = createEventDispatcher();
-
-  let { user: authUser } = session;
+  let { user: authUser } = $session;
 
   let value;
   let ref;
@@ -41,6 +42,13 @@
         send();
     }
   };
+
+  const join = async () => {
+    const res = await api.put(`join/${txt.id}`)
+    if (!res.OK) {
+      console.log('fetch PUT `join/${txt.id} res: ', res)
+    }
+  }
 
   const exit = async () => {
     await api.put(`leave/${txt.id}`);
@@ -96,7 +104,7 @@
 {#if !user && txt}
   <Row noGutter>
     <Column>
-      <Link href="{routes.txts}/{txt.id}/txt">
+      <Link href="{routes.txts}/{txt.id}">
         <Truncate>
           txt {txt.id}: {txt.value}
         </Truncate>
@@ -105,7 +113,7 @@
   </Row>
 {/if}
 
-{#if txt && authUser.id === txt.user.id}
+{#if txt && authUser.id === txt.user?.id}
   <Row noGutter>
     <Column>
       <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
@@ -127,10 +135,10 @@
       {#if txt}
         {#if txt.joined}
           {#if leaveText}
-            <p on:click={exit} class="pointer">{leaveText}</p>
+            <Button size='small' on:click={exit} class="pointer">{leaveText}</Button>
           {/if}
         {:else if joinText}
-          <p on:click={() => dispatch("join")} class="pointer">{joinText}</p>
+          <Button size='small' on:click={join} class="pointer">{joinText}</Button>
         {/if}
       {/if}
       <br />
@@ -147,12 +155,12 @@
   {#each items as item}
     <Row noGutter>
       <Column>
-        <Link href="{routes.users}/{item.user.id}">
+        <Link href="{routes.user(item.user.id)}">
           <p class="small pointer">
             {item.user?.username}
           </p>
         </Link>
-        <Link href="{routes.txts}/{item.id}">
+        <Link href="{routes.txtTxt(item.id)}">
           <p>{item.value}</p>
         </Link>
       </Column>

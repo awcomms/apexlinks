@@ -39,20 +39,20 @@
 {#if user?.id === txt.user?.id}
 <Row noGutter>
     <Column>
-        <Link href='{routes.txts}/{txt.id}/edit'>Edit this txt</Link>
+        <Link href='{routes.txtEdit(txt.id)}'>Edit this txt</Link>
     </Column>
 </Row>
 {/if}
 
 <Row noGutter>
     <Column>
-        <Link href='{routes.txts}/{txt.id}/chat'>Replies to this txt</Link>
+        <Link href='{routes.txtTxt(txt.id)}'>Replies to this txt</Link>
     </Column>
 </Row>
 
 <Row noGutter>
     <Column>
-        <Link href='{routes.users}/{txt.user.id}'>Creator of this txt</Link>
+        <Link href='{routes.txt(txt.id)}'>Creator of this txt</Link>
     </Column>
 </Row>
 
