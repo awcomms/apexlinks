@@ -197,7 +197,7 @@
   {#if sort === ("newest" || "oldest") && pages > 1}
     <Row noGutter>
       <Column>
-        <Button size="small" on:click={() => get(true)}>Get older txts</Button>
+        <Button size="small" on:click={() => get(true)}>Get {sort === 'newest' ? 'older': 'newer'} txts</Button>
       </Column>
     </Row>
   {/if}
