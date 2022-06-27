@@ -65,7 +65,7 @@
     sameUser ? false : "Add this user to dm list"
   }
   hideUser={sameUser}
-  text='Txts to self'
+  text={sameUser ? 'Txts to self' : `Txts to ${user.username}`}
   {user}
   {txt}
   bind:items

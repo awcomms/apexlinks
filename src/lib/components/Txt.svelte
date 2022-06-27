@@ -45,6 +45,15 @@
 
   let sort;
 
+  let showInput = authUser ? true : false;
+  if (txt && txt.self) {
+    if (txt.user?.id === txt.id) {
+      showInput = true;
+    } else {
+      showInput = false;
+    }
+  }
+
   onMount(() => {
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     ref.focus();
@@ -135,35 +144,35 @@
   <Row noGutter>
     <Column>
       <ButtonSet stacked={true}>
-      {#if txt && authUser.id === txt.user?.id}
-        <Button size="small" href="{routes.txts}/{txt.id}/edit"
-          >Edit this txt</Button
-        >
-      {/if}
-
-      {#if user && !hideUser}
-        <Link href="{routes.users}/{user.id}/about">
-          <Truncate clamp="end">{user.username}</Truncate>
-        </Link>
-      {/if}
-      {#if text}
-        <p>{text}</p>
-      {/if}
-      {#if txt}
-        {#if txt.joined}
-          {#if leaveText}
-            <Button size="small" on:click={exit} class="pointer"
-              >{leaveText}</Button
-            >
-          {/if}
-        {:else if joinText}
-          <Button size="small" on:click={join} class="pointer"
-            >{joinText}</Button
+        {#if txt && authUser.id === txt.user?.id}
+          <Button size="small" href="{routes.txts}/{txt.id}/edit"
+            >Edit this txt</Button
           >
         {/if}
-      {/if}
-      <br />
-      <div class="head-space" />
+
+        {#if user && !hideUser}
+          <Link href="{routes.users}/{user.id}/about">
+            <Truncate clamp="end">{user.username}</Truncate>
+          </Link>
+        {/if}
+        {#if text}
+          <p>{text}</p>
+        {/if}
+        {#if txt}
+          {#if txt.joined}
+            {#if leaveText}
+              <Button size="small" on:click={exit} class="pointer"
+                >{leaveText}</Button
+              >
+            {/if}
+          {:else if joinText}
+            <Button size="small" on:click={join} class="pointer"
+              >{joinText}</Button
+            >
+          {/if}
+        {/if}
+        <br />
+        <div class="head-space" />
       </ButtonSet>
     </Column>
   </Row>
@@ -225,15 +234,15 @@
       </Row>
     {/each}
 
-    {#if !txt.self || (txt.self && txt.user?.id === txt.id)}
-    <br />
-    <TxtInput
-      txt={txt ? true : false}
-      {labelText}
-      on:keydown={keydown}
-      bind:value
-      bind:ref
-    />
+    {#if showInput}
+      <br />
+      <TxtInput
+        txt={txt ? true : false}
+        {labelText}
+        on:keydown={keydown}
+        bind:value
+        bind:ref
+      />
     {/if}
   </div>
 </div>
