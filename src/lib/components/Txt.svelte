@@ -15,6 +15,7 @@
   import { TxtInput } from "$lib/components";
   import {
     Button,
+    ButtonSet,
     RadioButtonGroup,
     RadioButton,
     Row,
@@ -80,11 +81,11 @@
   });
 
   const get = async (older) => {
-    let url = `txts`;
+    let url = `txts?`;
     if (sort === "tag") {
-      url = url.concat(`?tags=${JSON.stringify(tags)}`);
+      url = url.concat(`&tags=${JSON.stringify(tags)}`);
     } else if (sort === "oldest") {
-      url = url.concat(`?reverse=1`);
+      url = url.concat(`&reverse=1`);
     }
     if (older && page) url = url.concat(`&page=${page - 1}`);
     if (txt) url = url.concat(`&id=${txt.id}`);
@@ -119,15 +120,65 @@
 </script>
 
 <div class="stick">
+  {#if !user && txt}
+    <Row noGutter>
+      <Column>
+        <Link href="{routes.txts}/{txt.id}">
+          <Truncate>
+            txt {txt.id}: {txt.value}
+          </Truncate>
+        </Link>
+      </Column>
+    </Row>
+  {/if}
+
+  <Row noGutter>
+    <Column>
+      <ButtonSet stacked={true}>
+      {#if txt && authUser.id === txt.user?.id}
+        <Button size="small" href="{routes.txts}/{txt.id}/edit"
+          >Edit this txt</Button
+        >
+      {/if}
+
+      {#if user && !hideUser}
+        <Link href="{routes.users}/{user.id}/about">
+          <Truncate clamp="end">{user.username}</Truncate>
+        </Link>
+      {/if}
+      {#if text}
+        <p>{text}</p>
+      {/if}
+      {#if txt}
+        {#if txt.joined}
+          {#if leaveText}
+            <Button size="small" on:click={exit} class="pointer"
+              >{leaveText}</Button
+            >
+          {/if}
+        {:else if joinText}
+          <Button size="small" on:click={join} class="pointer"
+            >{joinText}</Button
+          >
+        {/if}
+      {/if}
+      <br />
+      <div class="head-space" />
+      </ButtonSet>
+    </Column>
+  </Row>
+
   <Row noGutter>
     <Column>
       <RadioButtonGroup legendText="Sort txts by" bind:selected={sort}>
-        <RadioButton labelText="tag score" value="tag" />
+        <RadioButton labelText="tag search score" value="tag" />
         <RadioButton labelText="newest" value="newest" />
-        <RadioButton labelText='oldest' value='oldest'/>
+        <RadioButton labelText="oldest" value="oldest" />
       </RadioButtonGroup>
     </Column>
   </Row>
+
+  <br />
 
   {#if sort === "tag"}
     <Row noGutter>
@@ -141,63 +192,15 @@
       </Column>
     </Row>
   {/if}
-
-  {#if !user && txt}
-    <Row noGutter>
-      <Column>
-        <Link href="{routes.txts}/{txt.id}">
-          <Truncate>
-            txt {txt.id}: {txt.value}
-          </Truncate>
-        </Link>
-      </Column>
-    </Row>
-  {/if}
-
-  {#if txt && authUser.id === txt.user?.id}
-    <Row noGutter>
-      <Column>
-        <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
-      </Column>
-    </Row>
-  {/if}
-
-  <Row noGutter>
-    <Column>
-      <span>
-        {#if user && !hideUser}
-          <Link href="{routes.users}/{user.id}/about">
-            <Truncate clamp="end">{user.username}</Truncate>
-          </Link>
-        {/if}
-        {#if text}
-          <p>{text}</p>
-        {/if}
-        {#if txt}
-          {#if txt.joined}
-            {#if leaveText}
-              <Button size="small" on:click={exit} class="pointer"
-                >{leaveText}</Button
-              >
-            {/if}
-          {:else if joinText}
-            <Button size="small" on:click={join} class="pointer"
-              >{joinText}</Button
-            >
-          {/if}
-        {/if}
-        <br />
-      </span>
-      <div class="head-space" />
-    </Column>
-  </Row>
 </div>
 
 <div class="scroll">
   {#if sort === ("newest" || "oldest") && pages > 1}
     <Row noGutter>
       <Column>
-        <Button size="small" on:click={() => get(true)}>Get {sort === 'newest' ? 'older': 'newer'} txts</Button>
+        <Button size="small" on:click={() => get(true)}
+          >Get {sort === "newest" ? "older" : "newer"} txts</Button
+        >
       </Column>
     </Row>
   {/if}
@@ -222,6 +225,7 @@
       </Row>
     {/each}
 
+    {#if !txt.self || (txt.self && txt.user?.id === txt.id)}
     <br />
     <TxtInput
       txt={txt ? true : false}
@@ -230,6 +234,7 @@
       bind:value
       bind:ref
     />
+    {/if}
   </div>
 </div>
 

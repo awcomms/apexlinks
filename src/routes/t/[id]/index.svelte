@@ -4,7 +4,6 @@
     export const load = async ({params, fetch}) => {
         const {id} = params
         const txt = await api.get(`txts/${id}`, fetch)
-        console.log(txt)
         if (!txt.OK) {
             return {
                 error: txt.error,

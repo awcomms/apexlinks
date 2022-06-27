@@ -24,11 +24,12 @@
         Row,
         Column,
         Button,
+        Checkbox,
         TextInput,TextArea
     } from 'carbon-components-svelte'
     import {Tags} from "$lib/components"
 
-    let {value, tags, about} = txt;
+    let {value, tags, about, self, personal} = txt;
 
     const edit = async () => {
         // editLoading = true
@@ -48,6 +49,8 @@
 
 <Row noGutter>
     <Column>
+        <Checkbox bind:checked={self} labelText='disable public replies' />
+        <Checkbox bind:checked={personal} labelText='personal - only you can view this txt' />
         <Tags text="Edit this txt's tags" bind:tags />
         <br />
         <TextInput bin:value labelText='Txt value' />

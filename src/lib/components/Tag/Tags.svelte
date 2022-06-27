@@ -131,6 +131,9 @@
 {/if}
 
 <style>
+  /* p {
+    font-size: 1rem;
+  } */
   .head {
     display: grid;
     grid-template-columns: repeat(2, min-content);
