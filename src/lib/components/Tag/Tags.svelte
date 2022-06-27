@@ -7,7 +7,7 @@
   export let hidable = false;
   export let open = false;
   export let tags = [];
-  export let focusLast = false;
+  // export let focusLast = false;
 
   import { notify } from "$lib/stores";
   import Tag from "$lib/components/Tag/Tag.svelte";

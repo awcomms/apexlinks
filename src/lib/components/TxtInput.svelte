@@ -1,5 +1,5 @@
 <script>
-  export let ref, labelText = '',
+  export let txt = false, ref = null, labelText = '',
     value = "";
   import { session } from "$app/stores";
   import { routes } from "$lib/utils";
@@ -13,7 +13,7 @@
         <TextInput {labelText} on:keydown rows={2} bind:ref bind:value />
       {:else}
         <div class="login-prompt">
-          <Link href={routes.login}>Login to reply to this txt</Link>
+          <Link href={routes.login}>Login to {txt ? 'reply to this' : 'add a'} txt</Link>
         </div>
       {/if}
     </Column>
