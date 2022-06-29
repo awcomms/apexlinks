@@ -41,7 +41,7 @@
 
   const edit = async () => {
     // editLoading = true
-    const res = await api.put("txts", { value, tags, about });
+    const res = await api.put("txts", { value, tags, about, self, personal });
     // .finally(() => editLoading = false);
     if (!res.OK) {
       console.log("txt PUT res: ", res);
@@ -73,14 +73,16 @@
 
 <Row noGutter>
   <Column>
+    {#if !txt.dm}
     <Checkbox bind:checked={self} labelText="disable public replies" />
     <Checkbox
       bind:checked={personal}
       labelText="personal - only you can view this txt"
     />
+    {/if}
     <Tags text="Edit this txt's tags" bind:tags />
     <br />
-    <TextInput bin:value labelText="Txt value" />
+    <TextInput bind:value labelText="Txt value" />
     <br />
     <TextArea
       bind:value={about}
