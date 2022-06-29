@@ -110,18 +110,23 @@
     {/if}
     <SideNavMenu text="Txts">
       {#if $session.user}
-        <SideNavMenuItem isSelected={$page.url.pathname === `${routes.txts}/add`} href='{routes.txts}/add' text="Add txt" />
         <SideNavMenuItem
           text="My txts"
           href="{routes.txts}?user={$session.user.id}"
           isSelected={$page.url.pathname === routes.txts && $page.url.searchParams.get('user') ===
             $session.user.id}
         />
+        <SideNavMenuItem
+          text="Joined txts"
+          href="{routes.txts}?joined"
+          isSelected={$page.url.pathname === routes.txts && typeof $page.url.searchParams.get('joined') ===
+            'string'}
+        />
       {/if}
       <SideNavMenuItem text='All txts' href={routes.txts} isSelected={$page.url.pathname === routes.txts} />
     </SideNavMenu>
     {#if $session.user}
-      <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me" href="/u/{$session.user.id}" />
+      <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me: {$session.user.username}" href="/u/{$session.user.id}" />
       <SideNavLink isSelected={$page.url.pathname === '/edit'} href="/edit" text="Edit Profile" />
       <SideNavLink text="Exit" href={null} on:click={exit} />
     {/if}

@@ -14,7 +14,7 @@
     if (!session.user) {
       return {
         status: 302,
-        redirect: `${routes.users}/${id}/about`,
+        redirect: `${routes.users}/${id}`,
       };
     }
     const txt = await post(

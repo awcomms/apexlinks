@@ -6,7 +6,7 @@
     "dev": "svelte-kit dev --port 3737",
     "build": "svelte-kit build",
     "export": "svelte-kit export",
-    "start": "node build",
+    "start": "node server.js",
     "check": "svelte-check",
     "preview": "svelte-kit preview -H --port 3200"
   },

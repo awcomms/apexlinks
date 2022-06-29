@@ -110,6 +110,7 @@
   const send = async () => {
     let data = { value };
     if (txt) data.txt = txt.id;
+    if (user) data.dm = true
     await api.post(`txts`, data).then((res) => {
       if (!res.OK) {
         console.log("txt POST response: ", res);
@@ -151,7 +152,7 @@
         {/if}
 
         {#if user && !hideUser}
-          <Link href="{routes.users}/{user.id}/about">
+          <Link href="{routes.users}/{user.id}">
             <Truncate clamp="end">{user.username}</Truncate>
           </Link>
         {/if}
