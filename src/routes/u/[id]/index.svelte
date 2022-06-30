@@ -62,6 +62,12 @@
   </Column>
 </Row>
 
+<!-- <Row noGutter>
+  <Column>
+    <Link href='{routes.txts}?user={user.id}'
+  </Column>
+</Row> -->
+
 {#if user.image}
   <Row noGutter>
     <Column lg={2} sm={2} md={2} xlg={2}>

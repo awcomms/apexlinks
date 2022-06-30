@@ -32,17 +32,20 @@
     TextArea,
     InlineLoading,
   } from "carbon-components-svelte";
+  import { routes} from '$lib/utils'
+  import { goto } from '$app/navigation'
   import { Tags } from "$lib/components";
 
   let deleteLoading;
   let editLoading;
 
-  let { value, tags, about, self, personal } = txt;
+  let { value, tags, text, self, personal } = txt;
 
   const edit = async () => {
-    // editLoading = true
-    const res = await api.put("txts", { value, tags, about, self, personal });
-    // .finally(() => editLoading = false);
+    editLoading = true;
+    const res = await api
+      .put("txts", { value, tags, text, self, personal, id: txt.id })
+      .finally(() => (editLoading = false));
     if (!res.OK) {
       console.log("txt PUT res: ", res);
     }
@@ -50,14 +53,15 @@
   };
 
   const del = async () => {
-    console.log('del')
-    const res = await api.del(`txts/${txt.id}`);
-    if (!res.OK){
-
-    console.log("fetch DELETE response: ", res);
+    deleteLoading = true;
+    console.log("del");
+    const res = await api
+      .del(`txts/${txt.id}`)
+      .finally(() => (deleteLoading = false));
+    if (!res.OK) {
+      console.log("fetch DELETE response: ", res);
     }
-    goto(`${routes.txts}`)
-
+    goto(`${routes.txts}`);
   };
 </script>
 
@@ -74,29 +78,47 @@
 <Row noGutter>
   <Column>
     {#if !txt.dm}
-    <Checkbox bind:checked={self} labelText="disable public replies" />
-    <Checkbox
-      bind:checked={personal}
-      labelText="personal - only you can view this txt"
-    />
+      <Checkbox bind:checked={self} labelText="disable public replies" />
+      <Checkbox
+        bind:checked={personal}
+        labelText="personal - only you can view this txt"
+      />
     {/if}
-    <Tags text="Edit this txt's tags" bind:tags />
+    <Tags text="edit this txt's tags" bind:tags />
     <br />
-    <TextInput bind:value labelText="Txt value" />
+    <TextInput bind:value labelText="txt value" />
     <br />
     <TextArea
-      bind:value={about}
-      labelText="About this txt"
-      helperText="Works with markdown"
+      bind:value={text}
+      labelText="description text about this txt"
+      helperText="works with markdown"
     />
     <br />
-    <Button on:click={edit}
-      >Edit{#if editLoading}
-        <InlineLoading />{/if}</Button
-    >
-    <Button on:click={()=>open = true}
-      >Delete {#if deleteLoading}
-        <InlineLoading />{/if}
+    <Button as let:props>
+      <div on:click={edit} {...props}>
+        <p>Edit</p>
+        {#if editLoading}
+          <div class="right">
+            <InlineLoading />
+          </div>
+        {/if}
+      </div>
+    </Button>
+    <Button as let:props>
+      <div on:click={() => (open = true)} {...props}>
+        <p>Delete</p>
+        {#if deleteLoading}
+          <div class="right">
+            <InlineLoading />
+          </div>
+        {/if}
+      </div>
     </Button>
   </Column>
 </Row>
+
+<style>
+  .right {
+    float: right;
+  }
+</style>

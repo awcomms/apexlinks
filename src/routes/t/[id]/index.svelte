@@ -23,7 +23,6 @@
 
     import { session } from '$app/stores'
     let {user} = $session
-    console.log(txt, user)
 
     import {
         Row,
@@ -31,8 +30,10 @@
         Link
     } from 'carbon-components-svelte'
     import {Tags} from "$lib/components"
+    import { parseMarkdown } from "$lib/utils";
 
-    let {tags} = txt;
+    let {tags, text} = txt;
+    text = parseMarkdown(text)
 </script>
 
 {#if user?.id === txt.user?.id}
@@ -49,16 +50,26 @@
     </Column>
 </Row>
 
+{#if txt.user}
 <Row noGutter>
     <Column>
-        <Link href='{routes.txt(txt.id)}'>Creator of this txt</Link>
+        <Link href='{routes.user(txt.user.id)}'>Creator of this txt</Link>
     </Column>
 </Row>
+{/if}
 
 <Row noGutter>
     <Column>
         <p>txt {txt.id}</p>
         <p>{txt.value}</p>
-        <Tags bind:tags editable={false} />
+        <Tags {tags} editable={false} />
+    </Column>
+</Row>
+
+<br />
+
+<Row noGutter>
+    <Column>
+        {@html text}
     </Column>
 </Row>

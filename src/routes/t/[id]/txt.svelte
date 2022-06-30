@@ -18,9 +18,8 @@
         error: `txt ${txt.id} not a public txt`,
       };
     }
-    console.log(txt);
-    let repliesUrl = id ? `txts?id=${id}` : `txts`;
-    let res = await api.get(repliesUrl, fetch);
+    let getUrl = id ? `txts?id=${id}` : `txts`;
+    let res = await api.get(getUrl, fetch);
     if (!res.OK) {
       return {
         status: Number(res.STATUS),
@@ -36,14 +35,15 @@
         page,
         pages,
         total,
+        getUrl
       },
     };
   };
 </script>
 
 <script>
-  export let txt, items, total, page, pages;
+  export let getUrl, txt, items, total, page, pages;
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt labelText="Reply to this txt" {txt} {items} {total} {pages} {page} />
+<Txt labelText="Reply to this txt" {getUrl} {txt} {items} {total} {pages} {page} />

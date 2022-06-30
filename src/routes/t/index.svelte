@@ -1,13 +1,13 @@
 <script context="module">
   import { api } from "$lib/utils";
-  import { post } from '$lib/utils/fetch'
+  import { post } from "$lib/utils/fetch";
   export const load = async ({ url, fetch, session }) => {
     let { user: authUser } = session;
-    let txtsUrl = `txts?`;
+    let getUrl = `txts?`;
     let user = url.searchParams.get("user");
-    let joined = typeof url.searchParams.get("joined") === 'string';
+    let joined = typeof url.searchParams.get("joined") === "string";
 
-    let items, total, page, pages;
+    let res, items, total, page, pages;
 
     if (user) {
       user = await api.get(`users/${user}`, fetch);
@@ -17,29 +17,18 @@
           error: user.error,
         };
       }
-      txtsUrl = txtsUrl.concat(`user=${user.id}`);
-    } else if (joined) {
-      let res = await post(
+      getUrl = getUrl.concat(`user=${user.id}`);
+    }
+    if (joined) {
+      getUrl = getUrl.concat(`&joined`);
+      res = await post(
         "/send",
         { path: "txts?joined", method: "POST", data: { user: authUser.id } },
         fetch
       );
-      if (!res.OK) {
-        return {
-          status: Number(res.STATUS),
-          error: res.error
-        }
-      }
-      ({ items, total, page, pages } = res);
-      return {
-      props: {
-        items,
-        page,
-        pages,
-        total,
-      }}
+    } else {
+      res = await api.get(getUrl, fetch);
     }
-    let res = await api.get(txtsUrl, fetch);
     if (!res.OK) {
       return {
         status: Number(res.STATUS),
@@ -54,14 +43,15 @@
         page,
         pages,
         total,
+        getUrl,
       },
     };
   };
 </script>
 
 <script>
-  export let items, page, pages, total;
+  export let items, page, pages, total, getUrl;
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt labelText="Add a new txt" {items} {page} {pages} {total} />
+<Txt labelText="Add a new txt" {getUrl} {items} {page} {pages} {total} />

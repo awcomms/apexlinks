@@ -39,7 +39,7 @@ marked.setOptions({
     breaks: true
 })
 
-export function parseMarkdown(markdown) {
+export const parseMarkdown = (markdown) => {
     if(markdown){
         return marked(
             markdown.replace(/^\t+/gm, match => match.split('\t').join('  '))

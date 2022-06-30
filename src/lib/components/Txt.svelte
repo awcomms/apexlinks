@@ -1,5 +1,5 @@
 <script>
-  export let text = "",
+  export let getUrl, text = "",
     user = null,
     hideUser = false,
     page = 1,
@@ -90,17 +90,15 @@
   });
 
   const get = async (older) => {
-    let url = `txts?`;
     if (sort === "tag") {
-      url = url.concat(`&tags=${JSON.stringify(tags)}`);
+      getUrl = getUrl.concat(`&tags=${JSON.stringify(tags)}`);
     } else if (sort === "oldest") {
-      url = url.concat(`&reverse=1`);
+      getUrl = getUrl.concat(`&reverse=1`);
     }
-    if (older && page) url = url.concat(`&page=${page - 1}`);
-    if (txt) url = url.concat(`&id=${txt.id}`);
-    const res = await api.get(url);
+    if (older && page) getUrl = getUrl.concat(`&page=${page - 1}`);
+    const res = await api.get(getUrl);
     if (!res.OK) {
-      console.log(`txt fetch response`, res);
+      console.log(`txt fetch get response`, res);
       return;
     }
     ({ total, page, pages } = res);
