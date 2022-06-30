@@ -58,15 +58,15 @@
 
 <Row noGutter>
   <Column>
-    <Link href={routes.userTxt(user.id)}>Txt</Link>
+    <Link href={routes.userTxt(user.id)}>txt</Link>
   </Column>
 </Row>
 
-<!-- <Row noGutter>
+<Row noGutter>
   <Column>
-    <Link href='{routes.txts}?user={user.id}'
+    <Link href='{routes.txts}?user={user.id}'>all txts by this user</Link>
   </Column>
-</Row> -->
+</Row>
 
 {#if user.image}
   <Row noGutter>
