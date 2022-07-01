@@ -1,29 +1,40 @@
-<script context='module'>
-  export  const load = async({ error, status }) =>{
+<script context="module">
+    export const load = async ({ error, status }) => {
+    let message;
+    try {
+      message = JSON.parse(error.message);
+    } catch {}
     return {
       props: {
+        message,
         error,
         status
-      }
-    }
+      }}
   }
 </script>
 
 <script>
-  export let status = ''
-  export let error = ''
+  export let status = "";
+  export let error = "";
+  export let message
 
-  import { Row, Column } from "carbon-components-svelte";
+  import { Row, Column, Link } from "carbon-components-svelte";
 
   const dev = process.env.NODE_ENV === "development";
 </script>
 
 <Row noGutter>
-  <Column lg="{16}">
+  <Column lg={16}>
     <h1>Error code: {status}</h1>
     <div>
-      {error.txt || ''}
-      <!-- <Link inline href="/">Return home</Link> -->
+      {#if message}
+        <p>{message.message}</p>
+        {#if message.guide}
+          <Link href={message.guide.route}>{message.guide.message}</Link>
+        {/if}
+      {:else if error.message}
+        <p>{error.message}</p>
+      {/if}
     </div>
     {#if error && dev && error.stack}
       <div>

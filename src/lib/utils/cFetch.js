@@ -4,15 +4,17 @@ export const cFetch = (base, path, opts, _fetch) => {
       return f(`${base}/${path}`, opts)
         .then(async (r) => {
           const text = await r.text();
-          let json;
+          let json = {
+            STATUS: r.status,
+            OK: !r.status.toString().startsWith('4')
+          };
+          let _json
           try {
-            json = JSON.parse(text);
+            _json = JSON.parse(text)
           } catch (err) {
-            return text;
+            return {...json, TEXT: text};
           }
-          json.STATUS = r.status;
-          json.OK = !r.status.toString().startsWith('4')
-          return json;
+          return {...json, ..._json}
         })
         .catch((err) => {
           return { STATUS: 500, error: `API fetch error: ${err}` };

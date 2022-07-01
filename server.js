@@ -7,6 +7,10 @@ import { createServer } from "http";
 const app = express();
 app.use(handler);
 
+app.get("/healthcheck", (req, res) => {
+  res.end("ok");
+});
+
 const server = createServer(app);
 
 const io = getIO(server);

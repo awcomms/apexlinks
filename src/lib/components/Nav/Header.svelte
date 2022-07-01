@@ -6,6 +6,7 @@
   import { url8 } from "$lib/utils";
   import { post } from "$lib/utils/fetch/post";
   import { goto } from "$app/navigation";
+  import {VAPID } from '$lib/env'
   import { navigating, session } from "$app/stores";
   import { isSideNavOpen } from "$lib/stores";
   import {
@@ -51,9 +52,7 @@
             return sub;
           }
 
-          const response = await fetch(`get`);
-          const vapidKey = await response.text();
-          let int8VapidKey = url8(vapidKey);
+          let int8VapidKey = url8(VAPID);
           const options = {
             userVisibleOnly: true,
             applicationServerKey: int8VapidKey,

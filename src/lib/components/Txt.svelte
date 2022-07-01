@@ -1,6 +1,8 @@
 <script>
-  export let getUrl, text = "",
+  export let getUrl,
+    text = "",
     user = null,
+    getOnMount = false,
     hideUser = false,
     page = 1,
     labelText = "",
@@ -54,7 +56,12 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
+    if (getOnMount) {
+      console.log('-g', getUrl)
+      get();
+    }
+    if (txt) await api.put(`seen?id=${txt.id}`);
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     ref.focus();
   });
@@ -108,7 +115,7 @@
   const send = async () => {
     let data = { value };
     if (txt) data.txt = txt.id;
-    if (user) data.dm = true
+    if (user) data.dm = true;
     await api.post(`txts`, data).then((res) => {
       if (!res.OK) {
         console.log("txt POST response: ", res);

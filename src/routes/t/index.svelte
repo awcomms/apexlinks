@@ -7,6 +7,28 @@
     let user = url.searchParams.get("user");
     let joined = typeof url.searchParams.get("joined") === "string";
 
+    let props = {}
+
+    let id = url.searchParams.get("id");
+    if (id) {
+      const txt = await api.get(`txts/${id}`, fetch);
+      if (!txt.OK) {
+        return {
+          error: txt.error,
+          status: Number(txt.STATUS),
+        };
+      }
+      if (txt.dm) {
+        return {
+          status: 401,
+          error: `txt ${txt.id} not a public txt`,
+        };
+      }
+      props.getOnMount = true
+      props.txt = txt
+      getUrl = getUrl.concat(`id=${txt.id}`);
+    }
+
     let res, items, total, page, pages;
 
     if (user) {
@@ -20,12 +42,22 @@
       getUrl = getUrl.concat(`user=${user.id}`);
     }
     if (joined) {
+      if (!session.user) {
+        return {
+          error: JSON.stringify({
+            message: 'query argument `join` was specified in url but no logged in user',
+            guide: {
+              message: 'Click here to login',
+              route: `${routes.login}`
+            }
+          }),
+          status: 400
+        }
+      }
       getUrl = getUrl.concat(`&joined`);
-      res = await post(
-        "/send",
-        { path: "txts?joined", method: "POST", data: { user: authUser.id } },
-        fetch
-      );
+      return {
+        props: {getOnMount: true, getUrl}
+      }
     } else {
       res = await api.get(getUrl, fetch);
     }
@@ -39,6 +71,7 @@
 
     return {
       props: {
+        ...props,
         items,
         page,
         pages,
@@ -50,8 +83,8 @@
 </script>
 
 <script>
-  export let items, page, pages, total, getUrl;
+  export let txt, getOnMount, items, page, pages, total, getUrl;
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt labelText="Add a new txt" {getUrl} {items} {page} {pages} {total} />
+<Txt labelText="Add a new txt" {txt} {getOnMount} {getUrl} {items} {page} {pages} {total} />
