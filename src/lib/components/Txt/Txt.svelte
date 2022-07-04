@@ -1,5 +1,6 @@
 <script>
   export let getUrl,
+    dm = false,
     text = "",
     user = null,
     getOnMount = false,
@@ -8,7 +9,7 @@
     labelText = "",
     pages = 0,
     txt = null,
-    items = [],
+    txts = [],
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
@@ -20,6 +21,8 @@
     ButtonSet,
     RadioButtonGroup,
     RadioButton,
+    ContextMenu,
+    ContextMenuOption,
     Row,
     Column,
     Truncate,
@@ -27,6 +30,7 @@
   } from "carbon-components-svelte";
   import { onMount } from "svelte";
   import { session } from "$app/stores";
+  import { Delete } from "$lib/components/Txt";
   import { Tags } from "$lib/components";
   import { io } from "socket.io-client";
   import { browser } from "$app/env";
@@ -39,6 +43,14 @@
   let tags = [];
   let room = txt ? String(txt.id) : "home";
 
+  $: if (deleteTxt) ondeleteTxt();
+
+  const ondeleteTxt = () => (deleteOpen = true);
+
+  let deleteTxt;
+  let deleteLoading;
+  let deleteOpen = false;
+
   let value;
   let total;
   let ref;
@@ -47,21 +59,21 @@
 
   let showInput = $session.user ? true : false;
   if (txt && txt.user && txt.self) {
-      console.log('1')
+    console.log("1");
     if (txt.user?.id === $session.user?.id) {
-      console.log('2')
+      console.log("2");
       showInput = true;
     } else {
-      console.log('3')
+      console.log("3");
       showInput = false;
     }
   }
 
-  console.log(showInput, txt?.self)
+  console.log(showInput, txt?.self);
 
   onMount(async () => {
     if (getOnMount) {
-      console.log('-g', getUrl)
+      console.log("-g", getUrl);
       get();
     }
     if (txt) await api.put(`seen?id=${txt.id}`);
@@ -95,7 +107,7 @@
 
   socket.on("txt", async (obj) => {
     if (txt) await api.put(`seen?id=${txt.id}`, {});
-    items = [...items, obj];
+    txts = [...txts, obj];
     updateScroll();
   });
 
@@ -112,13 +124,13 @@
       return;
     }
     ({ total, page, pages } = res);
-    items = [...res.items, ...items];
+    txts = [...res.txts, ...txts];
   };
 
   const send = async () => {
     let data = { value };
     if (txt) data.txt = txt.id;
-    if (user) data.dm = true;
+    if (dm) data.dm = true;
     await api.post(`txts`, data).then((res) => {
       if (!res.OK) {
         console.log("txt POST response: ", res);
@@ -135,7 +147,13 @@
       window.scrollTo({ left: 0, top: document.body.scrollHeight });
     }, 0);
   };
+
+  const remove = (item) => {
+    txts = txts.filter(t => t.id !== item.id)
+  }
 </script>
+
+<Delete on:del={({detail})=>remove(detail)} txt={deleteTxt} bind:open={deleteOpen} bind:loading={deleteLoading} />
 
 <div class="stick">
   {#if !user && txt}
@@ -226,8 +244,22 @@
   <br />
 
   <div class="con">
-    {#each items as item}
-      <Row noGutter>
+    {#each txts as item}
+      {#if $session.user && $session.user.id === item.user?.id}
+        <ContextMenu target={item.ref}>
+          <Link href='{routes.txtEdit(item.id)}'>
+            <ContextMenuOption
+              labelText="Edit"
+            />
+        
+          </Link>
+            <ContextMenuOption
+              on:click={() => (deleteTxt = item)}
+              labelText="Delete"
+            />
+        </ContextMenu>
+      {/if}
+      <Row noGutter bind:ref={item.ref}>
         <Column>
           <div>
             <Link href={routes.user(item.user?.id)}>

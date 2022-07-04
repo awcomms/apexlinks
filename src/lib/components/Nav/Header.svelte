@@ -115,12 +115,12 @@
           isSelected={$page.url.pathname === routes.txts && $page.url.searchParams.get('user') ===
             $session.user.id}
         />
-        <SideNavMenuItem
+        <!-- <SideNavMenuItem
           text="Joined txts"
           href="{routes.txts}?joined"
           isSelected={$page.url.pathname === routes.txts && typeof $page.url.searchParams.get('joined') ===
             'string'}
-        />
+        /> -->
       {/if}
       <SideNavMenuItem text='All txts' href={routes.txts} isSelected={$page.url.pathname === routes.txts} />
     </SideNavMenu>

@@ -52,7 +52,7 @@
     user,
     authUser;
 
-  import Txt from "$lib/components/Txt.svelte";
+  import Txt from "$lib/components/Txt/Txt.svelte";
 
   let sameUser = authUser.id === user.id
 </script>
@@ -68,6 +68,7 @@
   text={sameUser ? 'Txts to self' : `Txts to ${user.username}`}
   {user}
   {txt}
+  dm={true}
   bind:items
   bind:total
   bind:page

@@ -11,4 +11,5 @@ export const routes = {
   txtTxt: (id) => `${txts}?id=${id}`,
   txtEdit: (id) => `${txts}/${id}/edit`,
   userTxt: (id) => `${users}/${id}/txt`,
+  userEdit: '/edit'
 };

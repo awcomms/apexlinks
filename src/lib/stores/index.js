@@ -11,6 +11,7 @@ export const store = (defaultValue=[]) => {
     }
 }
 
+export const previousPage = store('/')
 export const to = store()
 export const username = store()
 export const notify = store()

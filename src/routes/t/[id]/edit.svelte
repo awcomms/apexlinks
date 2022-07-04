@@ -34,6 +34,7 @@
   } from "carbon-components-svelte";
   import { routes} from '$lib/utils'
   import { goto } from '$app/navigation'
+  import { Delete } from '$lib/components/Txt'
   import { Tags } from "$lib/components";
 
   console.log(txt.self)
@@ -56,28 +57,9 @@
     goto(`${routes.txts}/${txt.id}`);
   };
 
-  const del = async () => {
-    deleteLoading = true;
-    console.log("del");
-    const res = await api
-      .del(`txts/${txt.id}`)
-      .finally(() => (deleteLoading = false));
-    if (!res.OK) {
-      console.log("fetch DELETE response: ", res);
-    }
-    goto(`${routes.txts}`);
-  };
 </script>
 
-<Modal
-  danger
-  bind:open
-  modalHeading="Are you sure you want to delete this txt"
-  primaryButtonText="Delete"
-  secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (open = false)}
-  on:click:button--primary={del}
-/>
+<Delete {txt} bind:open bind:loading={deleteLoading} />
 
 <Row noGutter>
   <Column>

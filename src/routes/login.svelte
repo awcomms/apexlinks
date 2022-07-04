@@ -29,7 +29,7 @@
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
-    import { newUser } from '$lib/stores' 
+    import { newUser, previousPage } from '$lib/stores' 
     import { post } from '$lib/utils/fetch/post'
 
     $: if($newUser) {
@@ -135,7 +135,7 @@
         passwordInvalid = r.passwordInvalid
         if (r.token) {
             r.user ? $session.user = r.user : {}
-            goto(routes.index)
+            goto($previousPage)
         }
     }
 
@@ -187,7 +187,7 @@
         console.log(r)
         if (r.token) { //TODO-unsafe
             r.user ? $session.user = r.user : {}
-            goto('/edit')
+            goto(routes.userEdit)
         } else {
         }
     }

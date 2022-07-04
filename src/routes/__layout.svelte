@@ -1,11 +1,14 @@
 <script>
   import { Content, Grid } from "carbon-components-svelte";
-  import { newUser } from "$lib/stores";
+  import { afterNavigate } from "$app/navigation"
+  import { previousPage, newUser } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
   import Theme from "$lib/components/Theme.svelte";
 
   $newUser = false;
+
+  afterNavigate(navigation => $previousPage = navigation.from?.pathname)
 </script>
 
 <Theme persist theme="g10">
