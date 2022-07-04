@@ -33,6 +33,7 @@
     import { parseMarkdown } from "$lib/utils";
 
     let {tags, text} = txt;
+    if (!tags) tags = []
     text = parseMarkdown(text)
 </script>
 
