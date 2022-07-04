@@ -36,10 +36,14 @@
   import { goto } from '$app/navigation'
   import { Tags } from "$lib/components";
 
+  console.log(txt.self)
+  $: console.log(self)
+
   let deleteLoading;
   let editLoading;
 
   let { value, tags, text, self, personal } = txt;
+  if (!tags) tags = []
 
   const edit = async () => {
     editLoading = true;

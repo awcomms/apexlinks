@@ -39,22 +39,25 @@
   let tags = [];
   let room = txt ? String(txt.id) : "home";
 
-  let { user: authUser } = $session;
-
   let value;
   let total;
   let ref;
 
   let sort;
 
-  let showInput = authUser ? true : false;
-  if (txt && txt.self) {
-    if (txt.user?.id === txt.id) {
+  let showInput = $session.user ? true : false;
+  if (txt && txt.user && txt.self) {
+      console.log('1')
+    if (txt.user?.id === $session.user?.id) {
+      console.log('2')
       showInput = true;
     } else {
+      console.log('3')
       showInput = false;
     }
   }
+
+  console.log(showInput, txt?.self)
 
   onMount(async () => {
     if (getOnMount) {
@@ -63,7 +66,7 @@
     }
     if (txt) await api.put(`seen?id=${txt.id}`);
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
-    ref.focus();
+    if (ref) ref.focus();
   });
 
   const keydown = (e) => {
@@ -150,7 +153,7 @@
   <Row noGutter>
     <Column>
       <ButtonSet stacked={true}>
-        {#if txt && authUser.id === txt.user?.id}
+        {#if txt && $session.user.id === txt.user?.id}
           <Button size="small" href="{routes.txts}/{txt.id}/edit"
             >Edit this txt</Button
           >

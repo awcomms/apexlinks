@@ -87,4 +87,4 @@
   import Txt from "$lib/components/Txt.svelte";
 </script>
 
-<Txt labelText="Add a new txt" {txt} {getOnMount} {getUrl} {items} {page} {pages} {total} />
+<Txt labelText={txt ? "Reply to this txt" : "Add a new txt"} {txt} {getOnMount} {getUrl} {items} {page} {pages} {total} />

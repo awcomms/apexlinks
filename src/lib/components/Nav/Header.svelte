@@ -74,7 +74,7 @@
   const exit = () => {
     $session.user = null;
     post("/auth/exit");
-    goto("/");
+    goto(routes.login);
   };
 </script>
 
