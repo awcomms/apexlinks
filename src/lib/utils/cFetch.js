@@ -6,12 +6,11 @@ export const cFetch = (base, path, opts, _fetch) => {
           const text = await r.text();
           let json = {
             STATUS: r.status,
-            OK: !r.status.toString().startsWith('4')
+            OK: r.status.toString().startsWith('2')
           };
           let _json
           try {
             _json = JSON.parse(text);
-            _json.OK = !_json.error;
           } catch (err) {
             return { ...json, TEXT: text };
           }

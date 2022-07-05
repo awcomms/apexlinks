@@ -66,8 +66,10 @@
   };
 
   onMount(()=>{
+    console.log('header mount')
     if (navigator && navigator.serviceWorker && $session.user) {
-      getSub();
+      console.log('hmm')
+      // getSub();
     }
   })
 

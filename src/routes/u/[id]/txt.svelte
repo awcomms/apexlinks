@@ -28,12 +28,14 @@
         error: txt.error,
       };
     }
-    let { items, total, page, pages } = await api.get(`txts?id=${txt.id}`);
-    console.log(items.length)
+    let getUrl = `txts?id=${txt.id}`
+    let { items, total, page, pages } = await api.get(getUrl);
+    console.log(items?.length)
     return {
       props: {
         txt,
         items,
+        getUrl,
         total,
         page,
         pages,
@@ -46,6 +48,7 @@
 
 <script>
   export let items = [],
+    getUrl = '',
     total,
     page,
     pages,
@@ -59,16 +62,12 @@
 </script>
 
 <Txt
-  leaveText={sameUser
-    ? false
-    : "Remove this user from dm list"}
-  joinText = {
-    sameUser ? false : "Add this user to dm list"
-  }
+  leaveText={null}
+  joinText={null}
   hideUser={sameUser}
-  text={sameUser ? 'Txts to self' : `Txts to ${user.username}`}
   {user}
   {txt}
+  {getUrl}
   dm={true}
   bind:items
   bind:total

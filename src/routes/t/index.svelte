@@ -66,7 +66,7 @@
     return {
       props: {
         ...props,
-        txts: items,
+        items,
         page,
         pages,
         total,
@@ -77,8 +77,8 @@
 </script>
 
 <script>
-  export let txt, getOnMount, txts, page, pages, total, getUrl;
+  export let txt, getOnMount, items, page, pages, total, getUrl;
   import Txt from "$lib/components/Txt/Txt.svelte";
 </script>
 
-<Txt labelText={txt ? "Reply to this txt" : "Add a new txt"} {txt} {getOnMount} {getUrl} {txts} {page} {pages} {total} />
+<Txt labelText={txt ? "Reply to this txt" : "Add a new txt"} {txt} {getOnMount} {getUrl} {items} {page} {pages} {total} />

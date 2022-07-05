@@ -1,5 +1,5 @@
 <script>
-  export let getUrl = 'txts',
+  export let getUrl = "txts",
     dm = false,
     text = "",
     user = null,
@@ -13,6 +13,10 @@
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
+  items = items.map((i) => {
+    return { ...i, ref: null };
+  });
+
   import { api, routes } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
@@ -23,6 +27,7 @@
     RadioButton,
     ContextMenu,
     ContextMenuOption,
+    Loading,
     Row,
     Column,
     Truncate,
@@ -40,23 +45,19 @@
   $: if (sort === ("newest" || "oldest") || (sort === "tag" && tags.length > 0))
     get();
 
-  let tags = [];
-  let room = txt ? String(txt.id) : "home";
-  console.log('r', room)
-
   $: if (deleteTxt) ondeleteTxt();
 
-  const ondeleteTxt = () => (deleteOpen = true);
-
-  let deleteTxt;
-  let deleteLoading;
-  let deleteOpen = false;
-
-  let value;
-  let total;
-  let ref;
-
-  let sort;
+  let tags = [],
+    room = txt ? String(txt.id) : "home",
+    getLoading,
+    deleteTxt,
+    deleteLoading,
+    deleteOpen = false,
+    sameUser = user && user.id === $session.user.id,
+    value,
+    total,
+    ref,
+    sort;
 
   let showInput = $session.user ? true : false;
   if (txt && txt.user && txt.self) {
@@ -70,8 +71,6 @@
     }
   }
 
-  console.log(showInput, txt?.self);
-
   onMount(async () => {
     if (getOnMount) {
       console.log("-g", getUrl);
@@ -81,6 +80,8 @@
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     if (ref) ref.focus();
   });
+
+  const ondeleteTxt = () => (deleteOpen = true);
 
   const keydown = (e) => {
     switch (e.key) {
@@ -113,13 +114,15 @@
   });
 
   const get = async (older) => {
+    getLoading = true;
+    let url = getUrl;
     if (sort === "tag") {
-      getUrl = getUrl.concat(`&tags=${JSON.stringify(tags)}`);
+      url = url.concat(`&tags=${JSON.stringify(tags)}`);
     } else if (sort === "oldest") {
-      getUrl = getUrl.concat(`&reverse=1`);
+      url = url.concat(`&reverse`);
     }
-    if (older && page) getUrl = getUrl.concat(`&page=${page - 1}`);
-    const res = await api.get(getUrl);
+    if (older && page) url = url.concat(`&page=${page - 1}`);
+    const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
       console.log(`txt fetch get response`, res);
       return;
@@ -133,13 +136,12 @@
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
     await api.post(`txts`, data).then((res) => {
-      console.log(res)
       if (!res.OK) {
         console.log("txt POST response: ", res);
         return;
       }
       socket.emit("txt", { data: res, room });
-      value = ""; //TODO-option
+      value = "";
     });
   };
 
@@ -151,11 +153,20 @@
   };
 
   const remove = (item) => {
-    items = items.filter(t => t.id !== item.id)
-  }
+    items = items.filter((t) => t.id !== item.id);
+  };
 </script>
 
-<Delete on:del={({detail})=>remove(detail)} txt={deleteTxt} bind:open={deleteOpen} bind:loading={deleteLoading} />
+{#if getLoading}
+  <Loading />
+{/if}
+
+<Delete
+  on:del={({ detail }) => remove(detail)}
+  txt={deleteTxt}
+  bind:open={deleteOpen}
+  bind:loading={deleteLoading}
+/>
 
 <div class="stick">
   {#if !user && txt}
@@ -174,15 +185,16 @@
     <Column>
       <ButtonSet stacked={true}>
         {#if txt && $session.user.id === txt.user?.id}
-          <Button size="small" href="{routes.txts}/{txt.id}/edit"
-            >Edit this txt</Button
-          >
+          <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
         {/if}
 
         {#if user && !hideUser}
-          <Link href="{routes.users}/{user.id}">
-            <Truncate clamp="end">{user.username}</Truncate>
-          </Link>
+          <p>
+            Txts to
+              <Link href="{routes.user(user.id)}">
+                {sameUser ? "self" : `${user.username}`}
+              </Link>
+          </p>
         {/if}
         {#if text}
           <p>{text}</p>
@@ -249,16 +261,13 @@
     {#each items as item}
       {#if $session.user && $session.user.id === item.user?.id}
         <ContextMenu target={item.ref}>
-          <Link href='{routes.txtEdit(item.id)}'>
-            <ContextMenuOption
-              labelText="Edit"
-            />
-        
+          <Link href={routes.txtEdit(item.id)}>
+            <ContextMenuOption labelText="Edit" />
           </Link>
-            <ContextMenuOption
-              on:click={() => (deleteTxt = item)}
-              labelText="Delete"
-            />
+          <ContextMenuOption
+            on:click={() => (deleteTxt = item)}
+            labelText="Delete"
+          />
         </ContextMenu>
       {/if}
       <Row noGutter bind:ref={item.ref}>
