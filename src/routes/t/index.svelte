@@ -18,12 +18,6 @@
           status: Number(txt.STATUS),
         };
       }
-      if (txt.dm) {
-        return {
-          status: 401,
-          error: `txt ${txt.id} not a public txt`,
-        };
-      }
       props.getOnMount = true
       props.txt = txt
       getUrl = getUrl.concat(`id=${txt.id}`);

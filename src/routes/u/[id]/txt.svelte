@@ -14,12 +14,12 @@
     if (!session.user) {
       return {
         status: 302,
-        redirect: `${routes.users}/${id}`,
+        redirect: `${routes.login}`,
       };
     }
     const txt = await post(
       "/send",
-      { path: "txts/users", method: "POST", data: { user: id } },
+      { path: `txts/dm?user=${id}`, method: "GET"},
       fetch
     );
     if (!txt.OK) {
@@ -29,6 +29,7 @@
       };
     }
     let { items, total, page, pages } = await api.get(`txts?id=${txt.id}`);
+    console.log(items.length)
     return {
       props: {
         txt,

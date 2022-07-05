@@ -35,6 +35,8 @@
     let {tags, text} = txt;
     if (!tags) tags = []
     text = parseMarkdown(text)
+
+    let hiddenTags = tags.filter(t => t.hide)
 </script>
 
 {#if user?.id === txt.user?.id}
@@ -63,7 +65,7 @@
     <Column>
         <p>txt {txt.id}</p>
         <p>{txt.value}</p>
-        <Tags {tags} editable={false} />
+        <Tags {tags} editable={false} hide={true} open={true} showHiddenCount={true} />
     </Column>
 </Row>
 

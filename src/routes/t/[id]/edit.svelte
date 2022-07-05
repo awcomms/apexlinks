@@ -37,9 +37,6 @@
   import { Delete } from '$lib/components/Txt'
   import { Tags } from "$lib/components";
 
-  console.log(txt.self)
-  $: console.log(self)
-
   let deleteLoading;
   let editLoading;
 

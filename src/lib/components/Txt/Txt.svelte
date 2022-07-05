@@ -1,5 +1,5 @@
 <script>
-  export let getUrl,
+  export let getUrl = 'txts',
     dm = false,
     text = "",
     user = null,
@@ -9,7 +9,7 @@
     labelText = "",
     pages = 0,
     txt = null,
-    txts = [],
+    items = [],
     leaveText = "Remove this txt from your list",
     joinText = "Add this txt to your list";
 
@@ -42,6 +42,7 @@
 
   let tags = [];
   let room = txt ? String(txt.id) : "home";
+  console.log('r', room)
 
   $: if (deleteTxt) ondeleteTxt();
 
@@ -107,7 +108,7 @@
 
   socket.on("txt", async (obj) => {
     if (txt) await api.put(`seen?id=${txt.id}`, {});
-    txts = [...txts, obj];
+    items = [...items, obj];
     updateScroll();
   });
 
@@ -124,7 +125,7 @@
       return;
     }
     ({ total, page, pages } = res);
-    txts = [...res.txts, ...txts];
+    items = [...res.items, ...items];
   };
 
   const send = async () => {
@@ -132,6 +133,7 @@
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
     await api.post(`txts`, data).then((res) => {
+      console.log(res)
       if (!res.OK) {
         console.log("txt POST response: ", res);
         return;
@@ -149,7 +151,7 @@
   };
 
   const remove = (item) => {
-    txts = txts.filter(t => t.id !== item.id)
+    items = items.filter(t => t.id !== item.id)
   }
 </script>
 
@@ -244,7 +246,7 @@
   <br />
 
   <div class="con">
-    {#each txts as item}
+    {#each items as item}
       {#if $session.user && $session.user.id === item.user?.id}
         <ContextMenu target={item.ref}>
           <Link href='{routes.txtEdit(item.id)}'>

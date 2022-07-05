@@ -21,7 +21,9 @@
 
 <script>
   export let user;
-  import { Row, Link, Column, Tag } from "carbon-components-svelte";
+  import { Tags } from "$lib/components/Tag";
+  import { session } from "$app/stores";
+  import { Row, Link, Column } from "carbon-components-svelte";
   import { routes } from "$lib/utils";
 
   // onMount(() => {
@@ -37,6 +39,8 @@
   //     document.getElementById("ld").innerText = JSON.stringify(ld);
   //   })();
   // });
+
+  let tags = user.tags || []
 </script>
 
 <svelte:head>
@@ -56,15 +60,17 @@
   <script id="ld" type="application/ld+json"></script>
 </svelte:head>
 
+{#if $session.user}
 <Row noGutter>
   <Column>
-    <Link href={routes.userTxt(user.id)}>txt</Link>
+    <Link href={routes.userTxt(user.id)}>send txt</Link>
   </Column>
 </Row>
+{/if}
 
 <Row noGutter>
   <Column>
-    <Link href='{routes.txts}?user={user.id}'>all txts by this user</Link>
+    <Link href="{routes.txts}?user={user.id}">all txts by this user</Link>
   </Column>
 </Row>
 
@@ -83,12 +89,8 @@
   </Column>
 </Row>
 
-{#each user.tags as tag}
-  {#if !tag.hide}
-    <Row noGutter>
-      <Column>
-        <Tag>{tag.value}</Tag>
-      </Column>
-    </Row>
-  {/if}
-{/each}
+<Row noGutter>
+  <Column>
+    <Tags showHiddenCount={true} open={true} {tags} editable={false} />
+  </Column>
+</Row>

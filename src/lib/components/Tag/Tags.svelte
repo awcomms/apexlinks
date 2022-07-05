@@ -1,7 +1,9 @@
 <script>
   export let prefix = '';
+  export let hide = false;
   export let text = "";
   export let editable = true;
+  export let showHiddenCount = false;
   export let showUseOptions = false;
   export let useOptions = false;
   export let hidable = false;
@@ -21,6 +23,7 @@
   } from "carbon-components-svelte";
 
   $: if (ref && is_focused) ref.focus();
+  $: hiddenTags = tags.filter(t => t.hide)
 
   const dispatch = createEventDispatcher();
 
@@ -82,6 +85,9 @@
     {tags.length}
     {`${tags.length === 1 ? `${prefix}tag` : `${prefix}tags`}`}
   </p>
+  {#if showHiddenCount && hiddenTags.length > 0}
+     <pre>{tags.length} hidden</pre>
+  {/if}
   {#if editable}
   <Button
     kind="ghost"
@@ -107,26 +113,27 @@
     <Tag on:click on:click={clear} type="magenta">Clear</Tag>
   {/if}
   {#each tags as tag}
-    {#if editable && hidable}
-      <ContextMenu target={tag.ref}>
-        <ContextMenuOption selectable labelText="Hide" bind:selected={tag.hide} />
-      </ContextMenu>
+    {#if (hide && !tag.hide) || !hide}
+      {#if editable && hidable}
+        <ContextMenu target={tag.ref}>
+          <ContextMenuOption selectable labelText="Hide" bind:selected={tag.hide} />
+        </ContextMenu>
+      {/if}
+      <Tag
+        inputEventDelay={2100}
+        on:input={() => dispatch("change")}
+        on:enter={add}
+        bind:label={tag.label}
+        bind:value={tag.value}
+        bind:inputRef={tag.inputRef}
+        bind:ref={tag.ref}
+        filter={editable}
+        focusOnMount
+        {editable}
+        bind:focused
+        on:close={del(tag)}
+      />
     {/if}
-
-    <Tag
-      inputEventDelay={2100}
-      on:input={() => dispatch("change")}
-      on:enter={add}
-      bind:label={tag.label}
-      bind:value={tag.value}
-      bind:inputRef={tag.inputRef}
-      bind:ref={tag.ref}
-      filter
-      focusOnMount
-      editable
-      bind:focused
-      on:close={del(tag)}
-    />
   {/each}
 {/if}
 

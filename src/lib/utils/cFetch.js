@@ -10,9 +10,10 @@ export const cFetch = (base, path, opts, _fetch) => {
           };
           let _json
           try {
-            _json = JSON.parse(text)
+            _json = JSON.parse(text);
+            _json.OK = !_json.error;
           } catch (err) {
-            return {...json, TEXT: text};
+            return { ...json, TEXT: text };
           }
           return {...json, ..._json}
         })
