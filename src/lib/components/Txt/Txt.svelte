@@ -42,8 +42,7 @@
 
   const socket = io();
 
-  $: if (sort === ("newest" || "oldest") || (sort === "tag" && tags.length > 0))
-    get();
+  $: if ((sort === 'tag' && tags.length > 1) || (sort === ('old' || 'new'))) get();
 
   $: if (deleteTxt) ondeleteTxt();
 
@@ -113,31 +112,38 @@
     let url = getUrl;
     if (sort === "tag") {
       url = url.concat(`&tags=${JSON.stringify(tags)}`);
-    } else if (sort === "oldest") {
+    } else if (sort === "old") {
       url = url.concat(`&reverse`);
     }
-    if (older && page ) url = url.concat(`&page=${page - 1}`);
+    if (older && page) url = url.concat(`&page=${page - 1}`);
     const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
       console.log(`txt fetch get response`, res);
       return;
     }
     ({ total, page, pages } = res);
-    items = [...res.items, ...items];
+    if (false) {
+      //TODO older
+      items = [...res.items, ...items];
+    } else {
+      ({ items } = res);
+    }
   };
 
   const send = async () => {
     let data = { value };
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
-    await api.post(`txts?include=${JSON.stringify(['user', 'value'])}`, data).then((res) => {
-      if (!res.OK) {
-        console.log("txt POST response: ", res);
-        return;
-      }
-      socket.emit("txt", { data: res, room });
-      value = "";
-    });
+    await api
+      .post(`txts?include=${JSON.stringify(["user", "value"])}`, data)
+      .then((res) => {
+        if (!res.OK) {
+          console.log("txt POST response: ", res);
+          return;
+        }
+        socket.emit("txt", { data: res, room });
+        value = "";
+      });
   };
 
   const updateScroll = () => {
@@ -189,9 +195,9 @@
         {#if user && !hideUser}
           <p>
             Txts to
-              <Link href="{routes.user(user.id)}">
-                {sameUser ? "self" : `${user.username}`}
-              </Link>
+            <Link href={routes.user(user.id)}>
+              {sameUser ? "self" : `${user.username}`}
+            </Link>
           </p>
         {/if}
         {#if text}
@@ -220,8 +226,8 @@
     <Column>
       <RadioButtonGroup legendText="Sort txts by" bind:selected={sort}>
         <RadioButton labelText="tag search score" value="tag" />
-        <RadioButton labelText="newest" value="newest" />
-        <RadioButton labelText="oldest" value="oldest" />
+        <RadioButton labelText="new" value="new" />
+        <RadioButton labelText="old" value="old" />
       </RadioButtonGroup>
     </Column>
   </Row>
@@ -243,12 +249,10 @@
 </div>
 
 <div class="scroll">
-  {#if sort === ("newest" || "oldest") && pages > 1}
+  {#if sort === ("new" || "old") && pages > 1}
     <Row noGutter>
       <Column>
-        <Button size="small" on:click={() => get(true)}
-          >Get {sort === "newest" ? "older" : "newer"} txts</Button
-        >
+        <Button size="small" on:click={() => get(true)}>Load more</Button>
       </Column>
     </Row>
   {/if}

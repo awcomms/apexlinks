@@ -3,7 +3,7 @@
     import { routes } from "$lib/utils"
     export const load = async ({params, fetch}) => {
         const {id} = params
-        const include = ['value', 'text']
+        const include = ['value', 'text', 'user', 'tags']
         const txt = await api.get(`txts/${id}?include=${JSON.stringify(include)}`, fetch)
         if (!txt.OK) {
             return {
