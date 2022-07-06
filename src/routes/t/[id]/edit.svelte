@@ -2,7 +2,8 @@
   import { api } from "$lib/utils";
   export const load = async ({ params, fetch }) => {
     const { id } = params;
-    const txt = await api.get(`txts/${id}`, fetch);
+    const include = [ 'value', 'tags', 'txt', 'self', 'personal', 'dm']
+    const txt = await api.get(`txts/${id}?include=${JSON.stringify(include)}`, fetch);
     if (!txt.OK) {
       return {
         error: txt.error,
@@ -25,7 +26,6 @@
   import {
     Row,
     Column,
-    Modal,
     Button,
     Checkbox,
     TextInput,

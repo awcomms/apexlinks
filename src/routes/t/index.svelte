@@ -2,56 +2,59 @@
   import { api } from "$lib/utils";
   import { post } from "$lib/utils/fetch";
   export const load = async ({ url, fetch, session }) => {
-    let { user: authUser } = session;
-    let getUrl = `txts?`;
+    let include = ["user", "value"];
+    let getUrl = `txts?include=${JSON.stringify(include)}`;
     let user = url.searchParams.get("user");
     let joined = typeof url.searchParams.get("joined") === "string";
 
-    let props = {}
+    let props = {};
 
     let id = url.searchParams.get("id");
     if (id) {
-      const txt = await api.get(`txts/${id}`, fetch);
+      const txt = await api.get(`txts/${id}?include=${JSON.stringify(['value'])}`, fetch);
       if (!txt.OK) {
         return {
           error: txt.error,
           status: Number(txt.STATUS),
         };
       }
-      props.getOnMount = true
-      props.txt = txt
-      getUrl = getUrl.concat(`id=${txt.id}`);
+      props.getOnMount = true;
+      props.txt = txt;
+      getUrl = getUrl.concat(`&id=${txt.id}`);
     }
 
     let res, items, total, page, pages;
 
     if (user) {
-      user = await api.get(`users/${user}`, fetch);
+      user = await api.get(`users/${user}?include=${JSON.stringify(['username'])}`, fetch);
       if (!user.OK) {
         return {
           status: Number(user.STATUS),
           error: user.error,
         };
       }
-      getUrl = getUrl.concat(`user=${user.id}`);
+      getUrl = getUrl.concat(`&user=${user.id}`);
     }
     if (joined) {
       if (!session.user) {
         return {
           error: JSON.stringify({
-            message: 'query argument `join` was specified in url but no logged in user',
+            message:
+              "query argument `join` was specified in url but no logged in user",
             guide: {
-              message: 'Click here to login',
-              route: `${routes.login}`
-            }
+              message: "Click here to login",
+              route: `${routes.login}`,
+            },
           }),
-          status: 400
-        }
+          status: 400,
+        };
       }
       getUrl = getUrl.concat(`&joined`);
-      return {
-        props: {getOnMount: true, getUrl}
-      }
+      res = await post(
+        "/send",
+        { path: getUrl, method: "GET" },
+        fetch
+      );
     } else {
       res = await api.get(getUrl, fetch);
     }
@@ -62,6 +65,8 @@
       };
     }
     ({ items, total, page, pages } = res);
+
+    print('page', page)
 
     return {
       props: {
@@ -81,4 +86,13 @@
   import Txt from "$lib/components/Txt/Txt.svelte";
 </script>
 
-<Txt labelText={txt ? "Reply to this txt" : "Add a new txt"} {txt} {getOnMount} {getUrl} {items} {page} {pages} {total} />
+<Txt
+  labelText={txt ? "Reply to this txt" : "Add a new txt"}
+  {txt}
+  {getOnMount}
+  {getUrl}
+  {items}
+  {page}
+  {pages}
+  {total}
+/>

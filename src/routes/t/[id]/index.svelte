@@ -3,7 +3,8 @@
     import { routes } from "$lib/utils"
     export const load = async ({params, fetch}) => {
         const {id} = params
-        const txt = await api.get(`txts/${id}`, fetch)
+        const include = ['value', 'text']
+        const txt = await api.get(`txts/${id}?include=${JSON.stringify(include)}`, fetch)
         if (!txt.OK) {
             return {
                 error: txt.error,
@@ -36,7 +37,6 @@
     if (!tags) tags = []
     text = parseMarkdown(text)
 
-    let hiddenTags = tags.filter(t => t.hide)
 </script>
 
 {#if user?.id === txt.user?.id}

@@ -4,7 +4,8 @@
 
   export const load = async ({ params, session, fetch }) => {
     const { id } = params;
-    const user = await api.get(`users/${id}`, fetch);
+    const include = JSON.stringify(['username'])
+    const user = await api.get(`users/${id}?include=${include}`, fetch);
     if (!user.OK) {
       return {
         status: user.STATUS,

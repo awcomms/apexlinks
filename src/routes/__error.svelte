@@ -32,7 +32,7 @@
         {#if message.guide}
           <Link href={message.guide.route}>{message.guide.message}</Link>
         {/if}
-      {:else if error.message}
+      {:else}
         <p>{error.message}</p>
       {/if}
     </div>

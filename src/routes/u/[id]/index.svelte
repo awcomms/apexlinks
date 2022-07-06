@@ -2,9 +2,9 @@
   import { api } from "$lib/utils";
   export const load = async ({ params, fetch }) => {
     let { id } = params;
-    let user = await api.get(`users/${id}`, fetch);
+    const include = JSON.stringify(["username", "tags", "text"]);
+    const user = await api.get(`users/${id}?include=${include}`, fetch);
     if (!user.OK) {
-      console.log("yeet");
       return {
         status: Number(user.STATUS),
         error: user.error,
@@ -40,7 +40,7 @@
   //   })();
   // });
 
-  let tags = user.tags || []
+  let tags = user.tags || [];
 </script>
 
 <svelte:head>
@@ -61,11 +61,11 @@
 </svelte:head>
 
 {#if $session.user}
-<Row noGutter>
-  <Column>
-    <Link href={routes.userTxt(user.id)}>send txt</Link>
-  </Column>
-</Row>
+  <Row noGutter>
+    <Column>
+      <Link href={routes.userTxt(user.id)}>send txt</Link>
+    </Column>
+  </Row>
 {/if}
 
 <Row noGutter>

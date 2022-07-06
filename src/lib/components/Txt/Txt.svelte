@@ -5,13 +5,14 @@
     user = null,
     getOnMount = false,
     hideUser = false,
-    page = 1,
+    page = 'last',
+    total = 0,
     labelText = "",
-    pages = 0,
+    pages = 1,
     txt = null,
     items = [],
-    leaveText = "Remove this txt from your list",
-    joinText = "Add this txt to your list";
+    leaveText = "Leave this txt",
+    joinText = "Join this txt";
 
   items = items.map((i) => {
     return { ...i, ref: null };
@@ -55,7 +56,6 @@
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
     value,
-    total,
     ref,
     sort;
 
@@ -135,7 +135,7 @@
     let data = { value };
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
-    await api.post(`txts`, data).then((res) => {
+    await api.post(`txts?include=${JSON.stringify(['user', 'value'])}`, data).then((res) => {
       if (!res.OK) {
         console.log("txt POST response: ", res);
         return;
@@ -172,11 +172,14 @@
   {#if !user && txt}
     <Row noGutter>
       <Column>
-        <Link href="{routes.txts}/{txt.id}">
-          <Truncate>
-            txt {txt.id}: {txt.value}
-          </Truncate>
-        </Link>
+        <p>
+          replies to
+          <Link href="{routes.txts}/{txt.id}">
+            <Truncate>
+              txt {txt.id}: {txt.value}
+            </Truncate>
+          </Link>
+        </p>
       </Column>
     </Row>
   {/if}

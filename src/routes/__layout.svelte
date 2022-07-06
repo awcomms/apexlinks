@@ -16,6 +16,7 @@
   const getSub = () => {
     navigator.serviceWorker.ready
       .then(async(registration) => {
+        console.log('ready')
         return registration.pushManager.getSubscription().then(async (sub) => {
           if (sub) {
             return sub;
