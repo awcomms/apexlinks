@@ -1,117 +1,114 @@
-import { c as create_ssr_component, v as validate_component } from "../../../../chunks/index-706e192e.js";
-import { a as api } from "../../../../chunks/api-47bb839d.js";
-import { r as routes } from "../../../../chunks/routes-fb6e9fa0.js";
-import "../../../../chunks/socket-c916af1c.js";
-import { T as Txt } from "../../../../chunks/Txt-6fba074b.js";
-import "../../../../chunks/send-cf4176c0.js";
-import "cookie";
-import "socket.io-client";
-import "../../../../chunks/TxtInput-e6d7f3c6.js";
-import "../../../../chunks/stores-f80eb8f4.js";
-import "../../../../chunks/Link-ac336e41.js";
-import "../../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
+import { c as create_ssr_component, h as subscribe, g as add_attribute, f as escape, v as validate_component } from "../../../../chunks/index-70dffb27.js";
+import { a as api } from "../../../../chunks/api-38343fdb.js";
+import { r as routes } from "../../../../chunks/routes-2be82c1b.js";
+import "../../../../chunks/parseMarkdown-2f2db9f5.js";
+import { T as Tags } from "../../../../chunks/Tags-22bd6bc0.js";
+import { L as Link } from "../../../../chunks/Link-3903a16b.js";
+import "../../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-f1877013.js";
 import "flatpickr";
-import "../../../../chunks/Row-d1968937.js";
-import "../../../../chunks/Column-a86887bc.js";
-import "../../../../chunks/TextInput-3971c789.js";
-/* empty css                                                              */function post(path, data, _fetch) {
-  let f = _fetch || fetch;
-  return f(path, {
-    method: "POST",
-    body: JSON.stringify(data || {}),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then((r) => r.json());
-}
-const load = async ({ params, session, fetch: fetch2 }) => {
-  const { id } = params;
-  const user = await api.get(`users/${id}`, fetch2);
+import { R as Row, C as Column } from "../../../../chunks/Column-9dd4af0c.js";
+import { s as session } from "../../../../chunks/stores-1f04fa1d.js";
+import "../../../../chunks/send-95f08c33.js";
+import "cookie";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
+import "../../../../chunks/index-3f4ef6a9.js";
+import "../../../../chunks/Button-fa0593f7.js";
+const load = async ({ params, fetch }) => {
+  let { id } = params;
+  const include = JSON.stringify(["username", "tags", "text"]);
+  const user = await api.get(`users/${id}?include=${include}`, fetch);
   if (!user.OK) {
-    return { status: user.STATUS, error: user.error };
-  }
-  if (!session.user) {
     return {
-      status: 302,
-      redirect: `${routes.users}/${id}/about`
+      status: Number(user.STATUS),
+      error: user.error
     };
   }
-  const txt = await post("/send", {
-    path: "txts/users",
-    method: "POST",
-    data: { user: id }
-  }, fetch2);
-  if (!txt.OK) {
-    return { status: txt.STATUS, error: txt.error };
-  }
-  let { items, total, page, pages } = await api.get(`txts?id=${txt.id}`);
-  return {
-    props: {
-      txt,
-      items,
-      total,
-      page,
-      pages,
-      user,
-      authUser: session.user
-    }
-  };
+  if (!user.tags)
+    user.tags = [];
+  return { props: { user } };
 };
 const U5Bidu5D = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { items = [], total, page, pages, txt, user, authUser } = $$props;
-  if ($$props.items === void 0 && $$bindings.items && items !== void 0)
-    $$bindings.items(items);
-  if ($$props.total === void 0 && $$bindings.total && total !== void 0)
-    $$bindings.total(total);
-  if ($$props.page === void 0 && $$bindings.page && page !== void 0)
-    $$bindings.page(page);
-  if ($$props.pages === void 0 && $$bindings.pages && pages !== void 0)
-    $$bindings.pages(pages);
-  if ($$props.txt === void 0 && $$bindings.txt && txt !== void 0)
-    $$bindings.txt(txt);
+  let $session, $$unsubscribe_session;
+  $$unsubscribe_session = subscribe(session, (value) => $session = value);
+  let { user } = $$props;
+  let tags = user.tags || [];
   if ($$props.user === void 0 && $$bindings.user && user !== void 0)
     $$bindings.user(user);
-  if ($$props.authUser === void 0 && $$bindings.authUser && authUser !== void 0)
-    $$bindings.authUser(authUser);
-  let $$settled;
-  let $$rendered;
-  do {
-    $$settled = true;
-    $$rendered = `${validate_component(Txt, "Txt").$$render($$result, {
-      leaveText: authUser.id === user.id ? "Texts to self" : "Stop receiving txts from this user",
-      title: user.username,
-      txt,
-      items,
-      total,
-      page,
-      pages
-    }, {
-      title: ($$value) => {
-        user.username = $$value;
-        $$settled = false;
-      },
-      txt: ($$value) => {
-        txt = $$value;
-        $$settled = false;
-      },
-      items: ($$value) => {
-        items = $$value;
-        $$settled = false;
-      },
-      total: ($$value) => {
-        total = $$value;
-        $$settled = false;
-      },
-      page: ($$value) => {
-        page = $$value;
-        $$settled = false;
-      },
-      pages: ($$value) => {
-        pages = $$value;
-        $$settled = false;
-      }
-    }, {})}`;
-  } while (!$$settled);
-  return $$rendered;
+  $$unsubscribe_session();
+  return `${$$result.head += `<meta name="${"keywords"}"${add_attribute("content", (() => {
+    let stringOfTags = "";
+    user.tags.forEach((t, i, a) => {
+      let tagString = i === a.length - 1 ? t : `${t}, `;
+      stringOfTags = stringOfTags.concat(tagString);
+    });
+    return stringOfTags;
+  })(), 0)} data-svelte="svelte-19aqtsx"><meta name="${"description"}" content="${escape(user.name) + "'s Apexlinks page"}" data-svelte="svelte-19aqtsx">${$$result.title = `<title>/${escape(user.username)}</title>`, ""}<script id="${"ld"}" type="${"application/ld+json"}" data-svelte="svelte-19aqtsx"><\/script>`, ""}
+
+${$session.user ? `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Link, "Link").$$render($$result, { href: routes.userTxt(user.id) }, {}, {
+            default: () => {
+              return `send txt`;
+            }
+          })}`;
+        }
+      })}`;
+    }
+  })}` : ``}
+
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Link, "Link").$$render($$result, { href: routes.txts + "?user=" + user.id }, {}, {
+            default: () => {
+              return `all txts by this user`;
+            }
+          })}`;
+        }
+      })}`;
+    }
+  })}
+
+${user.image ? `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, { lg: 2, sm: 2, md: 2, xlg: 2 }, {}, {
+        default: () => {
+          return `<img style="${"width: 100%;"}" alt="${"user display _image"}"${add_attribute("src", user.image, 0)}>`;
+        }
+      })}`;
+    }
+  })}` : ``}
+
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `<p>id: ${escape(user.id)}</p>
+    <p>username: ${escape(user.username)}</p>`;
+        }
+      })}`;
+    }
+  })}
+
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Tags, "Tags").$$render($$result, {
+            showHiddenCount: true,
+            open: true,
+            tags,
+            editable: false
+          }, {}, {})}`;
+        }
+      })}`;
+    }
+  })}`;
 });
 export { U5Bidu5D as default, load };

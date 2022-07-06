@@ -1,7 +1,7 @@
-import * as module from '../entries/pages/t/Txt.svelte.js';
+import * as module from '../entries/pages/t/_id_/index.svelte.js';
 
 export { module };
 export const index = 6;
-export const entry = 'pages/t/Txt.svelte-2c5e0469.js';
-export const js = ["pages/t/Txt.svelte-2c5e0469.js","chunks/index-e47b4649.js","chunks/socket-359f452a.js","chunks/routes-fb6e9fa0.js","chunks/navigation-0e6511d1.js","chunks/singletons-d1fb5791.js","chunks/TxtInput-08c527ea.js","chunks/stores-4f4e660a.js","chunks/Link-3fffe52b.js","chunks/HeaderSearch.svelte_svelte_type_style_lang-dee62dc9.js","chunks/Row-c4df0ce6.js","chunks/Column-5e525297.js","chunks/TextInput-439d1c85.js"];
-export const css = ["assets/Txt-de8fff00.css","assets/Tags.svelte_svelte_type_style_lang-45c60080.css","assets/HeaderSearch.svelte_svelte_type_style_lang-56ec7d53.css"];
+export const entry = 'pages/t/_id_/index.svelte-e110a28e.js';
+export const js = ["pages/t/_id_/index.svelte-e110a28e.js","chunks/index-b9b9b215.js","chunks/index-c3dc478b.js","chunks/routes-0c4bb859.js","chunks/Link-240d34e2.js","chunks/HeaderSearch.svelte_svelte_type_style_lang-82fabd9a.js","chunks/Column-07265bfb.js","chunks/Tags-e6ea5e5b.js","chunks/Button-0d5a8952.js"];
+export const css = ["assets/HeaderSearch.svelte_svelte_type_style_lang-56ec7d53.css","assets/Tags-3883add5.css"];

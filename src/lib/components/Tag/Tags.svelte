@@ -9,7 +9,6 @@
   export let hidable = false;
   export let open = false;
   export let tags = [];
-  // export let focusLast = false;
 
   import { notify } from "$lib/stores";
   import Tag from "$lib/components/Tag/Tag.svelte";
@@ -28,11 +27,11 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    // if (focusLast) tags[tags.length - 1]?.ref.focus();
+    let lastTagRef = tags[tags.length - 1]?.ref;
+    if (lastTagRef) lastTagRef.focus()
   });
 
   let focused;
-  // let value;
   let ref;
 
   const keydown = (e) => {

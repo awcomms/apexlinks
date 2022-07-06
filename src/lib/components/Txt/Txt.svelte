@@ -1,4 +1,8 @@
 <script>
+  /*
+  join
+    
+  */
   export let getUrl = "txts",
     dm = false,
     text = "",
@@ -39,18 +43,20 @@
   import { Tags } from "$lib/components";
   import { io } from "socket.io-client";
   import { browser } from "$app/env";
+  import LoadingButton from "$lib/components/LoadingButton.svelte";
 
   const socket = io();
 
-  $: if ((sort === 'tag' && tags.length > 1) || (sort === ('old' || 'new'))) get();
+  $: if (sort && !(sort === "tag" && tags.length < 1)) get();
 
   $: if (deleteTxt) ondeleteTxt();
 
   let tags = [],
     room = txt ? String(txt.id) : "home",
-    getLoading,
+    getLoading = false,
     deleteTxt,
-    deleteLoading,
+    deleteLoading = false,
+    joinLeaveLoading = false,
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
     value,
@@ -85,16 +91,28 @@
   };
 
   const join = async () => {
-    const res = await api.put(`join/${txt.id}`);
+    if (!txt) return;
+    joinLeaveLoading = true;
+    const res = await api
+      .put(`join/${txt.id}`)
+      .finally(() => (joinLeaveLoading = false));
     if (!res.OK) {
       console.log("fetch PUT `join/${txt.id} res: ", res);
     }
+    txt.joined = res.joined;
   };
 
-  const exit = async () => {
-    await api.put(`leave/${txt.id}`);
-    socket.emit("leave", txt.id);
-    goto(routes.txts);
+  const leave = async () => {
+    if (!txt) return;
+    joinLeaveLoading = true;
+    const res = await api
+      .put(`leave/${txt.id}`)
+      .finally(() => (joinLeaveLoading = false));
+    if (!res.OK) {
+      console.log("leave PUT res: ", res);
+    }
+    txt.joined = res.joined;
+    socket.emit("leave", room);
   };
 
   socket.on("connect", () => {
@@ -121,13 +139,13 @@
       console.log(`txt fetch get response`, res);
       return;
     }
-    ({ total, page, pages } = res);
-    if (false) {
-      //TODO older
-      items = [...res.items, ...items];
-    } else {
-      ({ items } = res);
-    }
+    ({ items, total, page, pages } = res);
+    console.log(
+      "time sort",
+      items.sort(
+        (a, b) => new Date(a.time).valueOf() - new Date(b.time).valueOf()
+      )
+    );
   };
 
   const send = async () => {
@@ -204,17 +222,12 @@
           <p>{text}</p>
         {/if}
         {#if txt}
-          {#if txt.joined}
-            {#if leaveText}
-              <Button size="small" on:click={exit} class="pointer"
-                >{leaveText}</Button
-              >
-            {/if}
-          {:else if joinText}
-            <Button size="small" on:click={join} class="pointer"
-              >{joinText}</Button
-            >
-          {/if}
+          <LoadingButton
+            size="small"
+            loading={joinLeaveLoading}
+            on:click={() => (txt.joined ? leave() : join())}
+            >{txt.joined ? leaveText : joinText}</LoadingButton
+          >
         {/if}
         <br />
         <div class="head-space" />

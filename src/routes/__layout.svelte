@@ -3,7 +3,8 @@
   import { afterNavigate } from "$app/navigation"
   import { onMount } from "svelte";
   import { session } from '$app/stores'
-  import { api } from '$lib/utils'
+  import {VAPID } from '$lib/env'
+  import { api, url8 } from '$lib/utils'
   import { previousPage, newUser } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
@@ -16,9 +17,9 @@
   const getSub = () => {
     navigator.serviceWorker.ready
       .then(async(registration) => {
-        console.log('ready')
         return registration.pushManager.getSubscription().then(async (sub) => {
           if (sub) {
+            console.log('1sub', sub)
             return sub;
           }
 
@@ -27,18 +28,17 @@
             userVisibleOnly: true,
             applicationServerKey: int8VapidKey,
           };
-          return registration.pushManager.subscribe(options);
+          let s = await registration.pushManager.subscribe(options).catch(e => console.dir(e));
+          return s
         });
       })
-      .then((sub) => {
-        api.post("subs", { id: $session.user.id, sub: sub });
+      .then(async (sub) => {
+        if (sub) await api.post("subs", { sub });
       });
   };
 
   onMount(()=>{
-    console.log('layout mount')
     if (navigator && navigator.serviceWorker && $session.user) {
-      console.log('hmm')
       getSub();
     }
   })

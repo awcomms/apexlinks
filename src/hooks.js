@@ -1,7 +1,7 @@
 import { parse } from "cookie";
 import { send } from "$lib/send";
 import { minify } from "html-minifier";
-import { dev, prerendering } from "$app/env";
+import { prerendering } from "$app/env";
 
 const min_opts = {
   collapseBooleanAttributes: true,

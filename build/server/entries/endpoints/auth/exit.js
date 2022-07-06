@@ -1,8 +1,11 @@
-import { a as api } from "../../../chunks/api-47bb839d.js";
-import "../../../chunks/socket-c916af1c.js";
-import "../../../chunks/send-cf4176c0.js";
+import { a as api } from "../../../chunks/api-38343fdb.js";
+import "../../../chunks/parseMarkdown-2f2db9f5.js";
+import "../../../chunks/send-95f08c33.js";
 import "cookie";
-import "socket.io-client";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
 async function post(req) {
   req.locals.token = null;
   await api.del("tokens", req.locals.token);

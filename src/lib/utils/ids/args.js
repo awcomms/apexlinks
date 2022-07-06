@@ -1,4 +1,6 @@
-export const args = (arg, seperator = '+') => {
+import { api } from "$lib/utils"
+
+export const args = (arg) => {
     let ids = arg.split("+");
     let items = ids.map((p) => {
       let id;

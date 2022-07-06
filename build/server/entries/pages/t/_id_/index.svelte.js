@@ -1,107 +1,116 @@
-import { c as create_ssr_component, v as validate_component } from "../../../../chunks/index-706e192e.js";
-import { a as api } from "../../../../chunks/api-47bb839d.js";
-import "../../../../chunks/socket-c916af1c.js";
-import "../../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
+import { c as create_ssr_component, h as subscribe, v as validate_component, f as escape } from "../../../../chunks/index-70dffb27.js";
+import { a as api } from "../../../../chunks/api-38343fdb.js";
+import { r as routes } from "../../../../chunks/routes-2be82c1b.js";
+import { p as parseMarkdown } from "../../../../chunks/parseMarkdown-2f2db9f5.js";
+import { s as session } from "../../../../chunks/stores-1f04fa1d.js";
+import { L as Link } from "../../../../chunks/Link-3903a16b.js";
+import "../../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-f1877013.js";
 import "flatpickr";
-import { R as Row } from "../../../../chunks/Row-d1968937.js";
-import { C as Column } from "../../../../chunks/Column-a86887bc.js";
-import { T as Txt } from "../../../../chunks/Txt-6fba074b.js";
-import { T as Tags } from "../../../../chunks/Tags-8ac9097a.js";
-import { io } from "socket.io-client";
-import "../../../../chunks/send-cf4176c0.js";
+import { R as Row, C as Column } from "../../../../chunks/Column-9dd4af0c.js";
+import { T as Tags } from "../../../../chunks/Tags-22bd6bc0.js";
+import "../../../../chunks/send-95f08c33.js";
 import "cookie";
-import "../../../../chunks/routes-fb6e9fa0.js";
-import "../../../../chunks/TxtInput-e6d7f3c6.js";
-import "../../../../chunks/stores-f80eb8f4.js";
-import "../../../../chunks/Link-ac336e41.js";
-import "../../../../chunks/TextInput-3971c789.js";
-/* empty css                                                              */import "../../../../chunks/index-ca308a68.js";
-import "../../../../chunks/Tag-8f483cdc.js";
-import "../../../../chunks/Close-75a59370.js";
-import "../../../../chunks/Button-b257bd6b.js";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
+import "../../../../chunks/index-3f4ef6a9.js";
+import "../../../../chunks/Button-fa0593f7.js";
 const load = async ({ params, fetch }) => {
   const { id } = params;
-  let txt;
-  if (id) {
-    txt = await api.get(`txts/${id}`, fetch);
-    if (!txt.OK) {
-      return {
-        status: Number(txt.STATUS),
-        error: txt.error
-      };
-    }
-  }
-  console.log(txt);
-  let repliesUrl = id ? `txts?id=${id}` : `txts`;
-  let res = await api.get(repliesUrl, fetch);
-  if (!res.OK) {
+  const include = ["value", "text", "user", "tags"];
+  const txt = await api.get(`txts/${id}?include=${JSON.stringify(include)}`, fetch);
+  if (!txt.OK) {
     return {
-      status: Number(res.STATUS),
-      error: res.error
+      error: txt.error,
+      status: Number(txt.STATUS)
     };
   }
-  let { items, total, page, pages } = res;
-  return {
-    props: { txt, items, page, pages, total }
-  };
+  return { props: { txt } };
 };
 const U5Bidu5D = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { txt, items, total, page, pages } = $$props;
-  let add = true;
-  const socket = io();
-  let tags;
-  let room = txt ? String(txt.id) : "home";
-  socket.on("connect", () => {
-    connect();
-  });
-  socket.on("txt", async (obj) => {
-    if (txt)
-      await api.put(`seen?id=${txt.id}`, {});
-    items = [...items, obj];
-    add = !add;
-  });
-  const connect = () => {
-    socket.emit("join", room);
-  };
+  var _a;
+  let $session, $$unsubscribe_session;
+  $$unsubscribe_session = subscribe(session, (value) => $session = value);
+  let { txt } = $$props;
+  let { user } = $session;
+  let { tags, text } = txt;
+  if (!tags)
+    tags = [];
+  text = parseMarkdown(text);
   if ($$props.txt === void 0 && $$bindings.txt && txt !== void 0)
     $$bindings.txt(txt);
-  if ($$props.items === void 0 && $$bindings.items && items !== void 0)
-    $$bindings.items(items);
-  if ($$props.total === void 0 && $$bindings.total && total !== void 0)
-    $$bindings.total(total);
-  if ($$props.page === void 0 && $$bindings.page && page !== void 0)
-    $$bindings.page(page);
-  if ($$props.pages === void 0 && $$bindings.pages && pages !== void 0)
-    $$bindings.pages(pages);
-  let $$settled;
-  let $$rendered;
-  do {
-    $$settled = true;
-    $$rendered = `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
-      default: () => {
-        return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
-          default: () => {
-            return `${validate_component(Tags, "Tags").$$render($$result, { prefix: "search ", tags }, {
-              tags: ($$value) => {
-                tags = $$value;
-                $$settled = false;
-              }
-            }, {})}`;
-          }
-        })}`;
-      }
-    })}
+  $$unsubscribe_session();
+  return `${(user == null ? void 0 : user.id) === ((_a = txt.user) == null ? void 0 : _a.id) ? `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Link, "Link").$$render($$result, { href: routes.txtEdit(txt.id) }, {}, {
+            default: () => {
+              return `Edit this txt`;
+            }
+          })}`;
+        }
+      })}`;
+    }
+  })}` : ``}
 
-${validate_component(Txt, "Txt").$$render($$result, {
-      socket,
-      txt,
-      items,
-      total,
-      add,
-      pages,
-      page
-    }, {}, {})}`;
-  } while (!$$settled);
-  return $$rendered;
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Link, "Link").$$render($$result, { href: routes.txtTxt(txt.id) }, {}, {
+            default: () => {
+              return `Replies to this txt`;
+            }
+          })}`;
+        }
+      })}`;
+    }
+  })}
+
+${txt.user ? `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `${validate_component(Link, "Link").$$render($$result, { href: routes.user(txt.user.id) }, {}, {
+            default: () => {
+              return `Creator of this txt`;
+            }
+          })}`;
+        }
+      })}`;
+    }
+  })}` : ``}
+
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `<p>txt ${escape(txt.id)}</p>
+        <p>${escape(txt.value)}</p>
+        ${validate_component(Tags, "Tags").$$render($$result, {
+            tags,
+            editable: false,
+            hide: true,
+            open: true,
+            showHiddenCount: true
+          }, {}, {})}`;
+        }
+      })}`;
+    }
+  })}
+
+<br>
+
+${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
+    default: () => {
+      return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
+        default: () => {
+          return `<!-- HTML_TAG_START -->${text}<!-- HTML_TAG_END -->`;
+        }
+      })}`;
+    }
+  })}`;
 });
 export { U5Bidu5D as default, load };

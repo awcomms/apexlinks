@@ -85,7 +85,7 @@ async function fetchAndCache(request) {
         cache.put(request, netRes.clone());
         return netRes || cache.match(request);
       })
-      .catch((err) => {
+      .catch(() => {
         return cache.match(request);
       });
   });

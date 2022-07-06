@@ -112,7 +112,6 @@
     <Tag
       text="Add tags to search for users"
       open={true}
-      focusLast={true}
       bind:tags={$userTags}
       on:change={get}
     />

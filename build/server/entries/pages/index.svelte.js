@@ -1,16 +1,16 @@
-import { c as create_ssr_component, j as subscribe, i as createEventDispatcher, l as set_store_value, v as validate_component, t as each, f as escape } from "../../chunks/index-706e192e.js";
-import "../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
+import { c as create_ssr_component, h as subscribe, j as createEventDispatcher, l as set_store_value, v as validate_component, t as each, f as escape } from "../../chunks/index-70dffb27.js";
+import "../../chunks/HeaderSearch.svelte_svelte_type_style_lang-f1877013.js";
 import "flatpickr";
-import { R as Row } from "../../chunks/Row-d1968937.js";
-import { C as Column } from "../../chunks/Column-a86887bc.js";
+import { R as Row, C as Column } from "../../chunks/Column-9dd4af0c.js";
 import "cookie";
-import "../../chunks/socket-c916af1c.js";
-import { u as users, b as userTags, s as selectedUsers } from "../../chunks/index-ca308a68.js";
-import { T as Tags } from "../../chunks/Tags-8ac9097a.js";
-import "socket.io-client";
-import "../../chunks/Tag-8f483cdc.js";
-import "../../chunks/Close-75a59370.js";
-/* empty css                                                        */import "../../chunks/Button-b257bd6b.js";
+import "../../chunks/parseMarkdown-2f2db9f5.js";
+import { u as users, b as userTags, s as selectedUsers } from "../../chunks/index-3f4ef6a9.js";
+import { T as Tags } from "../../chunks/Tags-22bd6bc0.js";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
+import "../../chunks/Button-fa0593f7.js";
 var Users_svelte_svelte_type_style_lang = /* @__PURE__ */ (() => ".selected.svelte-yomnls{background-color:gray}.actions.svelte-yomnls{margin-right:1rem}.label.svelte-yomnls{padding-left:0.5rem}.user.svelte-yomnls{display:flex;flex-direction:row}.pointer.svelte-yomnls:hover{color:rgb(52, 59, 204);cursor:pointer}")();
 const css = {
   code: ".selected.svelte-yomnls{background-color:gray}.actions.svelte-yomnls{margin-right:1rem}.label.svelte-yomnls{padding-left:0.5rem}.user.svelte-yomnls{display:flex;flex-direction:row}.pointer.svelte-yomnls:hover{color:rgb(52, 59, 204);cursor:pointer}",
@@ -50,7 +50,6 @@ ${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
               text: "Add tags to search for users",
               open: true,
               focusLast: true,
-              placeholder: "Search",
               tags: $userTags
             }, {
               tags: ($$value) => {

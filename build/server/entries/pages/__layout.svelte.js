@@ -1,13 +1,17 @@
-import { c as create_ssr_component, a as compute_rest_props, b as spread, e as escape_attribute_value, d as escape_object, f as escape, g as add_attribute, h as add_classes, i as createEventDispatcher, v as validate_component, m as missing_component, j as subscribe, k as compute_slots, l as set_store_value, s as setContext } from "../../chunks/index-706e192e.js";
-import { w as writable, d as derived } from "../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
+import { c as create_ssr_component, a as compute_rest_props, b as spread, e as escape_attribute_value, d as escape_object, f as escape, g as add_attribute, v as validate_component, m as missing_component, h as subscribe, i as add_classes, j as createEventDispatcher, k as compute_slots, l as set_store_value, s as setContext } from "../../chunks/index-70dffb27.js";
+import { w as writable, d as derived } from "../../chunks/HeaderSearch.svelte_svelte_type_style_lang-f1877013.js";
 import "flatpickr";
-import { i as isSideNavOpen, n as newUser } from "../../chunks/index-ca308a68.js";
-import { p as page, s as session, n as navigating } from "../../chunks/stores-f80eb8f4.js";
+import { p as page, s as session, n as navigating } from "../../chunks/stores-1f04fa1d.js";
 import "cookie";
-import { r as routes } from "../../chunks/routes-fb6e9fa0.js";
-import "../../chunks/socket-c916af1c.js";
-import { C as Close } from "../../chunks/Close-75a59370.js";
-import "socket.io-client";
+import "../../chunks/parseMarkdown-2f2db9f5.js";
+import { C as Close, i as isSideNavOpen, p as previousPage, n as newUser } from "../../chunks/index-3f4ef6a9.js";
+import { I as InlineLoading } from "../../chunks/InlineLoading-dd3cecbe.js";
+import { r as routes } from "../../chunks/routes-2be82c1b.js";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
+import "../../chunks/Loading-8d26f732.js";
 const ChevronDown = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let labelled;
   let attributes;
@@ -34,71 +38,6 @@ const ChevronDown = create_ssr_component(($$result, $$props, $$bindings, slots) 
     escape_object(attributes),
     escape_object($$restProps)
   ], {})}>${title ? `<title>${escape(title)}</title>` : ``}<path d="${"M16 22L6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z"}"></path></svg>`;
-});
-const CheckmarkFilled = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let labelled;
-  let attributes;
-  let $$restProps = compute_rest_props($$props, ["size", "title"]);
-  let { size = 16 } = $$props;
-  let { title = void 0 } = $$props;
-  if ($$props.size === void 0 && $$bindings.size && size !== void 0)
-    $$bindings.size(size);
-  if ($$props.title === void 0 && $$bindings.title && title !== void 0)
-    $$bindings.title(title);
-  labelled = $$props["aria-label"] || $$props["aria-labelledby"] || title;
-  attributes = {
-    "aria-hidden": labelled ? void 0 : true,
-    role: labelled ? "img" : void 0,
-    focusable: Number($$props["tabindex"]) === 0 ? true : void 0
-  };
-  return `<svg${spread([
-    { xmlns: "http://www.w3.org/2000/svg" },
-    { viewBox: "0 0 32 32" },
-    { fill: "currentColor" },
-    { preserveAspectRatio: "xMidYMid meet" },
-    { width: escape_attribute_value(size) },
-    { height: escape_attribute_value(size) },
-    escape_object(attributes),
-    escape_object($$restProps)
-  ], {})}>${title ? `<title>${escape(title)}</title>` : ``}<path d="${"M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2ZM14,21.5908l-5-5L10.5906,15,14,18.4092,21.41,11l1.5957,1.5859Z"}"></path><path fill="${"none"}" d="${"M14 21.591L9 16.591 10.591 15 14 18.409 21.41 11 23.005 12.585 14 21.591z"}" data-icon-path="${"inner-path"}"></path></svg>`;
-});
-const Loading = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let spinnerRadius;
-  let $$restProps = compute_rest_props($$props, ["small", "active", "withOverlay", "description", "id"]);
-  let { small = false } = $$props;
-  let { active = true } = $$props;
-  let { withOverlay = true } = $$props;
-  let { description = "Active loading indicator" } = $$props;
-  let { id = "ccs-" + Math.random().toString(36) } = $$props;
-  if ($$props.small === void 0 && $$bindings.small && small !== void 0)
-    $$bindings.small(small);
-  if ($$props.active === void 0 && $$bindings.active && active !== void 0)
-    $$bindings.active(active);
-  if ($$props.withOverlay === void 0 && $$bindings.withOverlay && withOverlay !== void 0)
-    $$bindings.withOverlay(withOverlay);
-  if ($$props.description === void 0 && $$bindings.description && description !== void 0)
-    $$bindings.description(description);
-  if ($$props.id === void 0 && $$bindings.id && id !== void 0)
-    $$bindings.id(id);
-  spinnerRadius = small ? "42" : "44";
-  return `${withOverlay ? `<div${spread([escape_object($$restProps)], {
-    classes: "bx--loading-overlay " + (!active ? "bx--loading-overlay--stop" : "")
-  })}><div aria-atomic="${"true"}"${add_attribute("aria-labelledby", id, 0)}${add_attribute("aria-live", active ? "assertive" : "off", 0)}${add_classes(("bx--loading " + (small ? "bx--loading--small" : "") + " " + (!active ? "bx--loading--stop" : "")).trim())}>
-      <label${add_attribute("id", id, 0)}${add_classes("bx--visually-hidden".trim())}>${escape(description)}</label>
-      <svg viewBox="${"0 0 100 100"}"${add_classes("bx--loading__svg".trim())}><title>${escape(description)}</title>${small ? `<circle cx="${"50%"}" cy="${"50%"}"${add_attribute("r", spinnerRadius, 0)}${add_classes("bx--loading__background".trim())}></circle>` : ``}<circle cx="${"50%"}" cy="${"50%"}"${add_attribute("r", spinnerRadius, 0)}${add_classes("bx--loading__stroke".trim())}></circle></svg></div></div>` : `<div${spread([
-    { "aria-atomic": "true" },
-    {
-      "aria-labelledby": escape_attribute_value(id)
-    },
-    {
-      "aria-live": escape_attribute_value(active ? "assertive" : "off")
-    },
-    escape_object($$restProps)
-  ], {
-    classes: "bx--loading " + (small ? "bx--loading--small" : "") + " " + (!active ? "bx--loading--stop" : "")
-  })}>
-    <label${add_attribute("id", id, 0)}${add_classes("bx--visually-hidden".trim())}>${escape(description)}</label>
-    <svg viewBox="${"0 0 100 100"}"${add_classes("bx--loading__svg".trim())}><title>${escape(description)}</title>${small ? `<circle cx="${"50%"}" cy="${"50%"}"${add_attribute("r", spinnerRadius, 0)}${add_classes("bx--loading__background".trim())}></circle>` : ``}<circle cx="${"50%"}" cy="${"50%"}"${add_attribute("r", spinnerRadius, 0)}${add_classes("bx--loading__stroke".trim())}></circle></svg></div>`}`;
 });
 const Grid = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let props;
@@ -151,65 +90,6 @@ const Grid = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     ].filter(Boolean).join(" ")
   };
   return `${as ? `${slots.default ? slots.default({ props }) : ``}` : `<div${spread([escape_object(props)], {})}>${slots.default ? slots.default({}) : ``}</div>`}`;
-});
-const ErrorFilled = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let labelled;
-  let attributes;
-  let $$restProps = compute_rest_props($$props, ["size", "title"]);
-  let { size = 16 } = $$props;
-  let { title = void 0 } = $$props;
-  if ($$props.size === void 0 && $$bindings.size && size !== void 0)
-    $$bindings.size(size);
-  if ($$props.title === void 0 && $$bindings.title && title !== void 0)
-    $$bindings.title(title);
-  labelled = $$props["aria-label"] || $$props["aria-labelledby"] || title;
-  attributes = {
-    "aria-hidden": labelled ? void 0 : true,
-    role: labelled ? "img" : void 0,
-    focusable: Number($$props["tabindex"]) === 0 ? true : void 0
-  };
-  return `<svg${spread([
-    { xmlns: "http://www.w3.org/2000/svg" },
-    { viewBox: "0 0 32 32" },
-    { fill: "currentColor" },
-    { preserveAspectRatio: "xMidYMid meet" },
-    { width: escape_attribute_value(size) },
-    { height: escape_attribute_value(size) },
-    escape_object(attributes),
-    escape_object($$restProps)
-  ], {})}>${title ? `<title>${escape(title)}</title>` : ``}<path fill="${"none"}" d="${"M14.9 7.2H17.1V24.799H14.9z"}" data-icon-path="${"inner-path"}" transform="${"rotate(-45 16 16)"}"></path><path d="${"M16,2A13.914,13.914,0,0,0,2,16,13.914,13.914,0,0,0,16,30,13.914,13.914,0,0,0,30,16,13.914,13.914,0,0,0,16,2Zm5.4449,21L9,10.5557,10.5557,9,23,21.4448Z"}"></path></svg>`;
-});
-const InlineLoading = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$restProps = compute_rest_props($$props, ["status", "description", "iconDescription", "successDelay"]);
-  let { status = "active" } = $$props;
-  let { description = void 0 } = $$props;
-  let { iconDescription = void 0 } = $$props;
-  let { successDelay = 1500 } = $$props;
-  createEventDispatcher();
-  if ($$props.status === void 0 && $$bindings.status && status !== void 0)
-    $$bindings.status(status);
-  if ($$props.description === void 0 && $$bindings.description && description !== void 0)
-    $$bindings.description(description);
-  if ($$props.iconDescription === void 0 && $$bindings.iconDescription && iconDescription !== void 0)
-    $$bindings.iconDescription(iconDescription);
-  if ($$props.successDelay === void 0 && $$bindings.successDelay && successDelay !== void 0)
-    $$bindings.successDelay(successDelay);
-  return `
-<div${spread([{ "aria-live": "assertive" }, escape_object($$restProps)], {
-    classes: "bx--inline-loading"
-  })}><div${add_classes("bx--inline-loading__animation".trim())}>${status === "error" ? `${validate_component(ErrorFilled, "ErrorFilled").$$render($$result, {
-    class: "bx--inline-loading--error",
-    title: iconDescription
-  }, {}, {})}` : `${status === "finished" ? `${validate_component(CheckmarkFilled, "CheckmarkFilled").$$render($$result, {
-    class: "bx--inline-loading__checkmark-container",
-    title: iconDescription
-  }, {}, {})}` : `${status === "inactive" || status === "active" ? `${validate_component(Loading, "Loading").$$render($$result, {
-    small: true,
-    description: iconDescription,
-    withOverlay: false,
-    active: status === "active"
-  }, {}, {})}` : ``}`}`}</div>
-  ${description ? `<div${add_classes("bx--inline-loading__text".trim())}>${escape(description)}</div>` : ``}</div>`;
 });
 const Menu = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let labelled;
@@ -447,8 +327,8 @@ const SideNavMenu = create_ssr_component(($$result, $$props, $$bindings, slots) 
           ${validate_component(icon || missing_component, "svelte:component").$$render($$result, {}, {}, {})}
         `}</div>` : ``}
     <span${add_classes("bx--side-nav__submenu-title".trim())}>${escape(text)}</span>
-    <div${add_classes("bx--side-nav__icon bx--side-nav__icon--small bx--side-nav__submenu-chevron".trim())}>${validate_component(ChevronDown || missing_component, "svelte:component").$$render($$result, { title: "Open Menu", tabindex: "0" }, {}, {})}</div></button>
-  <ul role="${"menu"}"${add_classes("bx--side-nav__menu".trim())}>${slots.default ? slots.default({}) : ``}</ul></li>`;
+    <div${add_classes("bx--side-nav__icon bx--side-nav__icon--small bx--side-nav__submenu-chevron".trim())}>${validate_component(ChevronDown, "ChevronDown").$$render($$result, {}, {}, {})}</div></button>
+  <ul role="${"menu"}"${add_attribute("style", expanded && "max-height: none", 0)}${add_classes("bx--side-nav__menu".trim())}>${slots.default ? slots.default({}) : ``}</ul></li>`;
 });
 const SideNavMenuItem = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$restProps = compute_rest_props($$props, ["isSelected", "href", "text", "ref"]);
@@ -625,15 +505,11 @@ ${validate_component(SideNav, "SideNav").$$render($$result, { isOpen: $isSideNav
     ${validate_component(SideNavMenu, "SideNavMenu").$$render($$result, { text: "Txts" }, {}, {
               default: () => {
                 return `${$session.user ? `${validate_component(SideNavMenuItem_1, "SideNavMenuItem").$$render($$result, {
-                  isSelected: $page.url.pathname === `${routes.txts}/add`,
-                  href: routes.txts + "/add",
-                  text: "Add txt"
-                }, {}, {})}
-        ${validate_component(SideNavMenuItem_1, "SideNavMenuItem").$$render($$result, {
                   text: "My txts",
                   href: routes.txts + "?user=" + $session.user.id,
                   isSelected: $page.url.pathname === routes.txts && $page.url.searchParams.get("user") === $session.user.id
-                }, {}, {})}` : ``}
+                }, {}, {})}
+        ` : ``}
       ${validate_component(SideNavMenuItem_1, "SideNavMenuItem").$$render($$result, {
                   text: "All txts",
                   href: routes.txts,
@@ -643,7 +519,7 @@ ${validate_component(SideNav, "SideNav").$$render($$result, { isOpen: $isSideNav
             })}
     ${$session.user ? `${validate_component(SideNavLink_1, "SideNavLink").$$render($$result, {
               isSelected: $page.url.pathname === `/u/${$session.user.username}`,
-              text: "Me",
+              text: "Me: " + $session.user.username,
               href: "/u/" + $session.user.id
             }, {}, {})}
       ${validate_component(SideNavLink_1, "SideNavLink").$$render($$result, {
@@ -697,9 +573,15 @@ const Theme = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${slots.default ? slots.default({}) : ``}`;
 });
 const _layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_session;
+  let $$unsubscribe_previousPage;
   let $newUser, $$unsubscribe_newUser;
+  $$unsubscribe_session = subscribe(session, (value) => value);
+  $$unsubscribe_previousPage = subscribe(previousPage, (value) => value);
   $$unsubscribe_newUser = subscribe(newUser, (value) => $newUser = value);
   set_store_value(newUser, $newUser = false, $newUser);
+  $$unsubscribe_session();
+  $$unsubscribe_previousPage();
   $$unsubscribe_newUser();
   return `${validate_component(Theme, "Theme").$$render($$result, { persist: true, theme: "g10" }, {}, {
     default: () => {

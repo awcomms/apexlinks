@@ -17,7 +17,7 @@ renderer.heading = (text, level) => {
             </h${level}>`;
 }
 
-renderer.list = (body, ordered, start) => {
+renderer.list = (body, ordered) => {
     if(!ordered){
         return `
             <ul style='list-style-type: square; list-style-position: inside;'>

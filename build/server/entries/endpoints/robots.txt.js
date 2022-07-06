@@ -1,7 +1,10 @@
-import { b as base } from "../../chunks/send-cf4176c0.js";
+import { b as base } from "../../chunks/send-95f08c33.js";
 import "cookie";
-import "../../chunks/socket-c916af1c.js";
-import "socket.io-client";
+import "../../chunks/parseMarkdown-2f2db9f5.js";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
 const get = () => {
   return {
     headers: {

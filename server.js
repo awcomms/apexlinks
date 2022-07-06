@@ -13,6 +13,6 @@ app.get("/healthcheck", (req, res) => {
 
 const server = createServer(app);
 
-const io = getIO(server);
+getIO(server);
 
 server.listen("3000", "0.0.0.0");

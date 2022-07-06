@@ -1,110 +1,117 @@
-import { c as create_ssr_component, v as validate_component } from "../../../chunks/index-706e192e.js";
-import { a as api } from "../../../chunks/api-47bb839d.js";
-import "../../../chunks/socket-c916af1c.js";
-import "../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-6dd63eaa.js";
-import "flatpickr";
-import { R as Row } from "../../../chunks/Row-d1968937.js";
-import { C as Column } from "../../../chunks/Column-a86887bc.js";
-import { T as Txt } from "../../../chunks/Txt-6fba074b.js";
-import { T as Tags } from "../../../chunks/Tags-8ac9097a.js";
-import { io } from "socket.io-client";
-import "../../../chunks/send-cf4176c0.js";
+import { c as create_ssr_component, v as validate_component } from "../../../chunks/index-70dffb27.js";
+import { p as post, T as Txt } from "../../../chunks/Txt-018b5cd1.js";
+import { a as api } from "../../../chunks/api-38343fdb.js";
+import "../../../chunks/parseMarkdown-2f2db9f5.js";
+import "../../../chunks/routes-2be82c1b.js";
+import "../../../chunks/stores-1f04fa1d.js";
 import "cookie";
-import "../../../chunks/routes-fb6e9fa0.js";
-import "../../../chunks/TxtInput-e6d7f3c6.js";
-import "../../../chunks/stores-f80eb8f4.js";
-import "../../../chunks/Link-ac336e41.js";
-import "../../../chunks/TextInput-3971c789.js";
-/* empty css                                                           */import "../../../chunks/index-ca308a68.js";
-import "../../../chunks/Tag-8f483cdc.js";
-import "../../../chunks/Close-75a59370.js";
-import "../../../chunks/Button-b257bd6b.js";
-const load = async ({ url, fetch }) => {
-  const id = url.searchParams.get("id");
-  let txt;
+import "../../../chunks/Link-3903a16b.js";
+import "../../../chunks/HeaderSearch.svelte_svelte_type_style_lang-f1877013.js";
+import "flatpickr";
+import "../../../chunks/Column-9dd4af0c.js";
+import "../../../chunks/TextInput-badba880.js";
+import "../../../chunks/Tags-22bd6bc0.js";
+import "../../../chunks/index-3f4ef6a9.js";
+import "../../../chunks/Button-fa0593f7.js";
+import "../../../chunks/ButtonSet-820f91e3.js";
+import "../../../chunks/Loading-8d26f732.js";
+import "socket.io-client";
+import "../../../chunks/Delete-fad7343b.js";
+import "../../../chunks/Modal-537a947a.js";
+import "../../../chunks/send-95f08c33.js";
+import "golden-fleece";
+import "prismjs";
+import "prism-svelte";
+import "marked";
+const load = async ({ url, fetch, session }) => {
+  let include = ["user", "value"];
+  let getUrl = `txts?include=${JSON.stringify(include)}`;
+  let user = url.searchParams.get("user");
+  let joined = typeof url.searchParams.get("joined") === "string";
+  let props = {};
+  let id = url.searchParams.get("id");
   if (id) {
-    txt = await api.get(`txts?id=${id}`, fetch);
+    const txt = await api.get(`txts/${id}?include=${JSON.stringify(["value"])}`, fetch);
     if (!txt.OK) {
       return {
-        status: Number(txt.STATUS),
-        error: txt.error
+        error: txt.error,
+        status: Number(txt.STATUS)
       };
     }
+    props.txt = txt;
+    getUrl = getUrl.concat(`&id=${txt.id}`);
   }
-  let repliesUrl = id ? `txts?id=${id}` : `txts`;
-  let res = await api.get(repliesUrl, fetch);
+  let res, items, total, page, pages;
+  if (user) {
+    user = await api.get(`users/${user}?include=${JSON.stringify(["username"])}`, fetch);
+    if (!user.OK) {
+      return {
+        status: Number(user.STATUS),
+        error: user.error
+      };
+    }
+    getUrl = getUrl.concat(`&user=${user.id}`);
+  }
+  if (joined) {
+    if (!session.user) {
+      return {
+        error: JSON.stringify({
+          message: "query argument `join` was specified in url but no logged in user",
+          guide: {
+            message: "Click here to login",
+            route: `${routes.login}`
+          }
+        }),
+        status: 400
+      };
+    }
+    getUrl = getUrl.concat(`&joined`);
+    res = await post("/send", { path: getUrl, method: "GET" }, fetch);
+  } else {
+    res = await api.get(getUrl, fetch);
+  }
   if (!res.OK) {
     return {
       status: Number(res.STATUS),
       error: res.error
     };
   }
-  let { items, total, page, pages } = res;
+  ({ items, total, page, pages } = res);
+  console.log("page", page);
+  console.log("items.length", items.length);
   return {
-    props: { txt, items, page, pages, total }
+    props: {
+      ...props,
+      items,
+      page,
+      pages,
+      total,
+      getUrl
+    }
   };
 };
 const T = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { txt, items, total, page, pages } = $$props;
-  let add = true;
-  const socket = io();
-  let tags;
-  let room = txt ? String(txt.id) : "home";
-  socket.on("connect", () => {
-    connect();
-  });
-  socket.on("txt", async (obj) => {
-    if (txt)
-      await api.put(`seen?id=${txt.id}`, {});
-    items = [...items, obj];
-    add = !add;
-  });
-  const connect = () => {
-    socket.emit("join", room);
-  };
+  let { txt, items, page, pages, total, getUrl } = $$props;
   if ($$props.txt === void 0 && $$bindings.txt && txt !== void 0)
     $$bindings.txt(txt);
   if ($$props.items === void 0 && $$bindings.items && items !== void 0)
     $$bindings.items(items);
-  if ($$props.total === void 0 && $$bindings.total && total !== void 0)
-    $$bindings.total(total);
   if ($$props.page === void 0 && $$bindings.page && page !== void 0)
     $$bindings.page(page);
   if ($$props.pages === void 0 && $$bindings.pages && pages !== void 0)
     $$bindings.pages(pages);
-  let $$settled;
-  let $$rendered;
-  do {
-    $$settled = true;
-    $$rendered = `${validate_component(Row, "Row").$$render($$result, { noGutter: true }, {}, {
-      default: () => {
-        return `${validate_component(Column, "Column").$$render($$result, {}, {}, {
-          default: () => {
-            return `${validate_component(Tags, "Tags").$$render($$result, {
-              text: "Add tags to search for txts",
-              prefix: "search ",
-              tags
-            }, {
-              tags: ($$value) => {
-                tags = $$value;
-                $$settled = false;
-              }
-            }, {})}`;
-          }
-        })}`;
-      }
-    })}
-
-${validate_component(Txt, "Txt").$$render($$result, {
-      socket,
-      txt,
-      items,
-      total,
-      add,
-      pages,
-      page
-    }, {}, {})}`;
-  } while (!$$settled);
-  return $$rendered;
+  if ($$props.total === void 0 && $$bindings.total && total !== void 0)
+    $$bindings.total(total);
+  if ($$props.getUrl === void 0 && $$bindings.getUrl && getUrl !== void 0)
+    $$bindings.getUrl(getUrl);
+  return `${validate_component(Txt, "Txt").$$render($$result, {
+    labelText: txt ? "Reply to this txt" : "Add a new txt",
+    txt,
+    getUrl,
+    items,
+    page,
+    pages,
+    total
+  }, {}, {})}`;
 });
 export { T as default, load };
