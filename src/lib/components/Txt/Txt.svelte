@@ -3,9 +3,8 @@
     dm = false,
     text = "",
     user = null,
-    getOnMount = false,
     hideUser = false,
-    page = 'last',
+    page = 1,
     total = 0,
     labelText = "",
     pages = 1,
@@ -72,10 +71,6 @@
   }
 
   onMount(async () => {
-    if (getOnMount) {
-      console.log("-g", getUrl);
-      get();
-    }
     if (txt) await api.put(`seen?id=${txt.id}`);
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     if (ref) ref.focus();
@@ -121,7 +116,7 @@
     } else if (sort === "oldest") {
       url = url.concat(`&reverse`);
     }
-    if (older && page) url = url.concat(`&page=${page - 1}`);
+    if (older && page ) url = url.concat(`&page=${page - 1}`);
     const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
       console.log(`txt fetch get response`, res);

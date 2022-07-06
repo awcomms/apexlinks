@@ -18,7 +18,6 @@
           status: Number(txt.STATUS),
         };
       }
-      props.getOnMount = true;
       props.txt = txt;
       getUrl = getUrl.concat(`&id=${txt.id}`);
     }
@@ -66,7 +65,8 @@
     }
     ({ items, total, page, pages } = res);
 
-    print('page', page)
+    console.log('page', page)
+    console.log('items.length', items.length)
 
     return {
       props: {
@@ -82,14 +82,13 @@
 </script>
 
 <script>
-  export let txt, getOnMount, items, page, pages, total, getUrl;
+  export let txt, items, page, pages, total, getUrl;
   import Txt from "$lib/components/Txt/Txt.svelte";
 </script>
 
 <Txt
   labelText={txt ? "Reply to this txt" : "Add a new txt"}
   {txt}
-  {getOnMount}
   {getUrl}
   {items}
   {page}
