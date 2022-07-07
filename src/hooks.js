@@ -35,7 +35,7 @@ export const getSession = async ({ locals }) => {
 export async function handle({ event, resolve }) {
   const { request } = event;
   event.locals.token = parse(request.headers.get("cookie") || "").token;
-  const response = await resolve(event);
+  const response = await resolve(event, {ssr: false});
 
   if (
     prerendering &&

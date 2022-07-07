@@ -3,8 +3,8 @@
   import { Button, InlineLoading } from "carbon-components-svelte";
 </script>
 
-<Button as let:props>
-  <div on:click {size} {...props}>
+<Button {size} as let:props>
+  <div on:click {...props}>
     <slot />
     {#if loading}
       <div class="right">

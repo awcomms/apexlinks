@@ -1,10 +1,10 @@
 <script>
   import { Content, Grid } from "carbon-components-svelte";
-  import { afterNavigate } from "$app/navigation"
+  import { afterNavigate } from "$app/navigation";
   import { onMount } from "svelte";
-  import { session } from '$app/stores'
-  import {VAPID } from '$lib/env'
-  import { api, url8 } from '$lib/utils'
+  import { session } from "$app/stores";
+  import { VAPID } from "$lib/env";
+  import { api, url8 } from "$lib/utils";
   import { previousPage, newUser } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
@@ -12,14 +12,14 @@
 
   $newUser = false;
 
-  afterNavigate(navigation => $previousPage = navigation.from?.pathname)
+  afterNavigate((navigation) => ($previousPage = navigation.from?.pathname));
 
   const getSub = () => {
     navigator.serviceWorker.ready
-      .then(async(registration) => {
+      .then(async (registration) => {
         return registration.pushManager.getSubscription().then(async (sub) => {
           if (sub) {
-            console.log('1sub', sub)
+            console.log("1sub", sub);
             return sub;
           }
 
@@ -28,20 +28,25 @@
             userVisibleOnly: true,
             applicationServerKey: int8VapidKey,
           };
-          let s = await registration.pushManager.subscribe(options).catch(e => console.dir(e));
-          return s
+          let s = await registration.pushManager
+            .subscribe(options)
+            .catch((e) => console.dir(e));
+          return s;
         });
       })
       .then(async (sub) => {
-        if (sub) await api.post("subs", { sub });
+        if (sub) {
+          const res = await api.post("subs", { sub });
+          if (!res.OK) console.log("POST sub res", res);
+        }
       });
   };
 
-  onMount(()=>{
+  onMount(() => {
     if (navigator && navigator.serviceWorker && $session.user) {
       getSub();
     }
-  })
+  });
 </script>
 
 <Theme persist theme="g10">

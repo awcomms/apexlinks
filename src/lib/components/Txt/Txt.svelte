@@ -44,6 +44,7 @@
   import { io } from "socket.io-client";
   import { browser } from "$app/env";
   import LoadingButton from "$lib/components/LoadingButton.svelte";
+  import LoadMoreButton from "./LoadMoreButton.svelte";
 
   const socket = io();
 
@@ -57,6 +58,8 @@
     deleteTxt,
     deleteLoading = false,
     joinLeaveLoading = false,
+    loadMoreTop = false,
+    loadMoreBottom = false,
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
     value,
@@ -125,7 +128,8 @@
     updateScroll();
   });
 
-  const get = async (older) => {
+  const get = async (dir=0) => {
+    console.log(dir);
     getLoading = true;
     let url = getUrl;
     if (sort === "tag") {
@@ -133,13 +137,25 @@
     } else if (sort === "old") {
       url = url.concat(`&reverse`);
     }
-    if (older && page) url = url.concat(`&page=${page - 1}`);
+    console.log(page);
+    let queryPage = page + dir
+    if (dir && page) url = url.concat(`&page=${queryPage}`);
     const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
       console.log(`txt fetch get response`, res);
       return;
     }
-    ({ items, total, page, pages } = res);
+    ({ total, page, pages } = res);
+    switch (dir) {
+      case -1:
+        items = [...res.items, ...items];
+        break;
+      case 0:
+        ({ items } = res);
+        break;
+      case 1:
+        items = [...items, ...res.items]
+    }
     console.log(
       "time sort",
       items.sort(
@@ -206,7 +222,7 @@
   <Row noGutter>
     <Column>
       <ButtonSet stacked={true}>
-        {#if txt && $session.user.id === txt.user?.id}
+        {#if txt && $session.user && $session.user.id === txt.user?.id}
           <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
         {/if}
 
@@ -262,12 +278,8 @@
 </div>
 
 <div class="scroll">
-  {#if sort === ("new" || "old") && pages > 1}
-    <Row noGutter>
-      <Column>
-        <Button size="small" on:click={() => get(true)}>Load more</Button>
-      </Column>
-    </Row>
+  {#if page > 1}
+    <LoadMoreButton loading={loadMoreTop} size="small" on:click={() => get(-1)} />
   {/if}
 
   <br />
@@ -312,6 +324,10 @@
       />
     {/if}
   </div>
+
+  <!-- {#if page > pages}
+    <LoadMoreButton size="small" on:click={() => get(1)} />
+  {/if} -->
 </div>
 
 <style>
