@@ -6,13 +6,14 @@
     Column,
     PaginationNav,
     Loading,
+    Link,
     // RadioButtonGroup,
     // RadioButton,
     // Slider,
   } from "carbon-components-svelte";
   // import currentLocation from "$lib/utils/currentLocation";
   // import Save from "$lib/components/Save.svelte";
-  import { api } from "$lib/utils";
+  import { routes, api } from "$lib/utils";
   import { selectedUsers, users, userTags } from "$lib/stores";
   // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
@@ -132,12 +133,6 @@
   <Row noGutter>
     <Column lg={4} sm={4} md={4} xlg={4}>
       <div
-        class:selected={showSelected &&
-          $selectedUsers.find((s) => s.id === user?.id)}
-        on:click={() => {
-          if (user.id) dispatch("click", user);
-        }}
-        class="pointer user"
       >
         <!-- {#if user.image}
           <img
@@ -156,15 +151,12 @@
             src="/placeholder.png"
           />
         {/if} -->
-        <div class="label">
+        <Link href='{routes.user(user.id)}' class="label">
           {#if user.username}
             <h4>{user.username}</h4>
             <!-- <p class="bx--link--sm">{user.username}</p> -->
           {/if}
-        </div>
-      </div>
-      <div class="actions">
-        <!-- <Save bind:item={user} /> -->
+        </Link>
       </div>
     </Column>
   </Row>

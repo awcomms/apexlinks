@@ -1,8 +1,4 @@
 <script>
-  /*
-  join
-    
-  */
   export let getUrl = "txts",
     dm = false,
     text = "",
@@ -22,7 +18,6 @@
   });
 
   import { api, routes } from "$lib/utils";
-  import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
   import {
     Button,
@@ -43,10 +38,11 @@
   import { Tags } from "$lib/components";
   import { io } from "socket.io-client";
   import { browser } from "$app/env";
+  import { API } from "$lib/env";
   import LoadingButton from "$lib/components/LoadingButton.svelte";
   import LoadMoreButton from "./LoadMoreButton.svelte";
 
-  const socket = io();
+  const socket = io(API, { path: "ws/socket.io" });
 
   $: if (sort && !(sort === "tag" && tags.length < 1)) get();
 
@@ -124,11 +120,11 @@
 
   socket.on("txt", async (obj) => {
     if (txt) await api.put(`seen?id=${txt.id}`, {});
-    items = [...items, obj];
+    items = [...items, obj]; //TODO sort
     updateScroll();
   });
 
-  const get = async (dir=0) => {
+  const get = async (dir = 0) => {
     console.log(dir);
     getLoading = true;
     let url = getUrl;
@@ -138,7 +134,7 @@
       url = url.concat(`&reverse`);
     }
     console.log(page);
-    let queryPage = page + dir
+    let queryPage = page + dir;
     if (dir && page) url = url.concat(`&page=${queryPage}`);
     const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
@@ -154,7 +150,7 @@
         ({ items } = res);
         break;
       case 1:
-        items = [...items, ...res.items]
+        items = [...items, ...res.items];
     }
     console.log(
       "time sort",
@@ -175,7 +171,6 @@
           console.log("txt POST response: ", res);
           return;
         }
-        socket.emit("txt", { data: res, room });
         value = "";
       });
   };
@@ -279,7 +274,11 @@
 
 <div class="scroll">
   {#if page > 1}
-    <LoadMoreButton loading={loadMoreTop} size="small" on:click={() => get(-1)} />
+    <LoadMoreButton
+      loading={loadMoreTop}
+      size="small"
+      on:click={() => get(-1)}
+    />
   {/if}
 
   <br />
