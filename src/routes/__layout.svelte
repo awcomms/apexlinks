@@ -29,7 +29,7 @@
             applicationServerKey: int8VapidKey,
           };
           let s = await registration.pushManager.subscribe(options).catch(e => console.dir(e));
-          return s
+          return s.toJSON()
         });
       })
       .then(async (sub) => {

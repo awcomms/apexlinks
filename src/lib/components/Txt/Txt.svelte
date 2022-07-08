@@ -1,8 +1,4 @@
 <script>
-  /*
-  join
-    
-  */
   export let getUrl = "txts",
     dm = false,
     text = "",
@@ -14,6 +10,7 @@
     pages = 1,
     txt = null,
     items = [],
+    showInput,
     leaveText = "Leave this txt",
     joinText = "Join this txt";
 
@@ -22,7 +19,6 @@
   });
 
   import { api, routes } from "$lib/utils";
-  import { goto } from "$app/navigation";
   import { TxtInput } from "$lib/components";
   import {
     Button,
@@ -31,6 +27,7 @@
     RadioButton,
     ContextMenu,
     ContextMenuOption,
+    InlineLoading,
     Loading,
     Row,
     Column,
@@ -63,16 +60,15 @@
     ref,
     sort;
 
-  let showInput = $session.user ? true : false;
+  if (typeof showInput !== 'boolean') {
+    showInput = $session.user ? true : false;
   if (txt && txt.user && txt.self) {
-    console.log("1");
     if (txt.user?.id === $session.user?.id) {
-      console.log("2");
       showInput = true;
     } else {
-      console.log("3");
       showInput = false;
     }
+  }
   }
 
   onMount(async () => {
@@ -81,7 +77,7 @@
     if (ref) ref.focus();
   });
 
-  const ondeleteTxt = () => (deleteOpen = true);
+  const ondeleteTxt = () => {deleteOpen = true};
 
   const keydown = (e) => {
     switch (e.key) {
@@ -90,29 +86,31 @@
     }
   };
 
-  const join = async () => {
-    if (!txt) return;
-    joinLeaveLoading = true;
+  const join = async (item) => {
+    let i = item ? item : txt
+    if (!i) return;
+    console.log(i)
+    if (item) {item.joinLeaveLoading = true} else{ joinLeaveLoading = true}
     const res = await api
-      .put(`join/${txt.id}`)
-      .finally(() => (joinLeaveLoading = false));
+      .put(`join/${i.id}`)
+      .finally(() => {if (item) {item.joinLeaveLoading = false} else{ joinLeaveLoading = false}});
     if (!res.OK) {
-      console.log("fetch PUT `join/${txt.id} res: ", res);
+      console.log("fetch PUT `join` res: ", res);
     }
-    txt.joined = res.joined;
+    i.joined = res.joined;
   };
 
-  const leave = async () => {
-    if (!txt) return;
-    joinLeaveLoading = true;
+  const leave = async (item) => {
+    let i = item ? item : txt
+    if (!i) return;
+    if (item) {item.joinLeaveLoading = true} else{ joinLeaveLoading = true}
     const res = await api
-      .put(`leave/${txt.id}`)
-      .finally(() => (joinLeaveLoading = false));
+      .put(`leave/${i.id}`)
+      .finally(() => {if (item) {item.joinLeaveLoading = false} else{ joinLeaveLoading = false}});
     if (!res.OK) {
       console.log("leave PUT res: ", res);
     }
-    txt.joined = res.joined;
-    socket.emit("leave", room);
+    i.joined = res.joined;
   };
 
   socket.on("connect", () => {
@@ -274,31 +272,42 @@
 
   <div class="con">
     {#each items as item}
-      {#if $session.user && $session.user.id === item.user?.id}
-        <ContextMenu target={item.ref}>
-          <Link href={routes.txtEdit(item.id)}>
-            <ContextMenuOption labelText="Edit" />
-          </Link>
-          <ContextMenuOption
-            on:click={() => (deleteTxt = item)}
-            labelText="Delete"
-          />
-        </ContextMenu>
-      {/if}
-      <Row noGutter bind:ref={item.ref}>
-        <Column>
-          <div>
-            <Link href={routes.user(item.user?.id)}>
-              <p class="small pointer">
-                {item.user?.username}
-              </p>
+      <div bind:this={item.ref}>
+        {#if $session.user}
+          <ContextMenu bind:target={item.ref}>
+            <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
+              <div slot='shortcutText'>
+                {#if item.joinLeaveLoading}
+                  <InlineLoading />
+                {/if}
+              </div>
+            </ContextMenuOption>
+            {#if $session.user.id === item.user?.id}
+              <Link href={routes.txtEdit(item.id)}>
+                <ContextMenuOption labelText="Edit" />
+              </Link>
+              <ContextMenuOption
+                on:click={() => (deleteTxt = item)}
+                labelText="Delete"
+              />
+            {/if}
+          </ContextMenu>
+        {/if}
+        <Row noGutter bind:ref={item.ref}>
+          <Column>
+            <div>
+              <Link href={routes.user(item.user?.id)}>
+                <p class="small pointer">
+                  {item.user?.username}
+                </p>
+              </Link>
+            </div>
+            <Link href={routes.txtTxt(item.id)}>
+              {item.value}
             </Link>
-          </div>
-          <Link href={routes.txtTxt(item.id)}>
-            {item.value}
-          </Link>
-        </Column>
-      </Row>
+          </Column>
+        </Row>
+      </div>
     {/each}
 
     {#if showInput}

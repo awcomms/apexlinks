@@ -1,5 +1,3 @@
 <script>
-  import Users from '$lib/components/Users/Users.svelte'
+    import {Row, Column} from 'carbon-components-svelte'
 </script>
-
-<Users />

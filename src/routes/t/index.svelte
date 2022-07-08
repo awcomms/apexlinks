@@ -2,14 +2,18 @@
   import { api } from "$lib/utils";
   import { post } from "$lib/utils/fetch";
   export const load = async ({ url, fetch, session }) => {
-    let include = ["user", "value", "time"];
-    let getUrl = `txts?include=${JSON.stringify(include)}`;
-    let user = url.searchParams.get("user");
-    let joined = typeof url.searchParams.get("joined") === "string";
+    let res,
+      items,
+      total,
+      page,
+      pages,
+      include = ["user", "value", "time"],
+      getUrl = `txts?`,
+      user = url.searchParams.get("user"),
+      joined = typeof url.searchParams.get("joined") === "string",
+      id = url.searchParams.get("id"),
+      props = {};
 
-    let props = {};
-
-    let id = url.searchParams.get("id");
     if (id) {
       const txt = await post(
         "/send",
@@ -26,10 +30,9 @@
         };
       }
       props.txt = txt;
+      include.push("joined");
       getUrl = getUrl.concat(`&id=${txt.id}`);
     }
-
-    let res, items, total, page, pages;
 
     if (user) {
       user = await api.get(
@@ -44,6 +47,7 @@
       }
       getUrl = getUrl.concat(`&user=${user.id}`);
     }
+
     if (joined) {
       if (!session.user) {
         return {
@@ -60,10 +64,10 @@
       }
       props.joined = true;
       getUrl = getUrl.concat(`&joined`);
-      res = await post("/send", { path: getUrl, method: "GET" }, fetch);
-    } else {
-      res = await api.get(getUrl, fetch);
     }
+
+    getUrl = getUrl.concat(`&include=${JSON.stringify(include)}`);
+    res = await post("/send", { path: getUrl, method: "GET" }, fetch);
     if (!res.OK) {
       return {
         status: Number(res.STATUS),
@@ -71,8 +75,6 @@
       };
     }
     ({ items, total, page, pages } = res);
-
-    console.log("page", page);
 
     return {
       props: {

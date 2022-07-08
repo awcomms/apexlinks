@@ -14,7 +14,7 @@
     SideNav,
     Header,
   } from "carbon-components-svelte";
-  import { routes } from "$lib/utils";
+  import { iterLength, routes } from "$lib/utils";
 
   let show;
   let installRef;
@@ -76,6 +76,7 @@
       {/if}
       <SideNavLink isSelected={$page.url.pathname === routes.login} text="Login" href={routes.login} />
     {/if}
+    <SideNavLink isSelected={$page.url.pathname === routes.users} text="Users" href={routes.users} />
     <SideNavMenu text="Txts">
       {#if $session.user}
         <SideNavMenuItem
@@ -84,12 +85,11 @@
           isSelected={$page.url.pathname === routes.txts && $page.url.searchParams.get('user') ===
             $session.user.id}
         />
-        <!-- <SideNavMenuItem
+        <SideNavMenuItem
           text="Joined txts"
           href="{routes.txts}?joined"
-          isSelected={$page.url.pathname === routes.txts && typeof $page.url.searchParams.get('joined') ===
-            'string'}
-        /> -->
+          isSelected={$page.url.pathname === `${routes.txts}`}
+        />
       {/if}
       <SideNavMenuItem text='All txts' href={routes.txts} isSelected={$page.url.pathname === routes.txts} />
     </SideNavMenu>
