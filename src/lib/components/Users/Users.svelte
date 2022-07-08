@@ -59,7 +59,7 @@
         return { value: t.value };
       })
     );
-    let include = JSON.stringify(['username'])
+    let include = JSON.stringify(['username', 'online'])
     let url = `users?&tags=${tagString}&page=${page + 1}&include=${include}`;
     let res = await api.get(url).finally(() => (loading = false));
     if (Array.isArray(res.items)) {

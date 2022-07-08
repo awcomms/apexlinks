@@ -1,16 +1,15 @@
 <script>
   import { Content, Grid } from "carbon-components-svelte";
   import { afterNavigate } from "$app/navigation"
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { session } from '$app/stores'
   import {VAPID } from '$lib/env'
   import { api, url8 } from '$lib/utils'
-  import { previousPage, newUser } from "$lib/stores";
+  import { previousPage } from "$lib/stores";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
   import Theme from "$lib/components/Theme.svelte";
-
-  $newUser = false;
+  // import workerURL from '$lib/worker.js?url'
 
   afterNavigate(navigation => $previousPage = navigation.from?.pathname)
 
@@ -38,9 +37,22 @@
   };
 
   onMount(()=>{
+    // const wsWorker = new SharedWorker(workerURL)
+    // wsWorker.port.start()
+    // wsWorker.port.postMessage({
+    //   action: 'online',
+    //   value: true
+    // })
     if (navigator && navigator.serviceWorker && $session.user) {
       getSub();
     }
+  })
+
+  onDestroy(()=>{
+    if ($session.user) wsWorker.port.postMessage({
+      action: 'online',
+      value: false
+    })
   })
 </script>
 

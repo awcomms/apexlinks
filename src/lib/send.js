@@ -1,6 +1,6 @@
 import { dev, browser } from "$app/env";
 import { parse } from "cookie";
-import {cFetch} from "$lib/utils"
+import { cFetch } from "$lib/utils";
 
 // import { API } from "$lib/env";
 
@@ -33,5 +33,5 @@ export function send({ method, path, data, auth }, f) {
     opts.body = JSON.stringify(data);
   }
 
-  return cFetch(base, path, opts, f)
+  return cFetch(base, path, opts, f);
 }
