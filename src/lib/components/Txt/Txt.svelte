@@ -72,6 +72,7 @@
   }
 
   console.log('page', page)
+  console.log('getUrl', getUrl)
 
   onMount(async () => {
     if (txt) await api.put(`seen?id=${txt.id}`);

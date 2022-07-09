@@ -88,10 +88,10 @@
         <SideNavMenuItem
           text="Joined txts"
           href="{routes.txts}?joined"
-          isSelected={$page.url.pathname === `${routes.txts}`}
+          isSelected={false}
         />
       {/if}
-      <SideNavMenuItem text='All txts' href={routes.txts} isSelected={$page.url.pathname === routes.txts} />
+      <SideNavMenuItem text='All txts' href={routes.txts} isSelected={false} />
     </SideNavMenu>
     {#if $session.user}
       <SideNavLink isSelected={$page.url.pathname === `/u/${$session.user.username}`} text="Me: {$session.user.username}" href="/u/{$session.user.id}" />
