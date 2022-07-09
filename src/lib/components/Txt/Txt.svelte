@@ -23,8 +23,8 @@
   import {
     Button,
     ButtonSet,
-    RadioButtonGroup,
-    RadioButton,
+    // RadioButtonGroup,
+    // RadioButton,
     ContextMenu,
     ContextMenuOption,
     InlineLoading,
@@ -70,6 +70,8 @@
     }
   }
   }
+
+  console.log('page', page)
 
   onMount(async () => {
     if (txt) await api.put(`seen?id=${txt.id}`);
@@ -137,7 +139,12 @@
       console.log(`txt fetch get response`, res);
       return;
     }
-    ({ items, total, page, pages } = res);
+    ({ total, page, pages } = res);
+    if (older) {
+      items = [...res.items, ...items]
+    } else {
+      ({items} = res)
+    }
     console.log(
       "time sort",
       items.sort(
@@ -233,7 +240,7 @@
     </Column>
   </Row>
 
-  <Row noGutter>
+  <!-- <Row noGutter>
     <Column>
       <RadioButtonGroup legendText="Sort txts by" bind:selected={sort}>
         <RadioButton labelText="tag search score" value="tag" />
@@ -241,7 +248,7 @@
         <RadioButton labelText="old" value="old" />
       </RadioButtonGroup>
     </Column>
-  </Row>
+  </Row> -->
 
   <br />
 
@@ -260,7 +267,7 @@
 </div>
 
 <div class="scroll">
-  {#if sort === ("new" || "old") && pages > 1}
+  {#if pages > 1}
     <Row noGutter>
       <Column>
         <Button size="small" on:click={() => get(true)}>Load more</Button>

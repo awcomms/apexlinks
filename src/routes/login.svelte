@@ -108,6 +108,8 @@
     }
     */
 
+    let include = `&include=${JSON.stringify(['username'])}`
+
     const login = async function() {
         loginLoading = true
         if (!username){
@@ -124,7 +126,7 @@
         }
         usernameInvalid=false
         passwordInvalid=false
-        let r = await post('auth/login', { username, password }).then(
+        let r = await post('auth/login?${include}', { username, password }).then(
             (res)=>{
                 loginLoading=false
                 return res
@@ -166,7 +168,7 @@
         usernameInvalid=false
         passwordInvalid=false
         emailInvalid=false
-        const r = await post('auth/join', { email, username, password }).finally(
+        const r = await post(`auth/join?${include}`, { email, username, password }).finally(
             (r)=>{
                 joinLoading = false
                 return r
