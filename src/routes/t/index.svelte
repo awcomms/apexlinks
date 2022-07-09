@@ -7,7 +7,7 @@
       total,
       page,
       pages,
-      include = ["user", "value", "time"],
+      include = ["user", "value", "time", "joined"],
       getUrl = `txts?`,
       user = url.searchParams.get("user"),
       joined = typeof url.searchParams.get("joined") === "string",

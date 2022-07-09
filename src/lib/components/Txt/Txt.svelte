@@ -159,7 +159,7 @@
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
     await api
-      .post(`txts?include=${JSON.stringify(["user", "value"])}`, data)
+      .post(`txts?include=${JSON.stringify(["user", "value", "joined"])}`, data)
       .then((res) => {
         if (!res.OK) {
           console.log("txt POST response: ", res);
@@ -283,13 +283,13 @@
       <div bind:this={item.ref}>
         {#if $session.user}
           <ContextMenu bind:target={item.ref}>
-            <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
+            <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
                 {#if item.joinLeaveLoading}
                   <InlineLoading />
                 {/if}
               </div>
-            </ContextMenuOption>
+            </ContextMenuOption> -->
             {#if $session.user.id === item.user?.id}
               <Link href={routes.txtEdit(item.id)}>
                 <ContextMenuOption labelText="Edit" />
