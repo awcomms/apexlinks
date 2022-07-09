@@ -48,12 +48,12 @@
     }
   })
 
-  onDestroy(()=>{
-    if ($session.user) wsWorker.port.postMessage({
-      action: 'online',
-      value: false
-    })
-  })
+  // onDestroy(()=>{
+  //   if ($session.user) wsWorker.port.postMessage({
+  //     action: 'online',
+  //     value: false
+  //   })
+  // })
 </script>
 
 <Theme persist theme="g10">
