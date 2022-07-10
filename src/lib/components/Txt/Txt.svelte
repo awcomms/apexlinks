@@ -60,6 +60,7 @@
     sameUser = user && user.id === $session.user.id,
     value = '',
     ref,
+    sending = false,
     sort;
 
   if (typeof showInput !== "boolean") {
@@ -186,6 +187,8 @@
   };
 
   const send = async () => {
+    if (sending) return
+    sending = true
     let data = { value };
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
@@ -198,7 +201,7 @@
         }
         socket.emit("txt", { data: res, room });
         value = "";
-      });
+      }).finally(()=>sending=false)
   };
 
   const updateScroll = () => {
@@ -313,7 +316,7 @@
     {#each items as item}
       <div bind:this={item.ref}>
         {#if $session.user}
-          <ContextMenu bind:target={item.userRef}>
+          <ContextMenu bind:target={item.ref}>
             <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
                 {#if item.joinLeaveLoading}
@@ -334,7 +337,7 @@
         {/if}
         <Row noGutter bind:ref={item.ref}>
           <Column>
-            <div bind:this={item.userRef}>
+            <div>
               <Link href={routes.user(item.user?.id)}>
                 <p class="small pointer">
                   {item.user?.username}

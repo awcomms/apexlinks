@@ -6,7 +6,6 @@
     value = "";
   import { session } from "$app/stores";
   import { routes, api } from "$lib/utils";
-  import { delay } from "$lib/utils";
   import { createEventDispatcher } from "svelte";
   import {
     Row,
@@ -23,15 +22,22 @@
 
   let items = [],
     selectedId,
-    searching = false;
+    searching = false,
+    delayId,
+    delay = 2000;
 
   $: if (searching) items = [{ value: "Loading", loading: true }];
 
   $: if (selectedId) (async () => await get())();
 
-  let delayId;
+  $: if (value) startGet();
 
-  $: if (value) delay(delayId, 2000, () => get());
+  const startGet = () => {
+    if (typeof delayId === "number") clearTimeout(delayId);
+    delayId = setTimeout(() => {
+      get()
+    }, delay);
+  }
 
   const get = async () => {
     const include = `include=${JSON.stringify(["value"])}`;
@@ -61,6 +67,7 @@
       {#if $session.user}
         {#if existing}
           <ComboBox
+            bind:ref
             on:select={({ detail }) => dispatch("add", detail.selectedItem)}
             bind:value
             bind:selectedId
