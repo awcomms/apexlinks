@@ -59,6 +59,7 @@
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
     value = "",
+    existing = false,
     ref,
     sending = false,
     sort;
@@ -147,9 +148,9 @@
     updateScroll();
   });
 
-  const add = async ({ detail: item }) => {
+  const add = async ({ detail: id }) => {
     await api
-      .put(`txts?${include}`, { id: item.id, reply: [txt.id] })
+      .put(`txts?${include}`, { id, reply: [txt.id] })
       .then((r) => {
         if (!r.OK) {
           console.log("res:", r);
@@ -191,6 +192,11 @@
   const send = async () => {
     if (sending) return;
     sending = true;
+    console.log('ex', existing)
+    if (existing) {
+      add()
+      return
+    } 
     let data = { value };
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
@@ -381,6 +387,7 @@
         on:keydown={keydown}
         on:add={add}
         bind:value
+        bind:existing
         bind:ref
       />
     {/if}

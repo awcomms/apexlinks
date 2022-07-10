@@ -16,6 +16,7 @@
     ContextMenuOption,
     ComboBox,
     InlineLoading,
+NumberInput,
   } from "carbon-components-svelte";
 
   const dispatch = createEventDispatcher();
@@ -30,13 +31,18 @@
 
   $: if (selectedId) (async () => await get())();
 
-  $: if (value) startGet();
+  // $: if (value) startGet();
 
   const startGet = () => {
     if (typeof delayId === "number") clearTimeout(delayId);
     delayId = setTimeout(() => {
       get()
     }, delay);
+  }
+
+  const keydown = (e) => {
+    console.log('keydown', e.key)
+    if (e.key === 'Enter' && existing) dispatch('add', value)
   }
 
   const get = async () => {
@@ -52,11 +58,13 @@
   };
 </script>
 
+<svelte:window on:keydown={keydown}></svelte:window>
+
 {#if txt}
   <ContextMenu bind:target={ref}>
     <ContextMenuOption
       on:click={() => (existing = !existing)}
-      labelText={existing ? "Create a new txt to reply with" : "Reply to this txt with an existing txt"}
+      labelText={existing ? "Create a new txt to reply with" : "Reply with an existing txt"}
     />
   </ContextMenu>
 {/if}
@@ -66,7 +74,8 @@
     <Column>
       {#if $session.user}
         {#if existing}
-          <ComboBox
+        <NumberInput bind:value label='Type in the id of an existing txt' />
+          <!-- <ComboBox
             bind:ref
             on:select={({ detail }) => dispatch("add", detail.selectedItem)}
             bind:value
@@ -79,7 +88,7 @@
             {#if item.loading}
               <InlineLoading />
             {/if}
-          </ComboBox>
+          </ComboBox> -->
         {:else}
           <TextInput {labelText} on:keydown rows={2} bind:ref bind:value />
         {/if}
