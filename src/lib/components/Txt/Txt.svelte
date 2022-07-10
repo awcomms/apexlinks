@@ -15,7 +15,7 @@
     joinText = "Join this txt";
 
   items = items.map((i) => {
-    return { ...i, ref: null };
+    return { ...i, ref: null, contextMenu: true };
   });
 
   import { api, routes } from "$lib/utils";
@@ -48,7 +48,7 @@
 
   $: if (deleteTxt) ondeleteTxt();
 
-  const include = `include=${JSON.stringify(["user", "value", "joined"])}`
+  const include = `include=${JSON.stringify(["user", "value", "joined"])}`;
 
   let tags = [],
     room = txt ? String(txt.id) : "home",
@@ -58,7 +58,7 @@
     joinLeaveLoading = false,
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
-    value = '',
+    value = "",
     ref,
     sending = false,
     sort;
@@ -147,15 +147,17 @@
     updateScroll();
   });
 
-  const add = async ({detail: item}) => {
-    await api.put(`txts?${include}`, { id: item.id, reply: [txt.id] }).then((r) => {
-      if (!r.OK) {
-        console.log("res:", r);
-        return;
-      }
+  const add = async ({ detail: item }) => {
+    await api
+      .put(`txts?${include}`, { id: item.id, reply: [txt.id] })
+      .then((r) => {
+        if (!r.OK) {
+          console.log("res:", r);
+          return;
+        }
 
-      if (page === pages) items = [...items, r];
-    });
+        if (page === pages) items = [...items, r];
+      });
   };
 
   const get = async (older) => {
@@ -187,8 +189,8 @@
   };
 
   const send = async () => {
-    if (sending) return
-    sending = true
+    if (sending) return;
+    sending = true;
     let data = { value };
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
@@ -201,7 +203,8 @@
         }
         socket.emit("txt", { data: res, room });
         value = "";
-      }).finally(()=>sending=false)
+      })
+      .finally(() => (sending = false));
   };
 
   const updateScroll = () => {
@@ -315,8 +318,8 @@
   <div class="con">
     {#each items as item}
       <div bind:this={item.ref}>
-        {#if $session.user}
-          <ContextMenu bind:target={item.ref}>
+        {#if item.contextMenu && $session.user}
+          <ContextMenu bind:target={item.userRef}>
             <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
                 {#if item.joinLeaveLoading}
@@ -333,20 +336,38 @@
                 labelText="Delete"
               />
             {/if}
+            <!-- <ContextMenuOption
+              on:click={() => {
+                item.contextMenu = true;
+                item.ref.dispatchEvent(
+                  new CustomEvent("contextmenu", {
+                    bubbles: true,
+                    cancelable: false,
+                    view: window,
+                    button: 2,
+                    buttons: 0,
+                    clientX: item.ref.getBoundingClientRect().x,
+                    clientY: item.ref.getBoundingClientRect().y,
+                  })
+                );
+              }}
+              labelText="Open native context menu"
+            /> -->
           </ContextMenu>
         {/if}
-        <Row noGutter bind:ref={item.ref}>
+        <Row noGutter>
           <Column>
-            <div>
-              <Link href={routes.user(item.user?.id)}>
-                <p class="small pointer">
-                  {item.user?.username}
-                </p>
+            <Link href={routes.user(item.user?.id)}>
+              <p class="small pointer">
+                {item.user?.username}
+              </p>
+            </Link>
+
+            <div bind:this={item.userRef}>
+              <Link href={routes.txtTxt(item.id)}>
+                {item.value}
               </Link>
             </div>
-            <Link href={routes.txtTxt(item.id)}>
-              {item.value}
-            </Link>
           </Column>
         </Row>
       </div>
