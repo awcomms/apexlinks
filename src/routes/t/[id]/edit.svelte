@@ -2,7 +2,7 @@
   import { api } from "$lib/utils";
   export const load = async ({ params, fetch }) => {
     const { id } = params;
-    const include = [ 'value', 'tags', 'txt', 'self', 'personal', 'dm']
+    const include = [ 'value', 'tags', 'txt', 'self', 'personal', 'dm', 'anon']
     const txt = await api.get(`txts/${id}?include=${JSON.stringify(include)}`, fetch);
     if (!txt.OK) {
       return {
@@ -40,13 +40,13 @@
   let deleteLoading;
   let editLoading;
 
-  let { value, tags, text, self, personal } = txt;
+  let { value, tags, text, self, personal, anon } = txt;
   if (!tags) tags = []
 
   const edit = async () => {
     editLoading = true;
     const res = await api
-      .put("txts", { value, tags, text, self, personal, id: txt.id })
+      .put("txts", { value, tags, text, self, personal, anon, id: txt.id })
       .finally(() => (editLoading = false));
     if (!res.OK) {
       console.log("txt PUT res: ", res);
@@ -61,6 +61,7 @@
 <Row noGutter>
   <Column>
     {#if !txt.dm}
+      <Checkbox bind:checked={anon} labelText="let all replies to this txt be anonymous" />
       <Checkbox bind:checked={self} labelText="disable public replies" />
       <Checkbox
         bind:checked={personal}
