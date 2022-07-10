@@ -48,6 +48,8 @@
 
   $: if (deleteTxt) ondeleteTxt();
 
+  const include = `include=${JSON.stringify(["user", "value", "joined"])}`
+
   let tags = [],
     room = txt ? String(txt.id) : "home",
     getLoading = false,
@@ -56,23 +58,23 @@
     joinLeaveLoading = false,
     deleteOpen = false,
     sameUser = user && user.id === $session.user.id,
-    value,
+    value = '',
     ref,
     sort;
 
-  if (typeof showInput !== 'boolean') {
+  if (typeof showInput !== "boolean") {
     showInput = $session.user ? true : false;
-  if (txt && txt.user && txt.self) {
-    if (txt.user?.id === $session.user?.id) {
-      showInput = true;
-    } else {
-      showInput = false;
+    if (txt && txt.user && txt.self) {
+      if (txt.user?.id === $session.user?.id) {
+        showInput = true;
+      } else {
+        showInput = false;
+      }
     }
   }
-  }
 
-  console.log('page', page)
-  console.log('getUrl', getUrl)
+  console.log("page", page);
+  console.log("getUrl", getUrl);
 
   onMount(async () => {
     if (txt) await api.put(`seen?id=${txt.id}`);
@@ -80,7 +82,9 @@
     if (ref) ref.focus();
   });
 
-  const ondeleteTxt = () => {deleteOpen = true};
+  const ondeleteTxt = () => {
+    deleteOpen = true;
+  };
 
   const keydown = (e) => {
     switch (e.key) {
@@ -90,13 +94,21 @@
   };
 
   const join = async (item) => {
-    let i = item ? item : txt
+    let i = item ? item : txt;
     if (!i) return;
-    console.log(i)
-    if (item) {item.joinLeaveLoading = true} else{ joinLeaveLoading = true}
-    const res = await api
-      .put(`join/${i.id}`)
-      .finally(() => {if (item) {item.joinLeaveLoading = false} else{ joinLeaveLoading = false}});
+    console.log(i);
+    if (item) {
+      item.joinLeaveLoading = true;
+    } else {
+      joinLeaveLoading = true;
+    }
+    const res = await api.put(`join/${i.id}`).finally(() => {
+      if (item) {
+        item.joinLeaveLoading = false;
+      } else {
+        joinLeaveLoading = false;
+      }
+    });
     if (!res.OK) {
       console.log("fetch PUT `join` res: ", res);
     }
@@ -104,12 +116,20 @@
   };
 
   const leave = async (item) => {
-    let i = item ? item : txt
+    let i = item ? item : txt;
     if (!i) return;
-    if (item) {item.joinLeaveLoading = true} else{ joinLeaveLoading = true}
-    const res = await api
-      .put(`leave/${i.id}`)
-      .finally(() => {if (item) {item.joinLeaveLoading = false} else{ joinLeaveLoading = false}});
+    if (item) {
+      item.joinLeaveLoading = true;
+    } else {
+      joinLeaveLoading = true;
+    }
+    const res = await api.put(`leave/${i.id}`).finally(() => {
+      if (item) {
+        item.joinLeaveLoading = false;
+      } else {
+        joinLeaveLoading = false;
+      }
+    });
     if (!res.OK) {
       console.log("leave PUT res: ", res);
     }
@@ -125,6 +145,17 @@
     items = [...items, obj];
     updateScroll();
   });
+
+  const add = async ({detail: item}) => {
+    await api.put(`txts?${include}`, { id: item.id, reply: [txt.id] }).then((r) => {
+      if (!r.OK) {
+        console.log("res:", r);
+        return;
+      }
+
+      if (page === pages) items = [...items, r];
+    });
+  };
 
   const get = async (older) => {
     getLoading = true;
@@ -142,9 +173,9 @@
     }
     ({ total, page, pages } = res);
     if (older) {
-      items = [...res.items, ...items]
+      items = [...res.items, ...items];
     } else {
-      ({items} = res)
+      ({ items } = res);
     }
     console.log(
       "time sort",
@@ -159,7 +190,7 @@
     if (txt) data.txt = txt.id;
     if (dm) data.dm = true;
     await api
-      .post(`txts?include=${JSON.stringify(["user", "value", "joined"])}`, data)
+      .post(`txts?${include}`, data)
       .then((res) => {
         if (!res.OK) {
           console.log("txt POST response: ", res);
@@ -282,7 +313,7 @@
     {#each items as item}
       <div bind:this={item.ref}>
         {#if $session.user}
-          <ContextMenu bind:target={item.ref}>
+          <ContextMenu bind:target={item.userRef}>
             <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
                 {#if item.joinLeaveLoading}
@@ -303,7 +334,7 @@
         {/if}
         <Row noGutter bind:ref={item.ref}>
           <Column>
-            <div>
+            <div bind:this={item.userRef}>
               <Link href={routes.user(item.user?.id)}>
                 <p class="small pointer">
                   {item.user?.username}
@@ -321,9 +352,10 @@
     {#if showInput}
       <br />
       <TxtInput
-        txt={txt ? true : false}
+        {txt}
         {labelText}
         on:keydown={keydown}
+        on:add={add}
         bind:value
         bind:ref
       />

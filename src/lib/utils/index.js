@@ -1,5 +1,6 @@
 export * from './ids'
 export { api } from "./api"
+export { delay } from "./delay";
 export { routes } from "./routes";
 export { cFetch } from "./cFetch";
 export { iterLength } from "./iterLength";
