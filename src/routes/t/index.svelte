@@ -11,6 +11,7 @@
       getUrl = `txts?`,
       user = url.searchParams.get("user"),
       joined = typeof url.searchParams.get("joined") === "string",
+      to = typeof url.searchParams.get("to") === "string",
       id = url.searchParams.get("id"),
       props = {};
 
@@ -32,6 +33,10 @@
       props.txt = txt;
       include.push("joined");
       getUrl = getUrl.concat(`&id=${txt.id}`);
+      if (to) {
+        props.to = true
+        getUrl = getUrl.concat(`&to`)
+      }
     }
 
     if (user) {

@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
   export let getUrl = "txts",
     dm = false,
     text = "",
@@ -91,7 +91,7 @@
   const keydown = (e) => {
     switch (e.key) {
       case "Enter":
-        send();
+        existing ? add() : send()
     }
   };
 
@@ -114,6 +114,7 @@
     if (!res.OK) {
       console.log("fetch PUT `join` res: ", res);
     }
+    console.log(res)
     i.joined = res.joined;
   };
 
@@ -157,11 +158,12 @@
           return;
         }
 
+        console.log(page, pages)
         if (page === pages) items = [...items, r];
       });
   };
 
-  const get = async (older) => {
+  const get = async (older: boolean =false) => {
     getLoading = true;
     let url = getUrl;
     if (sort === "tag") {
@@ -189,28 +191,50 @@
     );
   };
 
+  type SendTxt = {
+    value: string;
+    state: 'done' | 'sending' | 'failed';
+    txt?: number;
+    dm: boolean;
+  }
+
+  type Txt = {
+    value: string;
+    id: number;
+  }
+
+  const resend = async (item: SendTxt) => {
+    await api
+      .post(`txts?${include}`, item)
+      .then((res) => {
+        if (!res.OK) {
+          item.state = 'failed'
+          console.log("txt POST response: ", res);
+          return;
+        }
+        item.state = 'done'
+        socket.emit("txt", { data: res, room });
+      })
+      .catch(() => item.state = 'failed')
+  }
+
   const send = async () => {
-    if (sending) return;
-    sending = true;
-    console.log('ex', existing)
-    if (existing) {
-      add()
-      return
-    } 
-    let data = { value };
-    if (txt) data.txt = txt.id;
-    if (dm) data.dm = true;
+    let data: SendTxt = { value, dm, txt: txt ? txt.id : null, state: 'sending' };
+    let index = items.length
+    items = [...items, data];
+    value = "";
     await api
       .post(`txts?${include}`, data)
       .then((res) => {
         if (!res.OK) {
+          data.state = 'failed'
           console.log("txt POST response: ", res);
           return;
         }
+        items[index] = res
         socket.emit("txt", { data: res, room });
-        value = "";
       })
-      .finally(() => (sending = false));
+      .catch(() => (data.state = 'failed'));
   };
 
   const updateScroll = () => {
@@ -324,8 +348,11 @@
   <div class="con">
     {#each items as item}
       <div bind:this={item.ref}>
-        {#if item.contextMenu && $session.user}
+        {#if $session.user}
           <ContextMenu bind:target={item.userRef}>
+            {#if item.state === 'failed'}
+              <ContextMenuOption labelText='Retry' on:click={() => resend(item)} />
+            {/if}
             <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
                 {#if item.joinLeaveLoading}
@@ -370,9 +397,13 @@
             </Link>
 
             <div bind:this={item.userRef}>
+              {#if item.state && item.state !== 'done'}
+                <p class={item.state}>{item.value}</p>
+              {:else}
               <Link href={routes.txtTxt(item.id)}>
                 {item.value}
               </Link>
+              {/if}
             </div>
           </Column>
         </Row>
@@ -384,7 +415,7 @@
       <TxtInput
         {txt}
         {labelText}
-        on:keydown={keydown}
+        on:send={send}
         on:add={add}
         bind:value
         bind:existing
@@ -395,6 +426,12 @@
 </div>
 
 <style>
+  .failed {
+    color: red
+  }
+  .sending {
+    color: grey
+  }
   .stick {
     position: sticky;
   }

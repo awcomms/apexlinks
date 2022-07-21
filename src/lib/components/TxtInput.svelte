@@ -41,8 +41,7 @@ NumberInput,
   }
 
   const keydown = (e) => {
-    console.log('keydown', e.key)
-    if (e.key === 'Enter' && existing) dispatch('add', value)
+    if (e.key === 'Enter') existing ? dispatch('add') : dispatch('send')
   }
 
   const get = async () => {
@@ -57,8 +56,6 @@ NumberInput,
     });
   };
 </script>
-
-<svelte:window on:keydown={keydown}></svelte:window>
 
 {#if txt}
   <ContextMenu bind:target={ref}>
@@ -90,7 +87,7 @@ NumberInput,
             {/if}
           </ComboBox> -->
         {:else}
-          <TextInput {labelText} on:keydown rows={2} bind:ref bind:value />
+          <TextInput {labelText} on:keydown={keydown} rows={2} bind:ref bind:value />
         {/if}
       {:else}
         <div class="login-prompt">
