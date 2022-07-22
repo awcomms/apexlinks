@@ -2,9 +2,10 @@
   import { post, get } from "$lib/utils/fetch";
   export const load = async ({ params, fetch }) => {
     const { id } = params;
+    const include = `&include=${JSON.stringify(["value", "user", "joined"])}`;
     const txt = await post(
       "/send",
-      { path: `txts/${id}`, method: "GET" },
+      { path: `txts/${id}?${include}`, method: "GET" },
       fetch
     );
     if (!txt.OK) {
@@ -14,7 +15,6 @@
       };
     }
 
-    // const include = `&include=${["value", "user", "seen"]}`;
     const getUrl = `txts/to?id=${id}`;
 
     const res = await post("/send", { path: getUrl, method: "GET" }, fetch);
