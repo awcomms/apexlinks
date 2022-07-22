@@ -53,6 +53,12 @@
     </Column>
 </Row>
 
+<Row noGutter>
+    <Column>
+        <Link href='{`${routes.txt(txt.id)}/to`}'>Txts this txt has replied to</Link>
+    </Column>
+</Row>
+
 {#if txt.user}
 <Row noGutter>
     <Column>

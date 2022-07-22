@@ -10,7 +10,7 @@
     pages = 1,
     txt = null,
     items = [],
-    showInput,
+    showInput = true,
     leaveText = "Leave this txt",
     joinText = "Join this txt";
 

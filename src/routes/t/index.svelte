@@ -7,7 +7,7 @@
       total,
       page,
       pages,
-      include = ["user", "value", "time", "joined"],
+      include = ["user", "value", "time", "joined", "seen"],
       getUrl = `txts?`,
       user = url.searchParams.get("user"),
       joined = typeof url.searchParams.get("joined") === "string",
@@ -69,6 +69,10 @@
       }
       props.joined = true;
       getUrl = getUrl.concat(`&joined`);
+    }
+
+    if (to) {
+      getUrl = getUrl.concat(`&to`)
     }
 
     getUrl = getUrl.concat(`&include=${JSON.stringify(include)}`);
