@@ -41,7 +41,7 @@
   import { txtEditModalOpen } from "$lib/store";
   import { browser } from "$app/env";
   import LoadingButton from "$lib/components/LoadingButton.svelte";
-import { allTextAttributes } from "$lib/var";
+import { allTxtAttributes } from "$lib/var";
 
   const socket = io();
 
@@ -87,7 +87,7 @@ import { allTextAttributes } from "$lib/var";
   });
 
   const edit = async (item) => {
-    let include = `&include=${JSON.stringify(allTextAttributes)}`
+    let include = `&include=${JSON.stringify(allTxtAttributes)}`
     editTxt = await api.get(`txts/${item.id}?${include}`);
     $txtEditModalOpen = true;
   };
