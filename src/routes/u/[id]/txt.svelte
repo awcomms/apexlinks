@@ -1,6 +1,6 @@
 <script context="module">
-  import { api, routes } from "$lib/utils";
-  import { post } from "$lib/utils/fetch";
+  import { api, routes } from "$lib/util";
+  import { post } from "$lib/util/fetch";
 
   export const load = async ({ params, session, fetch }) => {
     const { id } = params;

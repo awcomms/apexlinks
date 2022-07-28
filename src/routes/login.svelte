@@ -1,7 +1,7 @@
 <svelte:window on:keydown={keydown} />
 
 <script context='module'>
-  import { routes } from "$lib/utils";
+  import { routes } from "$lib/util";
     export const load = ({session}) => {
         if (session.user) {
             return {
@@ -25,12 +25,12 @@
         ButtonSet,
         InlineLoading,
     } from 'carbon-components-svelte';
-    import { api } from '$lib/utils'
+    import { api } from '$lib/util'
     import Input from '$lib/components/Input/Input.svelte'
     import { goto } from '$app/navigation';
     import { session } from '$app/stores'
-    import { newUser, previousPage } from '$lib/stores' 
-    import { post } from '$lib/utils/fetch/post'
+    import { newUser, previousPage } from '$lib/store' 
+    import { post } from '$lib/util/fetch/post'
 
     $: if($newUser) {
         userText = 'Login instead'

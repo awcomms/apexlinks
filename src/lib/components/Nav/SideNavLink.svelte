@@ -3,7 +3,7 @@
   export let href = ''
   import { page } from "$app/stores";
   export let isSelected = $page.url.pathname === href
-  import { isSideNavOpen } from "$lib/stores";
+  import { isSideNavOpen } from "$lib/store";
   import { SideNavLink } from "carbon-components-svelte";
 
   $: !href && href !== null ? href = `/${text.toLowerCase().replace(" ", "-")}`: {};

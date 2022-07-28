@@ -2,10 +2,10 @@
   import SideNavLink from "./SideNavLink.svelte";
   import SideNavMenuItem from "./SideNavMenuItem.svelte";
   import { page } from "$app/stores";
-  import { post } from "$lib/utils/fetch/post";
+  import { post } from "$lib/util/fetch/post";
   import { goto } from "$app/navigation";
   import { navigating, session } from "$app/stores";
-  import { isSideNavOpen } from "$lib/stores";
+  import { isSideNavOpen, txtSearchModalOpen } from "$lib/store";
   import {
     InlineLoading,
     SkipToContent,
@@ -14,7 +14,7 @@
     SideNav,
     Header,
   } from "carbon-components-svelte";
-  import { iterLength, routes } from "$lib/utils";
+  import { iterLength, routes } from "$lib/util";
 
   let show;
   let installRef;
@@ -51,9 +51,9 @@
 
 <Header
   persistentHamburgerMenu={true}
-  company="Apexlinks"
+  company="Search"
   bind:isSideNavOpen={$isSideNavOpen}
-  href={routes.index}
+  on:click={()=> $txtSearchModalOpen = true}
 >
   {#if $navigating}
     <InlineLoading />

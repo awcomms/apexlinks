@@ -1,6 +1,6 @@
 let port_count = 0;
 let online_state = false;
-import { post } from "$lib/utils/fetch";
+import { post } from "$lib/util/fetch";
 
 self.addEventListener("connect", ({ ports }) => {
   const port = ports[0];

@@ -1,6 +1,6 @@
 import { dev, browser } from "$app/env";
 import { parse } from "cookie";
-import { cFetch } from "$lib/utils";
+import { cFetch } from "$lib/util";
 
 // import { API } from "$lib/env";
 

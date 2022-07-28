@@ -1,5 +1,5 @@
 <script>
-import { parseMarkdown } from "$lib/utils";
+import { parseMarkdown } from "$lib/util";
 
   import { Row, Column, Accordion, AccordionItem } from "carbon-components-svelte";
 

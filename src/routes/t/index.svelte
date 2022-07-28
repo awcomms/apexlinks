@@ -1,6 +1,6 @@
 <script context="module">
-  import { api } from "$lib/utils";
-  import { post } from "$lib/utils/fetch";
+  import { api } from "$lib/util";
+  import { post } from "$lib/util/fetch";
   export const load = async ({ url, fetch, session }) => {
     let res,
       items,
@@ -34,8 +34,8 @@
       include.push("joined");
       getUrl = getUrl.concat(`&id=${txt.id}`);
       if (to) {
-        props.to = true
-        getUrl = getUrl.concat(`&to`)
+        props.to = true;
+        getUrl = getUrl.concat(`&to`);
       }
     }
 
@@ -72,7 +72,7 @@
     }
 
     if (to) {
-      getUrl = getUrl.concat(`&to`)
+      getUrl = getUrl.concat(`&to`);
     }
 
     getUrl = getUrl.concat(`&include=${JSON.stringify(include)}`);
@@ -99,9 +99,20 @@
 </script>
 
 <script>
+  import { Row, Column, Link } from 'carbon-components-svelte'
+  import { routes } from '$lib/util'
   export let txt, items, page, pages, total, getUrl;
   import Txt from "$lib/components/Txt/Txt.svelte";
 </script>
+
+{#if txt}
+  <Row noGutter>
+    <Column>
+      <Link href={`${routes.txt(txt.id)}/to`}>Txts this txt has replied to</Link
+      >
+    </Column>
+  </Row>
+{/if}
 
 <Txt
   labelText={txt ? "Reply to this txt" : "Add a new txt"}

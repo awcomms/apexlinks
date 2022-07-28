@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
   export let getUrl = "txts",
     dm = false,
     text = "",
@@ -18,7 +18,7 @@
     return { ...i, ref: null, contextMenu: true };
   });
 
-  import { api, routes } from "$lib/utils";
+  import { api, routes } from "$lib/util";
   import { TxtInput } from "$lib/components";
   import {
     Button,
@@ -36,17 +36,15 @@
   } from "carbon-components-svelte";
   import { onMount } from "svelte";
   import { session } from "$app/stores";
-  import { Delete } from "$lib/components/Txt";
-  import { Tags } from "$lib/components";
+  import { Delete, Edit } from "$lib/components/Txt";
   import { io } from "socket.io-client";
+  import { txtEditModalOpen } from "$lib/store";
   import { browser } from "$app/env";
   import LoadingButton from "$lib/components/LoadingButton.svelte";
 
   const socket = io();
 
   $: if (sort && !(sort === "tag" && tags.length < 1)) get();
-
-  $: if (deleteTxt) ondeleteTxt();
 
   const include = `include=${JSON.stringify(["user", "value", "joined"])}`;
 
@@ -60,9 +58,15 @@
     sameUser = user && user.id === $session.user.id,
     value = "",
     existing = false,
+    selectedId,
+    editTxt,
     ref,
-    sending = false,
     sort;
+
+  $: if (selectedId > -1) {
+    console.log(selectedId);
+    add();
+  }
 
   if (typeof showInput !== "boolean") {
     showInput = $session.user ? true : false;
@@ -75,27 +79,18 @@
     }
   }
 
-  console.log("page", page);
-  console.log("getUrl", getUrl);
-
   onMount(async () => {
     if (txt) await api.put(`seen?id=${txt.id}`);
     window.scrollTo({ left: 0, top: document.body.scrollHeight });
     if (ref) ref.focus();
   });
 
-  const ondeleteTxt = () => {
-    deleteOpen = true;
+  const edit = (item) => {
+    editTxt = item;
+    $txtEditModalOpen = true;
   };
 
-  const keydown = (e) => {
-    switch (e.key) {
-      case "Enter":
-        existing ? add() : send()
-    }
-  };
-
-  const join = async (item) => {
+  const join = async (item = null) => {
     let i = item ? item : txt;
     if (!i) return;
     console.log(i);
@@ -114,11 +109,11 @@
     if (!res.OK) {
       console.log("fetch PUT `join` res: ", res);
     }
-    console.log(res)
+    console.log(res);
     i.joined = res.joined;
   };
 
-  const leave = async (item) => {
+  const leave = async (item = null) => {
     let i = item ? item : txt;
     if (!i) return;
     if (item) {
@@ -149,21 +144,29 @@
     updateScroll();
   });
 
-  const add = async ({ detail: id }) => {
+  const add = async () => {
+    console.log(selectedId)
     await api
-      .put(`txts?${include}`, { id, reply: [txt.id] })
-      .then((r) => {
+      .put(`txts?${include}`, { id: selectedId, reply: [txt.id] })
+      .then(async(r) => {
         if (!r.OK) {
           console.log("res:", r);
           return;
         }
 
-        console.log(page, pages)
-        if (page === pages) items = [...items, r];
+        items = [...items, r];
+        socket.emit("txt", { data: r, room });
+        // await get({append: true})
       });
   };
 
-  const get = async (older: boolean =false) => {
+  type GetOptions = {
+    older?: boolean;
+    append?: boolean
+  }
+
+  const get = async (options: GetOptions={older: false, append: false}) => {
+    const {older, append} = options
     getLoading = true;
     let url = getUrl;
     if (sort === "tag") {
@@ -171,70 +174,68 @@
     } else if (sort === "old") {
       url = url.concat(`&reverse`);
     }
-    if (older && page) url = url.concat(`&page=${page - 1}`);
+
+    let queryPage = older && page ? page - 1 : page ? page : 'last'
+    url = url.concat(`&page=${queryPage}`);
+    if (append) url = url.concat(`&append`)
     const res = await api.get(url).finally(() => (getLoading = false));
     if (!res.OK) {
       console.log(`txt fetch get response`, res);
       return;
     }
     ({ total, page, pages } = res);
-    if (older) {
-      items = [...res.items, ...items];
-    } else {
-      ({ items } = res);
-    }
-    console.log(
-      "time sort",
-      items.sort(
-        (a, b) => new Date(a.time).valueOf() - new Date(b.time).valueOf()
-      )
-    );
+    ({ items } = res);
   };
 
   type SendTxt = {
     value: string;
-    state: 'done' | 'sending' | 'failed';
+    state: "done" | "sending" | "failed";
     txt?: number;
     dm: boolean;
-  }
+  };
 
   type Txt = {
     value: string;
     id: number;
-  }
+  };
 
   const resend = async (item: SendTxt) => {
     await api
       .post(`txts?${include}`, item)
       .then((res) => {
         if (!res.OK) {
-          item.state = 'failed'
+          item.state = "failed";
           console.log("txt POST response: ", res);
           return;
         }
-        item.state = 'done'
+        item.state = "done";
         socket.emit("txt", { data: res, room });
       })
-      .catch(() => item.state = 'failed')
-  }
+      .catch(() => (item.state = "failed"));
+  };
 
   const send = async () => {
-    let data: SendTxt = { value, dm, txt: txt ? txt.id : null, state: 'sending' };
-    let index = items.length
+    let data: SendTxt = {
+      value,
+      dm,
+      txt: txt ? txt.id : null,
+      state: "sending",
+    };
+    let index = items.length;
     items = [...items, data];
     value = "";
     await api
       .post(`txts?${include}`, data)
       .then((res) => {
         if (!res.OK) {
-          data.state = 'failed'
+          data.state = "failed";
           console.log("txt POST response: ", res);
           return;
         }
-        items[index] = res
+        items[index] = res;
         socket.emit("txt", { data: res, room });
       })
-      .catch(() => (data.state = 'failed'));
+      .catch(() => (data.state = "failed"));
   };
 
   const updateScroll = () => {
@@ -251,6 +252,10 @@
 
 {#if getLoading}
   <Loading />
+{/if}
+
+{#if editTxt}
+  <Edit txt={editTxt} />
 {/if}
 
 <Delete
@@ -320,7 +325,7 @@
 
   <br />
 
-  {#if sort === "tag"}
+  <!-- {#if sort === "tag"}
     <Row noGutter>
       <Column>
         <Tags
@@ -331,14 +336,19 @@
         />
       </Column>
     </Row>
-  {/if}
+  {/if} -->
 </div>
 
 <div class="scroll">
+  <Row noGutter>
+    <Column>
+      <p>total: {total}</p>
+    </Column>
+  </Row>
   {#if pages > 1}
     <Row noGutter>
       <Column>
-        <Button size="small" on:click={() => get(true)}>Load more</Button>
+        <Button size="small" on:click={() => get({older: true, append: true})}>Load more</Button>
       </Column>
     </Row>
   {/if}
@@ -350,8 +360,11 @@
       <div bind:this={item.ref}>
         {#if $session.user}
           <ContextMenu bind:target={item.userRef}>
-            {#if item.state === 'failed'}
-              <ContextMenuOption labelText='Retry' on:click={() => resend(item)} />
+            {#if item.state === "failed"}
+              <ContextMenuOption
+                labelText="Retry"
+                on:click={() => resend(item)}
+              />
             {/if}
             <!-- <ContextMenuOption disabled={item.joinLeaveLoading} on:click={()=>item.joined ? leave(item) : join(item)} labelText={item.joined ? "Leave" : "Join"}>
               <div slot='shortcutText'>
@@ -361,9 +374,7 @@
               </div>
             </ContextMenuOption> -->
             {#if $session.user.id === item.user?.id}
-              <Link href={routes.txtEdit(item.id)}>
-                <ContextMenuOption labelText="Edit" />
-              </Link>
+              <ContextMenuOption on:click={() => edit(item)} labelText="Edit" />
               <ContextMenuOption
                 on:click={() => (deleteTxt = item)}
                 labelText="Delete"
@@ -390,19 +401,21 @@
         {/if}
         <Row noGutter>
           <Column>
-            <Link href={routes.user(item.user?.id)}>
-              <p class="small pointer">
-                {item.user?.username}
-              </p>
-            </Link>
+            {#if !user || (user && $session.user.id !== user.id)}
+              <Link href={routes.user(item.user?.id)}>
+                <p class="small pointer">
+                  {item.user?.username}
+                </p>
+              </Link>
+            {/if}
 
             <div bind:this={item.userRef}>
-              {#if item.state && item.state !== 'done'}
-                <p class={item.state}>{item.value}</p>
+              {#if item.state && item.state !== "done"}
+                <p class={`${item.state} not-done`}>{item.value}</p>
               {:else}
-              <Link href={routes.txtTxt(item.id)}>
-                {item.value}
-              </Link>
+                <Link href={routes.txtTxt(item.id)}>
+                  {item.value}
+                </Link>
               {/if}
             </div>
           </Column>
@@ -417,6 +430,7 @@
         {labelText}
         on:send={send}
         on:add={add}
+        bind:selectedId
         bind:value
         bind:existing
         bind:ref
@@ -425,33 +439,30 @@
   </div>
 </div>
 
-<style>
-  .failed {
+<style lang="sass">
+  @use '@carbon/type'
+  
+  .not-done
+    @include type.type-style('body-compact-01')
+
+  .failed 
     color: red
-  }
-  .sending {
+  .sending 
     color: grey
-  }
-  .stick {
-    position: sticky;
-  }
-  .scroll {
-    display: grid;
-  }
-  .con {
-    /* overflow-y:scroll; */
-    display: grid;
-    row-gap: 0.37rem;
-    width: 100%;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-  .small {
-    color: grey;
-    font-size: 0.75rem;
-  }
-  .head-space {
-    height: 0.5rem;
-  }
+  .stick 
+    position: sticky
+  .scroll 
+    display: grid
+  .con 
+    /* overflow-y:scroll */
+    display: grid
+    row-gap: 0.37rem
+    width: 100%
+  .pointer 
+    cursor: pointer
+  .small 
+    color: grey
+    font-size: 0.75rem
+  .head-space 
+    height: 0.5rem
 </style>

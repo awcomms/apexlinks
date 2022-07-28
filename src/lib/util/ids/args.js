@@ -1,4 +1,4 @@
-import { api } from "$lib/utils"
+import { api } from "$lib/util"
 
 export const args = (arg) => {
     let ids = arg.split("+");

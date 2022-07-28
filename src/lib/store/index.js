@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'
 
-export const store = (defaultValue=[]) => {
+export const store = (defaultValue=undefined) => {
     const { subscribe, set } = writable(defaultValue)
 
     return {
@@ -33,7 +33,9 @@ export const itemQuery = store()
 export const globalQuery = store()
 export const isSideNavOpen = store()
 export const selectedUsers = store();
-
+export const txtSearchTags = store([])
+export const txtEditModalOpen = store(false)
+export const txtSearchModalOpen = store(false)
 
 export const parents = store();
 export const parentItems = store();

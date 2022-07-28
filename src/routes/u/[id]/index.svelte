@@ -1,5 +1,5 @@
 <script context="module">
-  import { api } from "$lib/utils";
+  import { api } from "$lib/util";
   export const load = async ({ params, fetch }) => {
     let { id } = params;
     const include = JSON.stringify(["username", "tags", "text"]);
@@ -24,7 +24,7 @@
   import { Tags } from "$lib/components/Tag";
   import { session } from "$app/stores";
   import { Row, Link, Column } from "carbon-components-svelte";
-  import { routes } from "$lib/utils";
+  import { routes } from "$lib/util";
 
   // onMount(() => {
   //   (() => {

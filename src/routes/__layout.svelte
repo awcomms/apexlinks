@@ -4,8 +4,8 @@
   import { onMount, onDestroy } from "svelte";
   import { session } from '$app/stores'
   import {VAPID } from '$lib/env'
-  import { api, url8 } from '$lib/utils'
-  import { previousPage } from "$lib/stores";
+  import { api, url8 } from '$lib/util'
+  import { previousPage } from "$lib/store";
   import "carbon-components-svelte/css/all.css";
   import Header from "$lib/components/Nav/Header.svelte";
   import Theme from "$lib/components/Theme.svelte";

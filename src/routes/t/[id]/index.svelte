@@ -1,6 +1,6 @@
 <script context='module'>
-    import { api } from "$lib/utils"
-    import { routes } from "$lib/utils"
+    import { api } from "$lib/util"
+    import { routes } from "$lib/util"
     export const load = async ({params, fetch}) => {
         const {id} = params
         const include = ['value', 'text', 'user', 'tags']
@@ -31,7 +31,7 @@
         Link
     } from 'carbon-components-svelte'
     import {Tags} from "$lib/components"
-    import { parseMarkdown } from "$lib/utils";
+    import { parseMarkdown } from "$lib/util";
 
     let {tags, text} = txt;
     if (!tags) tags = []

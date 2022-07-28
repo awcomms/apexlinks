@@ -1,5 +1,5 @@
 <script context="module">
-  import { routes } from "$lib/utils";
+  import { routes } from "$lib/util";
   export  const load = async({ session }) => {
     let user = session.user;
     if (!user) {
@@ -21,7 +21,7 @@
 <script>
   export let user;
 
-  import { api } from "$lib/utils";
+  import { api } from "$lib/util";
   import { goto } from "$app/navigation";
   import {
     InlineLoading,

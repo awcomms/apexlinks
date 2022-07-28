@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { post, get } from "$lib/utils/fetch";
+  import { post, get } from "$lib/util/fetch";
   export const load = async ({ params, fetch }) => {
     const { id } = params;
     const include = `&include=${JSON.stringify(["value", "user", "joined"])}`;

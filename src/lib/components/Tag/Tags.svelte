@@ -10,7 +10,7 @@
   export let open = false;
   export let tags = [];
 
-  import { notify } from "$lib/stores";
+  import { notify } from "$lib/store";
   import Tag from "$lib/components/Tag/Tag.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import { onMount, createEventDispatcher } from "svelte";

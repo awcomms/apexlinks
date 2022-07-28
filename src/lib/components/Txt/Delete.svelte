@@ -1,5 +1,5 @@
 <script>
-  import { api } from "$lib/utils";
+  import { api } from "$lib/util";
   import { session } from "$app/stores";
   import { createEventDispatcher } from "svelte";
   import { Modal, Truncate } from "carbon-components-svelte";

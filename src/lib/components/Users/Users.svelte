@@ -10,10 +10,10 @@
     // RadioButton,
     // Slider,
   } from "carbon-components-svelte";
-  // import currentLocation from "$lib/utils/currentLocation";
+  // import currentLocation from "$lib/util/currentLocation";
   // import Save from "$lib/components/Save.svelte";
-  import { api } from "$lib/utils";
-  import { selectedUsers, users, userTags } from "$lib/stores";
+  import { api } from "$lib/util";
+  import { selectedUsers, users, userTags } from "$lib/store";
   // import UpDown from "$lib/components/UpDown.svelte";
   import Tag from "$lib/components/Tag/Tags.svelte";
   // import { goto } from "$app/navigation";

@@ -2,7 +2,7 @@
   export let text = ''
   export let href = null
   export let isSelected
-  import { isSideNavOpen } from "$lib/stores";
+  import { isSideNavOpen } from "$lib/store";
   import { SideNavMenuItem } from "carbon-components-svelte";
 
   // if (!href) {
