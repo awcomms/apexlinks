@@ -9,7 +9,7 @@ export const routes = {
   txt: (id) => `${txts}/${id}`,
   user: (id) => `${users}/${id}`,
   users,
-  txtTxt: (id) => `${txts}?id=${id}`,
+  txtReplies: (id) => `${txts}?id=${id}`,
   txtEdit: (id) => `${txts}/${id}/edit`,
   userTxt: (id) => `${users}/${id}/txt`,
   userEdit: '/edit'

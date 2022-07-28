@@ -49,7 +49,7 @@
 
 <Row noGutter>
     <Column>
-        <Link href='{routes.txtTxt(txt.id)}'>Replies to this txt</Link>
+        <Link href='{routes.txtReplies(txt.id)}'>Replies to this txt</Link>
     </Column>
 </Row>
 

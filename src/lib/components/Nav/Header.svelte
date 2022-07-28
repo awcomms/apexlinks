@@ -13,8 +13,10 @@
     SideNavItems,
     SideNav,
     Header,
+Modal,
   } from "carbon-components-svelte";
-  import { iterLength, routes } from "$lib/util";
+  import { routes } from "$lib/util";
+import Search from "../Txt/Search.svelte";
 
   let show;
   let installRef;
@@ -53,7 +55,7 @@
   persistentHamburgerMenu={true}
   company="Search"
   bind:isSideNavOpen={$isSideNavOpen}
-  on:click={()=> $txtSearchModalOpen = true}
+  on:click={()=> $txtSearchModalOpen = !$txtSearchModalOpen}
 >
   {#if $navigating}
     <InlineLoading />
@@ -62,6 +64,10 @@
     <SkipToContent />
   </div>
 </Header>
+
+<Modal modalHeading='Search with tags' size="lg" passiveModal hasForm bind:open={$txtSearchModalOpen}>
+  <Search />
+</Modal>
 
 <SideNav bind:isOpen={$isSideNavOpen}>
   <SideNavItems>

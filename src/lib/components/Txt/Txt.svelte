@@ -413,7 +413,7 @@
               {#if item.state && item.state !== "done"}
                 <p class={`${item.state} not-done`}>{item.value}</p>
               {:else}
-                <Link href={routes.txtTxt(item.id)}>
+                <Link href={routes.txtReplies(item.id)}>
                   {item.value}
                 </Link>
               {/if}
