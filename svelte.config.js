@@ -5,8 +5,6 @@ export default {
   kit: {
     adapter: adapter({
       out: "build",
-      precompress: true,
-      envPrefix: "X_CUSTOM_",
     })
   },
   preprocess: preprocess({
