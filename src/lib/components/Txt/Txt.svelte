@@ -36,11 +36,12 @@
   } from "carbon-components-svelte";
   import { onMount } from "svelte";
   import { session } from "$app/stores";
-  import { Delete, Edit } from "$lib/components/Txt";
+  import { Edit } from "$lib/components/Txt";
   import { io } from "socket.io-client";
   import { txtEditModalOpen } from "$lib/store";
   import { browser } from "$app/env";
   import LoadingButton from "$lib/components/LoadingButton.svelte";
+import { allTextAttributes } from "$lib/var";
 
   const socket = io();
 
@@ -85,8 +86,9 @@
     if (ref) ref.focus();
   });
 
-  const edit = (item) => {
-    editTxt = item;
+  const edit = async (item) => {
+    let include = `&include=${JSON.stringify(allTextAttributes)}`
+    editTxt = await api.get(`txts/${item.id}?${include}`);
     $txtEditModalOpen = true;
   };
 
@@ -255,15 +257,8 @@
 {/if}
 
 {#if editTxt}
-  <Edit txt={editTxt} />
+  <Edit on:delete={()=>goto(`${routes.txt}?user=${$session.user.id}`)} bind:open={$txtEditModalOpen} txt={editTxt} />
 {/if}
-
-<Delete
-  on:del={({ detail }) => remove(detail)}
-  txt={deleteTxt}
-  bind:open={deleteOpen}
-  bind:loading={deleteLoading}
-/>
 
 <div class="stick">
   {#if !user && txt}
@@ -375,10 +370,6 @@
             </ContextMenuOption> -->
             {#if $session.user.id === item.user?.id}
               <ContextMenuOption on:click={() => edit(item)} labelText="Edit" />
-              <ContextMenuOption
-                on:click={() => (deleteTxt = item)}
-                labelText="Delete"
-              />
             {/if}
             <!-- <ContextMenuOption
               on:click={() => {

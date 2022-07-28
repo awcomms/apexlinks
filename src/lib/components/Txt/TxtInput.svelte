@@ -71,15 +71,14 @@
 <div class="input">
   <Row noGutter>
     <Button
-          icon={existing ? Add : TextAlignJustify}
-          iconDescription={existing ? newTxtPrompt : existingTxtPrompt}
-          size="small"
-          kind="ghost"
-          on:click={() => (existing = !existing)}
-        />
+      icon={existing ? Add : TextAlignJustify}
+      iconDescription={existing ? newTxtPrompt : existingTxtPrompt}
+      size="small"
+      kind="ghost"
+      on:click={() => (existing = !existing)}
+    />
     <Column>
       {#if $session.user}
-        
         {#if txt && existing}
           <ComboBox
             direction="top"
@@ -92,10 +91,9 @@
             bind:items
             let:item
           >
-            <p>{item.id}: {item.value}</p>
-            {#if item.loading}
-              <InlineLoading />
-            {/if}
+            <p>
+              {#if !item.loading}{item.id}: {/if}{item.value}
+            </p>
           </ComboBox>
         {:else}
           <TextInput on:keydown={keydown} bind:value labelText={newTxtPrompt} />

@@ -13,7 +13,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   export let status = "";
   export let error = "";
   export let message

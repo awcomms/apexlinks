@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let prefix = '';
   export let hide = false;
   export let text = "";

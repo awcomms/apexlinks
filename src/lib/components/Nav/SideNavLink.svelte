@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let text = ''
   export let href = ''
   import { page } from "$app/stores";

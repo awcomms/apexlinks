@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let ref = null
     export let value = ''
     export let password = ''

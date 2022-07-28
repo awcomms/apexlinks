@@ -18,7 +18,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   export let user;
 
   import { api } from "$lib/util";

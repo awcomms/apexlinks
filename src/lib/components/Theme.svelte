@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let persist = false;
   export let persistKey = "theme";
   export let theme = "white";

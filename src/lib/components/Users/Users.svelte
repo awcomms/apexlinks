@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export const selected = {};
   export let showSelected = false;
   import {

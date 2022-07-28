@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Content, Grid } from "carbon-components-svelte";
   import { afterNavigate } from "$app/navigation"
   import { onMount, onDestroy } from "svelte";

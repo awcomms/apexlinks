@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let autoFocusInvalid = true
     export let ref = null
     export let value = ''

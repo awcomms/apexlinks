@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { parseMarkdown } from "$lib/util";
 
   import { Row, Column, Accordion, AccordionItem } from "carbon-components-svelte";

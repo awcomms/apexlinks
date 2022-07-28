@@ -98,7 +98,7 @@
   };
 </script>
 
-<script>
+<script lang="ts">
   import { Row, Column, Link } from 'carbon-components-svelte'
   import { routes } from '$lib/util'
   export let txt, items, page, pages, total, getUrl;

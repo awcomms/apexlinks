@@ -47,7 +47,7 @@
   };
 </script>
 
-<script>
+<script lang="ts">
   export let items = [],
     getUrl = '',
     total,

@@ -19,7 +19,7 @@
   };
 </script>
 
-<script>
+<script lang="ts">
   export let user;
   import { Tags } from "$lib/components/Tag";
   import { session } from "$app/stores";

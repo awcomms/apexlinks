@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   let input;
 
   export let inputEventDelay = 0;

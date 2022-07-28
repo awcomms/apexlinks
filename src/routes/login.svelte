@@ -15,7 +15,7 @@
     }
 </script>
 
-<script>
+<script lang="ts">
     import {
         Row,
         Form,

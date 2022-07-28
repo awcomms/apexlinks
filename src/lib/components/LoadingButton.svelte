@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let loading=false, size='small';
   import { Button, InlineLoading } from "carbon-components-svelte";
 </script>

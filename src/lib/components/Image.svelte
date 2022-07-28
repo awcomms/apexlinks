@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let setPrompt = "Set image";
   export let changePrompt = "Change image";
   export let image = "";

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import SideNavLink from "./SideNavLink.svelte";
   import SideNavMenuItem from "./SideNavMenuItem.svelte";
   import { page } from "$app/stores";
