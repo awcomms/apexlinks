@@ -42,7 +42,7 @@
         console.log('txt delete response: ', res)
         return
       }
-      dispatch('delete')
+      dispatch('del', txt.id)
       // goto(`${routes.txt}?user=${$session.user.id}`)
     }).finally(()=>deleteLoading = false)
   }

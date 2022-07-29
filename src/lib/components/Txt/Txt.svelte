@@ -254,6 +254,11 @@ import { allTxtAttributes } from "$lib/var";
   const doneEdit = ({detail: item}) => {
     items[items.findIndex(i => i.id === item.id)] = item
   }
+
+  const del = ({detail: id}) => {
+    items = items.filter(i => i.id !== id)
+    $txtEditModalOpen = false
+  }
 </script>
 
 {#if getLoading}
@@ -261,7 +266,7 @@ import { allTxtAttributes } from "$lib/var";
 {/if}
 
 {#if editTxt}
-  <Edit {include} on:edit={doneEdit} bind:open={$txtEditModalOpen} bind:txt={editTxt} />
+  <Edit {include} on:del={del} on:edit={doneEdit} bind:open={$txtEditModalOpen} bind:txt={editTxt} />
 {/if}
 
 <div class="stick">
