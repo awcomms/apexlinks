@@ -1,5 +1,6 @@
 <script lang="ts">
   export let open, txt;
+  export let include
 
   import {
     Modal,
@@ -9,6 +10,8 @@
     Button,
     InlineLoading,
   } from "carbon-components-svelte";
+  // import { goto } from '$app/navigation'
+  // import { session } from '$app/stores'
   import { Tags } from "$lib/components/Tag";
   import { api } from "$lib/util";
   import { createEventDispatcher } from 'svelte'
@@ -16,18 +19,19 @@
   const dispatch = createEventDispatcher()
 
   let deleteLoading = false, editLoading = false, deleteRequest = false;
-  let { anon, text, value, self, tags, personal } = txt;
+  $: ({ anon, text, value, self, tags, personal } = txt);
 
   if (!tags) tags = [];
 
   const edit = async () => {
     editLoading = true;
     const res = await api
-      .put("txts", { value, tags, text, self, personal, anon, id: txt.id })
+      .put(`txts?${include}`, { value, tags, text, self, personal, anon, id: txt.id })
       .finally(() => (editLoading = false));
     if (!res.OK) {
       console.log("txt PUT res: ", res);
     }
+    dispatch('edit', res)
     open = false;
   };
 
@@ -39,6 +43,7 @@
         return
       }
       dispatch('delete')
+      // goto(`${routes.txt}?user=${$session.user.id}`)
     }).finally(()=>deleteLoading = false)
   }
 </script>

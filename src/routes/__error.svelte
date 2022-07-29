@@ -25,7 +25,7 @@
 
 <Row noGutter>
   <Column lg={16}>
-    <h1>Error code: {status}</h1>
+    <h1>HTTP error code: {status}</h1>
     <div>
       {#if message}
         <p>{message.message}</p>

@@ -39,7 +39,7 @@
   text = parseMarkdown(text);
 </script>
 
-<Edit on:delete={()=>goto(`${routes.txt}?user=${$session.user.id}`)} bind:open={editOpen} {txt} />
+<Edit bind:open={editOpen} {txt} />
 
 {#if $session.user && $session.user?.id === txt.user?.id}
   <Row noGutter>

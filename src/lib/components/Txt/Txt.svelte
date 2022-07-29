@@ -47,7 +47,7 @@ import { allTxtAttributes } from "$lib/var";
 
   $: if (sort && !(sort === "tag" && tags.length < 1)) get();
 
-  const include = `include=${JSON.stringify(["user", "value", "joined"])}`;
+  const include = `include=${JSON.stringify(["user", "value"])}`;
 
   let tags = [],
     room = txt ? String(txt.id) : "home",
@@ -250,6 +250,10 @@ import { allTxtAttributes } from "$lib/var";
   const remove = (item) => {
     items = items.filter((t) => t.id !== item.id);
   };
+
+  const doneEdit = ({detail: item}) => {
+    items[items.findIndex(i => i.id === item.id)] = item
+  }
 </script>
 
 {#if getLoading}
@@ -257,7 +261,7 @@ import { allTxtAttributes } from "$lib/var";
 {/if}
 
 {#if editTxt}
-  <Edit on:delete={()=>goto(`${routes.txt}?user=${$session.user.id}`)} bind:open={$txtEditModalOpen} txt={editTxt} />
+  <Edit {include} on:edit={doneEdit} bind:open={$txtEditModalOpen} bind:txt={editTxt} />
 {/if}
 
 <div class="stick">

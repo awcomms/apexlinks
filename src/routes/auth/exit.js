@@ -1,6 +1,6 @@
 import { api } from '$lib/util'
 
-export async function post(req) {
+export async function POST(req) {
     req.locals.token = null
     await api.del('tokens', req.locals.token)
     return {
