@@ -19,9 +19,15 @@
   const dispatch = createEventDispatcher()
 
   let deleteLoading = false, editLoading = false, deleteRequest = false;
-  $: ({ anon, text, value, self, tags, personal } = txt);
+  let { anon, text, value, self, tags, personal } = txt
+
+  $: update(txt)
 
   if (!tags) tags = [];
+
+  const update = (_: any) => {
+    ({ anon, text, value, self, tags, personal } = _)
+  }
 
   const edit = async () => {
     editLoading = true;

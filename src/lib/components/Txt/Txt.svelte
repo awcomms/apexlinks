@@ -87,6 +87,7 @@ import { allTxtAttributes } from "$lib/var";
   });
 
   const edit = async (item) => {
+    // let index = items.findIndex(i => i.id === item.id)
     let include = `&include=${JSON.stringify(allTxtAttributes)}`
     editTxt = await api.get(`txts/${item.id}?${include}`);
     $txtEditModalOpen = true;
