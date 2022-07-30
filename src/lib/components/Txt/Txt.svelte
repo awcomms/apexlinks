@@ -248,16 +248,16 @@ import { allTxtAttributes } from "$lib/var";
     }, 0);
   };
 
-  const remove = (item) => {
-    items = items.filter((t) => t.id !== item.id);
-  };
-
   const doneEdit = ({detail: item}) => {
     items[items.findIndex(i => i.id === item.id)] = item
   }
 
-  const del = ({detail: id}) => {
+  const remove = (id) => {
     items = items.filter(i => i.id !== id)
+  }
+
+  const del = ({detail: id}) => {
+    remove(id)
     $txtEditModalOpen = false
   }
 </script>
@@ -267,7 +267,7 @@ import { allTxtAttributes } from "$lib/var";
 {/if}
 
 {#if editTxt}
-  <Edit {include} on:del={del} on:edit={doneEdit} bind:open={$txtEditModalOpen} bind:txt={editTxt} />
+  <Edit current={txt} {include} on:remove={del} on:del={del} on:edit={doneEdit} bind:open={$txtEditModalOpen} bind:txt={editTxt} />
 {/if}
 
 <div class="stick">

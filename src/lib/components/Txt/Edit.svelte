@@ -1,6 +1,5 @@
 <script lang="ts">
-  export let open, txt;
-  export let include
+  export let open, txt, include, current;
 
   import {
     Modal,
@@ -18,7 +17,7 @@
 
   const dispatch = createEventDispatcher()
 
-  let deleteLoading = false, editLoading = false, deleteRequest = false;
+  let deleteLoading = false, editLoading = false, deleteRequest = false, removeLoading = false;
   let { anon, text, value, self, tags, personal } = txt
 
   $: update(txt)
@@ -27,6 +26,16 @@
 
   const update = (_: any) => {
     ({ anon, text, value, self, tags, personal } = _)
+  }
+
+  const remove = async() => {
+    await api.put(`txts?${include}`, { id: txt.id, unreply: [current.id]}).then(res => {
+      if (!res.OK){
+        console.log('`remove as child` api response', res)
+        return
+      }
+      dispatch('remove', txt.id)
+    })
   }
 
   const edit = async () => {
@@ -85,6 +94,16 @@
     <div on:click={edit} {...props}>
       <p>Edit</p>
       {#if editLoading}
+        <div class="right">
+          <InlineLoading />
+        </div>
+      {/if}
+    </div>
+  </Button>
+  <Button as let:props>
+    <div on:click={remove} {...props}>
+      <p>Remove as child</p>
+      {#if removeLoading}
         <div class="right">
           <InlineLoading />
         </div>
