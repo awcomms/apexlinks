@@ -26,6 +26,7 @@
 
   const update = (_: any) => {
     ({ anon, text, value, self, tags, personal } = _)
+    deleteRequest = false
   }
 
   const remove = async() => {

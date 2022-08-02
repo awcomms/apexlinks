@@ -289,7 +289,7 @@ import { allTxtAttributes } from "$lib/var";
   <Row noGutter>
     <Column>
       <ButtonSet stacked={true}>
-        {#if txt && $session.user.id === txt.user?.id}
+        {#if txt && $session.user && $session.user.id === txt.user?.id}
           <Link href="{routes.txts}/{txt.id}/edit">Edit this txt</Link>
         {/if}
 

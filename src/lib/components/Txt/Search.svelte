@@ -34,6 +34,6 @@
 {#each items as item}
   <p>
     <!-- settings: close search modal after clicking on a result ? -->
-      <Link on:click={()=>$txtSearchModalOpen = false} href={routes.txtReplies(item.id)}>{item.id}: {item.value}</Link>
+      <Link href={routes.txtReplies(item.id)}>{item.id}: {item.value}</Link>
   </p>
 {/each}
