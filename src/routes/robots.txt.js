@@ -1,9 +1,9 @@
-import { base } from '$lib/send'
+import { API } from '$lib/env'
 
 export const get = () => {
     return {
         headers: {
-            Location: `${base}/robots.txt`
+            Location: `${API}/robots.txt`
         },
         status: 301
     }
